@@ -85,6 +85,7 @@
             $('#admins .save-cancel-group').show();
             $('#admins .record-details').find('input, textarea').prop('disabled', false);
             $('#admins .record-details').find('select').prop('disabled', false);
+            $('#admins .record-details #admin-timezone').prop('disabled', GlobalVariables.enableDefaultTimezone);
             $('#admin-password, #admin-password-confirm').addClass('required');
             $('#filter-admins button').prop('disabled', true);
             $('#filter-admins .results').css('color', '#AAA');
@@ -98,6 +99,7 @@
             $('#admins .save-cancel-group').show();
             $('#admins .record-details').find('input, textarea').prop('disabled', false);
             $('#admins .record-details').find('select').prop('disabled', false);
+            $('#admins .record-details #admin-timezone').prop('disabled', GlobalVariables.enableDefaultTimezone);
             $('#admin-password, #admin-password-confirm').removeClass('required');
             $('#filter-admins button').prop('disabled', true);
             $('#filter-admins .results').css('color', '#AAA');
