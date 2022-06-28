@@ -351,7 +351,7 @@
             .val('')
             .prop('disabled', true);
         $('#providers .record-details #provider-calendar-view').val('default');
-        $('#providers .record-details #provider-timezone').val('UTC');
+        $('#providers .record-details #provider-timezone').val('Europe/Paris');
         $('#providers .add-break, .add-working-plan-exception, #reset-working-plan').prop('disabled', true);
         BackendUsers.wp.timepickers(true);
         $('#providers .working-plan input:text').timepicker('destroy');

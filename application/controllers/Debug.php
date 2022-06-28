@@ -3,12 +3,14 @@
 /**
  * Class used to add debug facilities for developers.
  *
- * @property User_model        $user
- * @property Services_model    $services
- * @property Providers_model   $providers
- * @property Settings_model    $settings
- * @property Secretaries_model $secretaries
- * @property Admins_model      $admins
+ * @property User_model         $user
+ * @property Services_model     $services
+ * @property Providers_model    $providers
+ * @property Settings_model     $settings
+ * @property Secretaries_model  $secretaries
+ * @property Admins_model       $admins
+ * @property Customers_model    $customers
+ * @property Appointments_model $appointments
  */
 class Debug extends EA_Controller
 {
@@ -19,7 +21,14 @@ class Debug extends EA_Controller
     const MAX_ADMINS = 4;
     const MAX_CUSTOMERS = 80;
 
-    public function index()
+    /**
+     * Populate the database with random data. Simply go to the BASE_URL/debug/populate to execute this task.
+     *
+     * @return void
+     * @throws Exception
+     */
+
+    public function populate()
     {
         $this->load->model('User_model', 'users');
         $this->load->model('Services_model', 'services');
@@ -27,10 +36,17 @@ class Debug extends EA_Controller
         $this->load->model('Settings_model', 'settings');
         $this->load->model('Secretaries_model', 'secretaries');
         $this->load->model('Admins_model', 'admins');
+        $this->load->model('Customers_model', 'customers');
+        $this->load->model('Appointments_model', 'appointments');
+        $this->load->config('config');
+
+        $this->load->library('timezones');
+
+        $this->load->helper('debug_helper');
+
+        $timezones = $this->timezones->to_grouped_array();
 
         $faker = Faker\Factory::create('fr_FR');
-
-        $slugs = [DB_SLUG_CUSTOMER, DB_SLUG_PROVIDER, DB_SLUG_ADMIN, DB_SLUG_SECRETARY];
 
         /********************************/
         /* Create available categories. */
@@ -78,35 +94,13 @@ class Debug extends EA_Controller
 
         for ($i = 0; $i < self::MAX_PROVIDERS; $i++)
         {
-            $settings = [
-                'username' => $faker->userName(),
-                'password' => 'password',
-                'notifications' => TRUE,
-                'google_sync' => FALSE,
-                'sync_past_days' => 30,
-                'sync_future_days' => 90,
-                'working_plan' => $this->settings->get_setting('company_working_plan'),
-                'calendar_view' => CALENDAR_VIEW_DEFAULT];
-
-            $provider = [
-                "first_name" => $faker->firstName(),
-                "last_name" => $faker->lastName(),
-                "email" => $faker->email(),
-                "mobile_number" => $faker->phoneNumber(),
-                "phone_number" => $faker->phoneNumber(),
-                "address" => $faker->address(),
-                "city" => $faker->city(),
-                "zip_code" => $faker->postcode(),
-                "state" => $faker->country(),
-                "notes" => $faker->text(),
-                "timezone" => $faker->timezone(),
-                "language" => $faker->languageCode(),
-                "id_roles" => DB_SLUG_PROVIDER,
-                "settings" => $settings,
-                "services" => [$services[$faker->numberBetween(0, self::MAX_SERVICES - 1)]['id']]];
+            // Create a provider user.
+            $provider = createUnroledUser($faker, $timezones, $this->config->item('available_languages'));
+            $provider['settings']['working_plan'] = $this->settings->get_setting('company_working_plan');
+            $provider['services'] = [$services[$faker->numberBetween(0, self::MAX_SERVICES - 1)]['id']];
 
             // Put the provider in the database.
-            $provider["id"] = $this->providers->add($provider);
+            $provider['id'] = $this->providers->add($provider);
             // And put it in the array of providers.
             $providers[] = $provider;
         }
@@ -117,35 +111,12 @@ class Debug extends EA_Controller
 
         for ($i = 0; $i < self::MAX_SECRETARIES; $i++)
         {
-            $settings = [
-                'username' => $faker->userName(),
-                'password' => 'password',
-                'notifications' => TRUE,
-                'google_sync' => FALSE,
-                'sync_past_days' => 30,
-                'sync_future_days' => 90,
-                'calendar_view' => CALENDAR_VIEW_DEFAULT];
-
-            $secretary = [
-                "first_name" => $faker->firstName(),
-                "last_name" => $faker->lastName(),
-                "email" => $faker->email(),
-                "mobile_number" => $faker->phoneNumber(),
-                "phone_number" => $faker->phoneNumber(),
-                "address" => $faker->address(),
-                "city" => $faker->city(),
-                "zip_code" => $faker->postcode(),
-                "state" => $faker->country(),
-                "notes" => $faker->text(),
-                "timezone" => $faker->timezone(),
-                "language" => $faker->languageCode(),
-                "id_roles" => DB_SLUG_PROVIDER,
-                "settings" => $settings,
-                "providers" => [$providers[$faker->numberBetween(0, self::MAX_PROVIDERS - 1)]['id']]];
-
+            // Create a secretary user.
+            $secretary = createUnroledUser($faker, $timezones, $this->config->item('available_languages'));
+            $secretary['providers'] = [$providers[$faker->numberBetween(0, self::MAX_PROVIDERS - 1)]['id']];
 
             // Put the secretary in the database.
-            $secretary["id"] = $this->secretaries->add($secretary);
+            $secretary['id'] = $this->secretaries->add($secretary);
             // And put it in the array of secretaries.
             $secretaries[] = $secretary;
         }
@@ -156,30 +127,8 @@ class Debug extends EA_Controller
 
         for ($i = 0; $i < self::MAX_ADMINS; $i++)
         {
-            $settings = [
-                'username' => $faker->userName(),
-                'password' => 'password',
-                'notifications' => TRUE,
-                'google_sync' => FALSE,
-                'sync_past_days' => 30,
-                'sync_future_days' => 90,
-                'calendar_view' => CALENDAR_VIEW_DEFAULT];
-
-            $admin = [
-                "first_name" => $faker->firstName(),
-                "last_name" => $faker->lastName(),
-                "email" => $faker->email(),
-                "mobile_number" => $faker->phoneNumber(),
-                "phone_number" => $faker->phoneNumber(),
-                "address" => $faker->address(),
-                "city" => $faker->city(),
-                "zip_code" => $faker->postcode(),
-                "state" => $faker->country(),
-                "notes" => $faker->text(),
-                "timezone" => $faker->timezone(),
-                "language" => $faker->languageCode(),
-                "id_roles" => DB_SLUG_PROVIDER,
-                "settings" => $settings];
+            // Create an admin user.
+            $admin = createUnroledUser($faker, $timezones, $this->config->item('available_languages'));
 
             // Put the admin in the database.
             $admin["id"] = $this->admins->add($admin);
@@ -187,6 +136,119 @@ class Debug extends EA_Controller
             $admins[] = $admin;
         }
 
+        /**********************************/
+        /* Add customers and appointments */
+        /**********************************/
 
+        for ($i = 0; $i < self::MAX_CUSTOMERS; $i++)
+        {
+            // Create a customer user.
+            $customer = createUnroledUser($faker, $timezones, $this->config->item('available_languages'));
+            unset($customer['settings']);
+
+            // Put the customer in the database.
+            $customer["id"] = $this->customers->add($customer);
+            // And put it in the array of customers.
+            $customers[] = $customer;
+
+            //  Find a provider to catch services.
+            $provider = $providers[rand(0, count($providers) - 1)];
+
+            // Retrieve the provider's working plan.
+            $workPlane = json_decode($provider['settings']['working_plan'], true);
+
+            // Compute all the possible appointment dates.
+            foreach ($workPlane as $day => $list)
+            {
+                $work[$day] = [['start' => $list['start'], 'end' => $list['end']]];
+
+                foreach ($list['breaks'] as $break) $work[$day] = rangeSplit($work[$day], $break);
+            }
+
+            foreach ($work as $day => $list)
+            {
+                // Find a random service supplied by the selected provider.
+                $service = $this->services->get_batch(['id' => $provider['services'][rand(0, count($provider['services']) - 1)]]);
+
+                // Determine the time slot for the appointment.
+                $serviceDuration = $service[0]['duration'] * 60;
+                $startTime = preg_split('/:/', $list[0]['start']);
+                $startTime = ($startTime[0] * 60 + $startTime[1] * 1) * 60;
+                $endTime = $startTime + $serviceDuration;
+
+                // Choose an hour randomly in the time slot.
+                $randomHour = rand($startTime, $endTime);
+
+                // Determine the appointment start and end date.
+                $startDate = $faker->dateTimeBetween('now', '+1 month');
+                $startDate->setTimestamp($startDate->getTimestamp() - ($startDate->getTimestamp() % (24 * 60 * 60)) + $randomHour);
+                $endDate = clone $startDate;
+                $endDate->setTimestamp($endDate->getTimestamp() + $serviceDuration);
+
+                $appointment = [
+                    'id_users_provider' => $provider['id'],
+                    'id_users_customer' => $customer['id'],
+                    'id_services' => $service[0]['id'],
+                    'start_datetime' => $startDate->format('Y-m-d H:i:s'),
+                    'end_datetime' => $endDate->format('Y-m-d H:i:s'),
+                    'notes' => $faker->text(100),
+                    'location' => $service[0]['location'],
+                    'is_unavailable' => FALSE,
+                ];
+
+                $this->appointments->add($appointment);
+            }
+        }
+
+        echo 'done.';
+    }
+
+    /**
+     * Empty the entire database. Simply go to the BASE_URL/debug/empty to execute this task.
+     *
+     * @return void
+     * @throws Exception
+     */
+
+    public function empty()
+    {
+        $this->load->model('appointments_model', 'appointments');
+        $this->load->model('customers_model', 'customers');
+        $this->load->model('providers_model', 'providers');
+        $this->load->model('secretaries_model', 'secretaries');
+        $this->load->model('services_model', 'services');
+        $this->load->model('admins_model', 'admins');
+
+        // Retrieve all the appointments.
+        $appointments = $this->appointments->get_batch();
+        // And delete them.
+        foreach ($appointments as $appointment) $this->appointments->delete($appointment['id']);
+
+        // Retrieve all the admins.
+        $admins = $this->admins->get_batch();
+        // And delete them, but the first.
+        foreach ($admins as $admin) if ($admin['id'] != 1) $this->admins->delete($admin['id']);
+
+        // Retrieve all the customers.
+        $customers = $this->customers->get_batch();
+        // And delete them.
+        foreach ($customers as $customer) $this->customers->delete($customer['id']);
+
+        // Retrieve all the providers.
+        $providers = $this->providers->get_batch();
+        // And delete them.
+        foreach ($providers as $provider) $this->providers->delete($provider['id']);
+
+        // Retrieve all the secretaries.
+        $secretaries = $this->secretaries->get_batch();
+        // And delete them.
+        foreach ($secretaries as $secretary) $this->secretaries->delete($secretary['id']);
+
+        // Retrieve all the services.
+        $services = $this->services->get_batch();
+        // And delete them.
+        foreach ($services as $service) $this->services->delete($service['id']);
+
+        echo 'done.';
     }
 }

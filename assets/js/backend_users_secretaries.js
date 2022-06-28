@@ -325,7 +325,7 @@
             .val('')
             .prop('disabled', true);
         $('#secretaries .record-details #secretary-calendar-view').val('default');
-        $('#secretaries .record-details #secretary-timezone').val('UTC');
+        $('#secretaries .record-details #secretary-timezone').val('America/New_York');
         $('#secretaries .add-edit-delete-group').show();
         $('#secretaries .save-cancel-group').hide();
         $('#edit-secretary, #delete-secretary').prop('disabled', true);
