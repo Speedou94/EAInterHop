@@ -52,6 +52,13 @@ class Config {
     const GOOGLE_CLIENT_ID      = '';
     const GOOGLE_CLIENT_SECRET  = '';
     const GOOGLE_API_KEY        = '';
+
+    // ------------------------------------------------------------------------
+    // TIMEZONE PROVIDER
+    // ------------------------------------------------------------------------
+
+    const ENABLE_DEFAULT_TIMEZONE = FALSE; // Enter TRUE or FALSE
+    const DEFAULT_TIMEZONE = 'Europe/Paris';
 }
 
 /* End of file config.php */
