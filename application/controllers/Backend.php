@@ -209,6 +209,8 @@ class Backend extends EA_Controller {
         $view['available_providers'] = $this->providers_model->get_available_providers();
         $view['available_services'] = $this->services_model->get_available_services();
         $view['timezones'] = $this->timezones->to_array();
+        $view['enable_default_timezone'] = config('enable_default_timezone');
+        $view['default_timezone'] = config('default_timezone');
 
         if ($this->session->userdata('role_slug') === DB_SLUG_SECRETARY)
         {
@@ -292,6 +294,8 @@ class Backend extends EA_Controller {
         $view['working_plan'] = $this->settings_model->get_setting('company_working_plan');
         $view['timezones'] = $this->timezones->to_array();
         $view['working_plan_exceptions'] = '{}';
+        $view['enable_default_timezone'] = config('enable_default_timezone');
+        $view['default_timezone'] = config('default_timezone');
         $this->set_user_data($view);
 
         $this->load->view('backend/header', $view);

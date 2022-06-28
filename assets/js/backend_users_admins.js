@@ -313,7 +313,7 @@
             .val('')
             .prop('disabled', true);
         $('#admins .record-details #admin-calendar-view').val('default');
-        $('#admins .record-details #admin-timezone').val('Europe/London');
+        $('#admins .record-details #admin-timezone').val(GlobalVariables.enableDefaultTimezone ? GlobalVariables.defaultTimezone : 'UTC');
         $('#edit-admin, #delete-admin').prop('disabled', true);
 
         $('#admins .has-error').removeClass('has-error');

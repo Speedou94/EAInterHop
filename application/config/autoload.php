@@ -81,7 +81,7 @@ $autoload['helper'] = ['custom_exceptions', 'url', 'file', 'language', 'asset', 
 |
 */
 
-$autoload['config'] = ['google', 'email'];
+$autoload['config'] = ['google', 'email', 'locale'];
 
 
 /*
