@@ -54,11 +54,14 @@ class Config {
     const GOOGLE_API_KEY        = '';
 
     // ------------------------------------------------------------------------
-    // TIMEZONE PROVIDER
+    // LOCALE SETTINGS
     // ------------------------------------------------------------------------
 
     const ENABLE_DEFAULT_TIMEZONE = FALSE; // Enter TRUE or FALSE
     const DEFAULT_TIMEZONE = 'Europe/Paris';
+
+    const ENABLE_DEFAULT_TIME_FORMAT = TRUE; // Enter TRUE or FALSE
+    const DEFAULT_TIME_FORMAT = 'HH:MM';
 }
 
 /* End of file config.php */

@@ -23,9 +23,11 @@ class Migration_Add_time_format_setting extends CI_Migration {
      */
     public function up()
     {
+
         $this->db->insert('settings', [
             'name' => 'time_format',
-            'value' => 'regular'
+            'value' => $this->config->item('enable_default_time_format') ? $this->config->item('default_time_format') : 'regular',
+
         ]);
     }
 

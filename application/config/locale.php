@@ -1,7 +1,10 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 // ------------------------------------------------------------------------
-// TIMEZONE PROVIDER
+// LOCALE SETTINGS
 // ------------------------------------------------------------------------
 
 $config['enable_default_timezone'] = Config::ENABLE_DEFAULT_TIMEZONE;
 $config['default_timezone'] = Config::DEFAULT_TIMEZONE;
+
+$config['enable_default_time_format'] = config::ENABLE_DEFAULT_TIME_FORMAT;
+$config['default_time_format'] = config::DEFAULT_TIME_FORMAT;
