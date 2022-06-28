@@ -61,7 +61,7 @@ class Config {
     const DEFAULT_TIMEZONE = 'Europe/Paris';
 
     const ENABLE_DEFAULT_TIME_FORMAT = TRUE; // Enter TRUE or FALSE
-    const DEFAULT_TIME_FORMAT = 'HH:MM';
+    const DEFAULT_TIME_FORMAT = 'military';
 }
 
 /* End of file config.php */
