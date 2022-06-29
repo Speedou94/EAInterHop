@@ -63,7 +63,7 @@ class Config {
     const ENABLE_DEFAULT_TIMEZONE = FALSE; // Enter TRUE or FALSE
     const DEFAULT_TIMEZONE = 'Europe/Paris';
 
-    const ENABLE_DEFAULT_TIME_FORMAT = TRUE; // Enter TRUE or FALSE
+    const ENABLE_DEFAULT_TIME_FORMAT = FALSE; // Enter TRUE or FALSE
     const DEFAULT_TIME_FORMAT = 'military';
 }
 
