@@ -61,10 +61,10 @@ class Config {
     // ------------------------------------------------------------------------
 
     const ENABLE_DEFAULT_TIMEZONE = FALSE; // Enter TRUE or FALSE
-    const DEFAULT_TIMEZONE = 'Europe/Paris';
+    const DEFAULT_TIMEZONE = 'Europe/Paris'; // Check available timezones in Application/librairies/Timezones.php
 
     const ENABLE_DEFAULT_TIME_FORMAT = FALSE; // Enter TRUE or FALSE
-    const DEFAULT_TIME_FORMAT = 'military';
+    const DEFAULT_TIME_FORMAT = 'military'; // military => HH:MM, regular => H:MM AM/PM
 }
 
 /* End of file config.php */
