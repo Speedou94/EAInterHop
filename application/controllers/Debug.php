@@ -44,7 +44,15 @@ class Debug extends EA_Controller
 
         $this->load->helper('debug_helper');
 
-        $timezones = $this->timezones->to_grouped_array();
+        if ($this->config->item('enable_default_timezone'))
+        {
+            $key = preg_split('/\//', $this->config->item('default_timezone'))[0];
+            $timezones = [$key => [$this->config->item('default_timezone') => $this->timezones->to_grouped_array()[$key][$this->config->item('default_timezone')]]];
+        }
+        else
+        {
+            $timezones = $this->timezones->to_grouped_array();
+        }
 
         $faker = Faker\Factory::create('fr_FR');
 
