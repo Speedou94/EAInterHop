@@ -465,7 +465,8 @@
                 return Number(filterResult.id) === Number(id);
             });
 
-            this.display(customer);
+            // [workaround] If the customer was not found in the filter results then return.
+            if ( (customer !== undefined) ) this.display(customer);
 
             $('#edit-customer, #delete-customer').prop('disabled', false);
         }

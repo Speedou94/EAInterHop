@@ -260,6 +260,7 @@
                                         </select>
                                     </div>
 
+                                    <?php if (!$enable_default_timezone) : ?>
                                     <div class="form-group">
                                         <label for="provider-timezone">
                                             <?= lang('timezone') ?>
@@ -267,6 +268,7 @@
                                         </label>
                                         <?= render_timezone_dropdown('id="provider-timezone" class="form-control required"') ?>
                                     </div>
+                                    <?php endif ?>
 
                                     <br>
 
@@ -548,6 +550,7 @@
                                 </select>
                             </div>
 
+                            <?php if (!$enable_default_timezone) : ?>
                             <div class="form-group">
                                 <label for="secretary-timezone">
                                     <?= lang('timezone') ?>
@@ -555,6 +558,7 @@
                                 </label>
                                 <?= render_timezone_dropdown('id="secretary-timezone" class="form-control required"') ?>
                             </div>
+                            <?php endif; ?>
 
                             <br>
 
@@ -756,6 +760,7 @@
                                 </select>
                             </div>
 
+                            <?php if (!$enable_default_timezone) : ?>
                             <div class="form-group">
                                 <label for="admin-timezone">
                                     <?= lang('timezone') ?>
@@ -763,6 +768,7 @@
                                 </label>
                                 <?= render_timezone_dropdown('id="admin-timezone" class="form-control required"') ?>
                             </div>
+                            <?php endif; ?>
 
                             <br>
 

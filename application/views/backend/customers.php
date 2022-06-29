@@ -161,6 +161,7 @@
                         <select id="language" class="form-control required"></select>
                     </div>
 
+                    <?php if (!$enable_default_timezone) : ?>
                     <div class="form-group">
                         <label for="timezone">
                             <?= lang('timezone') ?>
@@ -168,6 +169,7 @@
                         </label>
                         <?= render_timezone_dropdown('id="timezone" class="form-control required"') ?>
                     </div>
+                    <?php endif ?>
 
                     <div class="form-group">
                         <label class="control-label" for="notes">
