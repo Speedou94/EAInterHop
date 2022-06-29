@@ -55,13 +55,16 @@ class Config {
 
     // ------------------------------------------------------------------------
     // LOCALE SETTINGS
+    // Please note that the defaults values can't be undone after the EA
+    // installation. However, set the enabler to false will re enable the
+    // corresponding field in the backend pages.
     // ------------------------------------------------------------------------
 
-    const ENABLE_DEFAULT_TIMEZONE = FALSE; // Enter TRUE or FALSE
-    const DEFAULT_TIMEZONE = 'Europe/Paris';
+    const ENABLE_DEFAULT_TIMEZONE       = FALSE; // Enter TRUE or FALSE
+    const DEFAULT_TIMEZONE              = 'Europe/Paris'; // Check available timezones in Application/librairies/Timezones.php
 
-    const ENABLE_DEFAULT_TIME_FORMAT = TRUE; // Enter TRUE or FALSE
-    const DEFAULT_TIME_FORMAT = 'military';
+    const ENABLE_DEFAULT_TIME_FORMAT    = FALSE; // Enter TRUE or FALSE
+    const DEFAULT_TIME_FORMAT           = 'military'; // military => HH:MM, regular => H:MM AM/PM
 }
 
 /* End of file config.php */
