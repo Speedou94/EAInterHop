@@ -333,6 +333,7 @@ class Backend extends EA_Controller {
         $view['system_settings'] = $this->settings_model->get_settings();
         $view['user_settings'] = $this->user_model->get_user($user_id);
         $view['timezones'] = $this->timezones->to_array();
+        $view['enable_default_time_format'] = config('enable_default_time_format');
 
         // book_advance_timeout preview
         $book_advance_timeout = $this->settings_model->get_setting('book_advance_timeout');

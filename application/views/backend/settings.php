@@ -115,6 +115,7 @@
                                     <?= lang('date_format_hint') ?>
                                 </span>
                             </div>
+                            <?php if ($enable_default_time_format == false): ?>
                             <div class="form-group">
                                 <label for="time-format">
                                     <?= lang('time_format') ?>
@@ -127,6 +128,7 @@
                                     <?= lang('time_format_hint') ?>
                                 </span>
                             </div>
+                            <?php endif ?>
                             <div class="form-group">
                                 <label for="first-weekday">
                                     <?= lang('first_weekday') ?>
