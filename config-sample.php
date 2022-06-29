@@ -55,6 +55,9 @@ class Config {
 
     // ------------------------------------------------------------------------
     // LOCALE SETTINGS
+    // Please note that the defaults values can't be undone after the EA
+    // installation. However, set the enabler to false will re enable the
+    // corresponding field in the backend pages.
     // ------------------------------------------------------------------------
 
     const ENABLE_DEFAULT_TIMEZONE = FALSE; // Enter TRUE or FALSE
