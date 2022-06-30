@@ -66,8 +66,8 @@ class Config {
     const ENABLE_DEFAULT_TIME_FORMAT    = FALSE; // Enter TRUE or FALSE
     const DEFAULT_TIME_FORMAT           = 'military'; // military => HH:MM, regular => H:MM AM/PM
 
-    const ENABLE_DEFAULT_FIRST_WEEKDAY = FALSE; // Enter TRUE or FALSE
-    const DEFAULT_FIRST_WEEKDAY = 'monday'; // Check available weekdays in Application/librairies/Weekdays.php
+    const ENABLE_DEFAULT_FIRST_WEEKDAY  = FALSE; // Enter TRUE or FALSE
+    const DEFAULT_FIRST_WEEKDAY         = 'monday'; // Check available weekdays in Application/librairies/Weekdays.php
 }
 
 /* End of file config.php */

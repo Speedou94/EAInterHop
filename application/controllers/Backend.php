@@ -294,7 +294,7 @@ class Backend extends EA_Controller {
         $view['working_plan'] = $this->settings_model->get_setting('company_working_plan');
         $view['timezones'] = $this->timezones->to_array();
         $view['working_plan_exceptions'] = '{}';
-        $view['enable_default_timezone'] = config('enable_default_timezone');
+        $view['enable_default_timezone'] = config('enable_default_timezone');// send to view to enable/disable the default timezone option
         $view['default_timezone'] = config('default_timezone');
         $this->set_user_data($view);
 
