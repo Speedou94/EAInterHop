@@ -25,7 +25,7 @@ class Migration_Add_weekday_start_setting extends CI_Migration {
     {
         $this->db->insert('settings', [
             'name' => 'first_weekday',
-            'value' => 'sunday'
+            'value' => $this->config->item('enable_default_first_weekday') ? $this->config->item('default_first_weekday') : 'sunday'
         ]);
     }
 

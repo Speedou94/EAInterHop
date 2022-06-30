@@ -20,8 +20,7 @@
         timezones: <?= json_encode($timezones) ?>,
         workingPlan: <?= json_encode(json_decode($working_plan)) ?>,
         workingPlanExceptions: <?= json_encode(json_decode($working_plan_exceptions)) ?>,
-        enableDefaultTimezone: <?= json_encode($enable_default_timezone) ?>,
-        defaultTimezone: <?= json_encode($default_timezone) ?>,
+
         user: {
             id: <?= $user_id ?>,
             email: <?= json_encode($user_email) ?>,

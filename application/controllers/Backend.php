@@ -335,6 +335,7 @@ class Backend extends EA_Controller {
         $view['timezones'] = $this->timezones->to_array();
         $view['enable_default_time_format'] = config('enable_default_time_format');
 
+
         // book_advance_timeout preview
         $book_advance_timeout = $this->settings_model->get_setting('book_advance_timeout');
         $hours = floor($book_advance_timeout / 60);

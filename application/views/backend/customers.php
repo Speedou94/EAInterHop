@@ -12,8 +12,7 @@
         baseUrl: <?= json_encode($base_url) ?>,
         customers: <?= json_encode($customers) ?>,
         timezones: <?= json_encode($timezones) ?>,
-        enableDefaultTimezone: <?= json_encode($enable_default_timezone) ?>,
-        defaultTimezone: <?= json_encode($default_timezone) ?>,
+
         user: {
             id: <?= $user_id ?>,
             email: <?= json_encode($user_email) ?>,

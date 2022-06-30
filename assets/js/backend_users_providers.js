@@ -87,7 +87,6 @@
             $('#providers .add-edit-delete-group').hide();
             $('#providers .save-cancel-group').show();
             $('#providers .record-details').find('input, select, textarea').prop('disabled', false);
-            if (GlobalVariables.enableDefaultTimezone) $('#providers .record-details #provider-timezone').prop('disabled', true);
             $('#provider-password, #provider-password-confirm').addClass('required');
             $('#providers').find('.add-break, .edit-break, .delete-break, .add-working-plan-exception, .edit-working-plan-exception, .delete-working-plan-exception, #reset-working-plan').prop('disabled', false);
             $('#provider-services input:checkbox').prop('disabled', false);
@@ -106,7 +105,6 @@
             $('#filter-providers button').prop('disabled', true);
             $('#filter-providers .results').css('color', '#AAA');
             $('#providers .record-details').find('input, select, textarea').prop('disabled', false);
-            if (GlobalVariables.enableDefaultTimezone) $('#providers .record-details #provider-timezone').prop('disabled', true);
             $('#provider-password, #provider-password-confirm').removeClass('required');
             $('#provider-services input:checkbox').prop('disabled', false);
             $('#providers').find('.add-break, .edit-break, .delete-break, .add-working-plan-exception, .edit-working-plan-exception, .delete-working-plan-exception, #reset-working-plan').prop('disabled', false);

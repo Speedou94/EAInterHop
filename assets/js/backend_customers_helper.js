@@ -84,7 +84,6 @@
             $('#add-edit-delete-group').hide();
             $('#save-cancel-group').show();
             $('.record-details').find('input, select, textarea').prop('disabled', false);
-            if (GlobalVariables.enableDefaultTimezone) $('.record-details #timezone').prop('disabled', true);
             $('#filter-customers button').prop('disabled', true);
             $('#filter-customers .results').css('color', '#AAA');
         });
@@ -94,7 +93,6 @@
          */
         $('#customers').on('click', '#edit-customer', function () {
             $('.record-details').find('input, select, textarea').prop('disabled', false);
-            if (GlobalVariables.enableDefaultTimezone) $('.record-details #timezone').prop('disabled', true);
             $('#add-edit-delete-group').hide();
             $('#save-cancel-group').show();
             $('#filter-customers button').prop('disabled', true);

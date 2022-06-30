@@ -90,7 +90,7 @@
             $('#secretaries .add-edit-delete-group').hide();
             $('#secretaries .save-cancel-group').show();
             $('#secretaries .record-details').find('input, textarea').prop('disabled', false);
-            $('#secretaries .record-details').find('select').prop('disabled', GlobalVariables.enableDefaultTimezone);
+            $('#secretaries .record-details').find('select').prop('disabled', false);
             $('#secretary-password, #secretary-password-confirm').addClass('required');
             $('#secretary-providers input:checkbox').prop('disabled', false);
         }.bind(this));
@@ -104,7 +104,7 @@
             $('#secretaries .add-edit-delete-group').hide();
             $('#secretaries .save-cancel-group').show();
             $('#secretaries .record-details').find('input, textarea').prop('disabled', false);
-            $('#secretaries .record-details #secretary-timezone').prop('disabled', GlobalVariables.enableDefaultTimezone);
+            $('#secretaries .record-details').find('select').prop('disabled', false);
             $('#secretary-password, #secretary-password-confirm').removeClass('required');
             $('#secretary-providers input:checkbox').prop('disabled', false);
         });
