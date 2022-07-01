@@ -81,6 +81,53 @@
             $(event.currentTarget).addClass('selected');
             $('#edit-provider, #delete-provider').prop('disabled', false);
         }.bind(this));
+
+        /**
+         * Event: Edit Provider Button "Click"
+         */
+        $('#workingplan').on('click', '#edit-provider', function () {
+            $('.add-edit-delete-group').hide();
+            $('.save-cancel-group').show();
+
+            $('#filter-providers button').prop('disabled', true);
+            $('#filter-providers .results').css('color', '#AAA');
+
+            $('#working-plan').find('input, select, textarea').prop('disabled', false);
+
+            $('#working-plan').find('.add-break, .edit-break, .delete-break, .add-working-plan-exception, .edit-working-plan-exception, .delete-working-plan-exception, #reset-working-plan').prop('disabled', false);
+            $('#working-plan input:checkbox').prop('disabled', false);
+            BackendWorkingPlan.wp.timepickers(false);
+        });
+
+        /**
+         * Event: Cancel Provider Button "Click"
+         *
+         * Cancel add or edit of an provider record.
+         */
+        $('#workingplan').on('click', '#cancel-provider', function () {
+            var id = $('#filter-providers .selected').attr('data-id');
+            this.resetForm();
+            if (id) this.select(id, true);
+        }.bind(this));
+
+        /**
+         * Event: Save Provider Button "Click"
+         */
+        $('#workingplan').on('click', '#save-provider', function () {
+            var provider = {
+                settings: {
+                    working_plan: JSON.stringify(BackendWorkingPlan.wp.get()),
+                    working_plan_exceptions: JSON.stringify(BackendWorkingPlan.wp.getWorkingPlanExceptions()),
+                }
+            };
+
+            // Include identifier.
+            if ($('#provider-id').val() !== '') provider.id = $('#provider-id').val();
+
+            if (!this.validate()) return;
+
+            this.save(provider);
+        }.bind(this));
     };
 
     /**
@@ -157,16 +204,19 @@
      */
     WorkingPlanHelper.prototype.display = function (provider)
     {
+        // Save the provider id for further updates.
+        $('#provider-id').val(provider.id);
+
         // Display working plan
         var workingPlan = $.parseJSON(provider.settings.working_plan);
         BackendWorkingPlan.wp.setup(workingPlan);
         $('.working-plan').find('input').prop('disabled', true);
         $('.breaks').find('.edit-break, .delete-break').prop('disabled', true);
-        $('#providers .working-plan-exceptions tbody').empty();
+        $('.working-plan-exceptions tbody').empty();
         var workingPlanExceptions = $.parseJSON(provider.settings.working_plan_exceptions);
         BackendWorkingPlan.wp.setupWorkingPlanExceptions(workingPlanExceptions);
         $('.working-plan-exceptions').find('.edit-working-plan-exception, .delete-working-plan-exception').prop('disabled', true);
-        $('#providers .working-plan input:checkbox').prop('disabled', true);
+        $('.working-plan input:checkbox').prop('disabled', true);
         Backend.placeFooterToBottom();
     };
 

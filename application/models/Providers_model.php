@@ -666,6 +666,19 @@ class Providers_model extends EA_Model {
     }
 
     /**
+     * @param $provider
+     *
+     * @return void
+     */
+    public function update_working_plan($provider) : int
+    {
+        $this->save_settings($provider['settings'], $provider['id']);
+
+        // Return record id.
+        return (int)$provider['id'];
+    }
+
+    /**
      * Get a providers setting from the database.
      *
      * @param string $setting_name The setting name that is going to be returned.

@@ -59,6 +59,7 @@
 
             <div class="record-details column col-12 col-md-7">
 
+                <!-- Edit/save/cancel buttons. -->
                 <div class="float-md-left mb-4 mr-4">
                     <div class="add-edit-delete-group btn-group">
                         <button id="edit-provider" class="btn btn-outline-secondary" disabled="disabled">
@@ -90,6 +91,10 @@
                 <div class="tab-content">
                     <div class="working-plan-view tab-pane fade show active clearfix" id="working-plan">
                         <h3><?= lang('working_plan') ?></h3>
+
+                        <!-- Selected provider identifier -->
+                        <input type="hidden" id="provider-id" class="record-id">
+
                         <button id="reset-working-plan" class="btn btn-primary" data-tippy-content="<?= lang('reset_working_plan') ?>">
                             <i class="fas fa-redo-alt mr-2"></i>
                             <?= lang('reset_plan') ?>
