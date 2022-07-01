@@ -72,6 +72,16 @@
                 </a>
             </li>
 
+            <?php $hidden = ($privileges[PRIV_WORKING_PLAN]['view'] == TRUE) ? '' : 'd-none' ?>
+            <?php $active = ($active_menu == PRIV_WORKING_PLAN) ? 'active' : '' ?>
+            <li class="nav-item <?= $active . $hidden ?>">
+                <a href="<?= site_url('backend/working_plan') ?>" class="nav-link"
+                   data-tippy-content="<?= lang('manage_working_plane_hint') ?>">
+                    <i class="fas fa-calendar-alt mr-2"></i>
+                    <?= lang('working_plan') ?>
+                </a>
+            </li>
+
             <?php $hidden = ($privileges[PRIV_SERVICES]['view'] == TRUE) ? '' : 'd-none' ?>
             <?php $active = ($active_menu == PRIV_SERVICES) ? 'active' : '' ?>
             <li class="nav-item <?= $active . $hidden ?>">
