@@ -32,6 +32,7 @@
     <div class="tab-pane active" id="workingplan">
         <div class="row">
             <!-- search filters -->
+            <?php if ($role_slug == DB_SLUG_SECRETARY): ?>
             <div id="filter-providers" class="filter-records column col-12 col-md-5">
                 <!-- Search input -->
                 <form class="mb-4">
@@ -56,6 +57,7 @@
                 <!-- Providers list -->
                 <div class="results"></div>
             </div>
+            <?php endif ?>
 
             <div class="record-details column col-12 col-md-7">
 
@@ -93,7 +95,7 @@
                         <h3><?= lang('working_plan') ?></h3>
 
                         <!-- Selected provider identifier -->
-                        <input type="hidden" id="provider-id" class="record-id">
+                        <input type="hidden" id="provider-id" class="record-id" <?= ($role_slug == DB_SLUG_PROVIDER) ? 'value="' . $user_id .'"' : '' ?>>
 
                         <button id="reset-working-plan" class="btn btn-primary" data-tippy-content="<?= lang('reset_working_plan') ?>">
                             <i class="fas fa-redo-alt mr-2"></i>
