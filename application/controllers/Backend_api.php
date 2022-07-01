@@ -745,6 +745,39 @@ class Backend_api extends EA_Controller {
     }
 
     /**
+     * Update a working plan provider record into database.
+     */
+    public function ajax_save_working_plan()
+    {
+        try
+        {
+            $provider = json_decode($this->input->post('provider'), TRUE);
+
+            if ($this->privileges[PRIV_WORKING_PLAN]['edit'] == FALSE)
+            {
+                throw new Exception('You do not have the required privileges for this task.');
+            }
+
+            $provider_id = $this->providers_model->update_working_plan($provider);
+
+            $response = ['status' => AJAX_SUCCESS, 'id' => $provider_id];
+        }
+        catch (Exception $exception)
+        {
+            $this->output->set_status_header(500);
+
+            $response = [
+                'message' => $exception->getMessage(),
+                'trace' => config('debug') ? $exception->getTrace() : []
+            ];
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($response));
+    }
+
+    /**
      * Insert of update working plan exceptions to database.
      */
     public function ajax_save_working_plan_exception()
