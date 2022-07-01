@@ -230,6 +230,36 @@ class Backend extends EA_Controller {
     }
 
     /**
+     * Display the working plan page.
+     *
+     * In this page the provider user will be able to manage his working plan.
+     */
+    public function working_plan()
+    {
+        $this->session->set_userdata('dest_url', site_url('backend/working_plan'));
+
+        if ( ! $this->has_privileges(PRIV_WORKING_PLAN)) return;
+
+        $view['base_url'] = config('base_url');
+        $view['page_title'] = lang('working_plan');
+        $view['user_display_name'] = $this->user_model->get_user_display_name($this->session->userdata('user_id'));
+        $view['active_menu'] = PRIV_WORKING_PLAN;
+        $view['company_name'] = $this->settings_model->get_setting('company_name');
+        $view['date_format'] = $this->settings_model->get_setting('date_format');
+        $view['time_format'] = $this->settings_model->get_setting('time_format');
+        $view['first_weekday'] = $this->settings_model->get_setting('first_weekday');
+        $view['providers'] = $this->providers_model->get_batch();
+        $view['working_plan'] = $this->providers_model->get_setting('working_plan', $this->session->userdata('user_id'));
+        $view['working_plan_exceptions'] = $this->providers_model->get_setting('working_plan_exceptions', $this->session->userdata('user_id'));
+
+        $this->set_user_data($view);
+
+        $this->load->view('backend/header', $view);
+        $this->load->view('backend/working_plan', $view);
+        $this->load->view('backend/footer', $view);
+    }
+
+    /**
      * Displays the backend services page.
      *
      * Here the admin user will be able to organize and create the services that the user will be able to book

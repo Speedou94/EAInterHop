@@ -1226,7 +1226,7 @@ class Backend_api extends EA_Controller {
     {
         try
         {
-            if ($this->privileges[PRIV_USERS]['view'] == FALSE)
+            if ( ($this->privileges[PRIV_USERS]['view'] == FALSE) && ($this->privileges[PRIV_WORKING_PLAN]['view'] == FALSE) )
             {
                 throw new Exception('You do not have the required privileges for this task.');
             }
