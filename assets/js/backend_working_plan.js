@@ -59,13 +59,11 @@ window.BackendWorkingPlan = window.BackendWorkingPlan || {};
 
         helper = new WorkingPlanHelper();
         helper.resetForm();
-        helper.filter('');
-        helper.bindEventHandlers();
 
-        if (GlobalVariables.user.role_slug === Backend.DB_SLUG_PROVIDER)
-        {
-            helper.display({ user_id: GlobalVariables.user.id, settings: { working_plan: GlobalVariables.workingPlan, working_plan_exceptions: GlobalVariables.workingPlanExceptions } });
-        }
+        if (GlobalVariables.user.role_slug === Backend.DB_SLUG_PROVIDER) helper.filter('', $('#provider-id').val(), true);
+        else helper.filter('');
+
+        helper.bindEventHandlers();
 
         if (defaultEventHandlers) bindEventHandlers();
     };

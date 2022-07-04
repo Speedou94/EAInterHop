@@ -13,8 +13,6 @@
         dateFormat: <?= json_encode($date_format) ?>,
         timeFormat: <?= json_encode($time_format) ?>,
         firstWeekday: <?= json_encode($first_weekday) ?>,
-        workingPlan: <?= json_encode($working_plan) ?>,
-        workingPlanExceptions: <?= json_encode($working_plan_exceptions) ?>,
 
         user: {
             id: <?= $user_id ?>,
@@ -64,7 +62,7 @@
                 <!-- Edit/save/cancel buttons. -->
                 <div class="float-md-left mb-4 mr-4">
                     <div class="add-edit-delete-group btn-group">
-                        <button id="edit-provider" class="btn btn-outline-secondary" disabled="disabled">
+                        <button id="edit-provider" class="btn btn-primary" disabled="disabled">
                             <i class="fas fa-edit mr-2"></i>
                             <?= lang('edit') ?>
                         </button>

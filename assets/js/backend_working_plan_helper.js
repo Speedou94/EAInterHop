@@ -85,7 +85,8 @@
         /**
          * Event: Edit Provider Button "Click"
          */
-        $('#workingplan').on('click', '#edit-provider', function () {
+        $('#workingplan').on('click', '#edit-provider', function ()
+        {
             $('.add-edit-delete-group').hide();
             $('.save-cancel-group').show();
 
@@ -104,16 +105,19 @@
          *
          * Cancel add or edit of an provider record.
          */
-        $('#workingplan').on('click', '#cancel-provider', function () {
+        $('#workingplan').on('click', '#cancel-provider', function ()
+        {
             var id = $('#filter-providers .selected').attr('data-id');
             this.resetForm();
-            if (id) this.select(id, true);
+            if (GlobalVariables.user.role_slug === Backend.DB_SLUG_PROVIDER) this.select($('#provider-id').val());
+            else if (id) this.select(id, true);
         }.bind(this));
 
         /**
          * Event: Save Provider Button "Click"
          */
-        $('#workingplan').on('click', '#save-provider', function () {
+        $('#workingplan').on('click', '#save-provider', function ()
+        {
             var provider = {
                 settings: {
                     working_plan: JSON.stringify(BackendWorkingPlan.wp.get()),
@@ -236,6 +240,8 @@
 
         var data = {csrfToken: GlobalVariables.csrfToken, key: key, limit: this.filterLimit};
 
+        if (GlobalVariables.user.role_slug === Backend.DB_SLUG_PROVIDER) data.where = selectId;
+
         $.post(url, data)
             .done(function (response)
             {
@@ -318,7 +324,7 @@
         $('#filter-providers .selected').removeClass('selected');
 
         // Select the new record.
-        $('#filter-filter-providers .entry[data-id="' + id + '"]').addClass('selected');
+        $('#filter-providers .entry[data-id="' + id + '"]').addClass('selected');
 
         // Search the provider in the filter results that is selected.
         var provider = this.filterResults.find(function (filterResult)
@@ -330,7 +336,7 @@
         this.display(provider);
 
         // As a provider is selected, the edit button can be used.
-        $('#edit-provider').prop(' disabled ', false);
+        $('#edit-provider').prop('disabled', false);
     };
 
     window.WorkingPlanHelper = WorkingPlanHelper;
