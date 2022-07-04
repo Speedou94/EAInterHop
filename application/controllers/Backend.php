@@ -232,7 +232,8 @@ class Backend extends EA_Controller {
     /**
      * Display the working plan page.
      *
-     * In this page the provider user will be able to manage his working plan.
+     * In this page the provider user will be able to manage his working plan. Secretaries can also manage the working
+     * plan of other providers. For them, the page will be displayed with a list of all available providers.
      */
     public function working_plan()
     {
@@ -248,9 +249,7 @@ class Backend extends EA_Controller {
         $view['date_format'] = $this->settings_model->get_setting('date_format');
         $view['time_format'] = $this->settings_model->get_setting('time_format');
         $view['first_weekday'] = $this->settings_model->get_setting('first_weekday');
-        $view['providers'] = $this->providers_model->get_batch();
-        $view['working_plan'] = $this->providers_model->get_setting('working_plan', $this->session->userdata('user_id'));
-        $view['working_plan_exceptions'] = $this->providers_model->get_setting('working_plan_exceptions', $this->session->userdata('user_id'));
+        $view['providers'] = $this->providers_model->get_batch(($this->session->userdata('role_slug') == DB_SLUG_PROVIDER) ? 'id = ' . $this->session->userdata('user_id') : null);
 
         $this->set_user_data($view);
 
