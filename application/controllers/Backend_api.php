@@ -784,10 +784,9 @@ class Backend_api extends EA_Controller {
     {
         try
         {
-            // Check privileges
-            $required_privileges = $this->privileges[PRIV_USERS]['edit'];
-
-            if ($required_privileges == FALSE)
+            // If current user doesn't have permission to edit working plan exceptions neither in users section nor
+            // working plan edit section, throw exception
+            if ( ($this->privileges[PRIV_USERS]['edit'] == FALSE) && (($this->privileges[PRIV_WORKING_PLAN]['edit'] == FALSE)) )
             {
                 throw new Exception('You do not have the required privileges for this task.');
             }
