@@ -44,6 +44,8 @@
      *
      * @param {Object} workingPlan Contains the working hours and breaks for each day of the week.
      */
+    var dayDisplayName = "";    // used to display the day name in the working plan
+
     WorkingPlan.prototype.setup = function (workingPlan) {
         var weekDayId = GeneralFunctions.getWeekDayId(GlobalVariables.firstWeekday);
         var workingPlanSorted = GeneralFunctions.sortWeekDictionary(workingPlan, weekDayId);
@@ -57,7 +59,7 @@
         $.each(workingPlanSorted, function (index, workingDay) {
             var day = this.convertValueToDay(index);
 
-            var dayDisplayName = GeneralFunctions.upperCaseFirstLetter(day)
+             dayDisplayName = GeneralFunctions.upperCaseFirstLetter(day)
 
             $('<tr/>', {
                 'html': [
@@ -175,6 +177,15 @@
                     })
                         .appendTo('.breaks tbody');
                 });
+
+                // Sort day's specialized planning according to the starting hour
+                workingDay.specialized.sort(function (specialized1, specialized2) {
+                    // We can do a direct string comparison since we have time based on 24 hours clock.
+                    return (specialized1.start).localeCompare(specialized2.start);
+                });
+
+                workingDay.specialized.forEach(function (workingDay) {displayPlanningForm(workingDay, "specialized").appendTo('.specialized tbody')});
+
             } else {
                 $('#' + index).prop('checked', false);
                 $('#' + index + '-start').prop('disabled', true);
@@ -186,6 +197,76 @@
         this.editableDayCell($('.breaks .break-day'));
         this.editableTimeCell($('.breaks').find('.break-start, .break-end'));
     };
+
+    /**
+     * Function to display planning form
+     * @param workingDay
+     */
+    function displayPlanningForm(workingDay, name) {
+
+        let timeFormat = GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm';
+
+        return $('<tr/>', {
+            'html': [
+                $('<td/>', {
+                    'class': name + "-day editable",
+                    'text': dayDisplayName
+                }),
+                $('<td/>', {
+                    'class': name + '-start editable',
+                    'text': Date.parse(workingDay.start).toString(timeFormat).toLowerCase()
+                }),
+                $('<td/>', {
+                    'class': name + '-end editable',
+                    'text': Date.parse(workingDay.end).toString(timeFormat).toLowerCase()
+                }),
+                $('<td/>', {
+                    'html': [
+                        $('<button/>', {
+                            'type': 'button',
+                            'class': 'btn btn-outline-secondary btn-sm edit-' + name,
+                            'title': EALang.edit,
+                            'html': [
+                                $('<span/>', {
+                                    'class': 'fas fa-edit'
+                                })
+                            ]
+                        }),
+                        $('<button/>', {
+                            'type': 'button',
+                            'class': 'btn btn-outline-secondary btn-sm delete-' + name,
+                            'title': EALang.delete,
+                            'html': [
+                                $('<span/>', {
+                                    'class': 'fas fa-trash-alt'
+                                })
+                            ]
+                        }),
+                        $('<button/>', {
+                            'type': 'button',
+                            'class': 'btn btn-outline-secondary btn-sm save-' + name + ' d-none',
+                            'title': EALang.save,
+                            'html': [
+                                $('<span/>', {
+                                    'class': 'fas fa-check-circle'
+                                })
+                            ]
+                        }),
+                        $('<button/>', {
+                            'type': 'button',
+                            'class': 'btn btn-outline-secondary btn-sm cancel-' + name + ' d-none',
+                            'title': EALang.cancel,
+                            'html': [
+                                $('<span/>', {
+                                    'class': 'fas fa-ban'
+                                })
+                            ]
+                        })
+                    ]
+                })
+            ]
+        })
+    }
 
     /**
      * Setup the dom elements of a given working plan exception.
