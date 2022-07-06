@@ -41,15 +41,15 @@
 
 <div class="container-fluid backend-page" id="calendar-page">
     <div class="row" id="calendar-toolbar">
-        <div id="calendar-filter" class="col-12 col-sm-5">
+        <div id="calendar-filter" class="col-12 col-sm-2">
             <div class="form-group calendar-filter-items">
-                <select id="select-filter-item" class="form-control col"
+                <select id="select-filter-item" class="custom-select mb-2 mb-sm-0">
                         data-tippy-content="<?= lang('select_filter_item_hint') ?>">
                 </select>
             </div>
         </div>
 
-        <div id="calendar-actions" class="col-12 col-sm-7">
+        <div id="calendar-actions" class="col-12 col-sm-10">
             <?php if (($role_slug == DB_SLUG_ADMIN || $role_slug == DB_SLUG_PROVIDER)
                 && config('google_sync_feature') == TRUE): ?>
                 <button id="google-sync" class="btn btn-primary"
