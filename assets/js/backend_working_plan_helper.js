@@ -240,7 +240,8 @@
 
         var data = {csrfToken: GlobalVariables.csrfToken, key: key, limit: this.filterLimit};
 
-        if (GlobalVariables.user.role_slug === Backend.DB_SLUG_PROVIDER) data.where = selectId;
+        if (GlobalVariables.user.role_slug === Backend.DB_SLUG_PROVIDER) data.provider = selectId;
+        else data.secretary = GlobalVariables.user.id;
 
         $.post(url, data)
             .done(function (response)

@@ -1265,15 +1265,22 @@ class Backend_api extends EA_Controller {
             }
 
             $key = $this->db->escape_str($this->input->post('key'));
+            $provider = $this->input->post('provider');
+            $secretary = $this->input->post('secretary');
+            if (isset($provider)) $provider = $this->db->escape_str($provider);
+            if (isset($secretary)) $secretary = $this->db->escape_str($secretary);
 
-            $where =
+            if (isset($provider)) $where = '(id = ' . $provider . ') AND ';
+            else $where="";
+
+            $where .=
                 '(first_name LIKE "%' . $key . '%" OR last_name LIKE "%' . $key . '%" ' .
                 'OR email LIKE "%' . $key . '%" OR mobile_number LIKE "%' . $key . '%" ' .
                 'OR phone_number LIKE "%' . $key . '%" OR address LIKE "%' . $key . '%" ' .
                 'OR city LIKE "%' . $key . '%" OR state LIKE "%' . $key . '%" ' .
                 'OR zip_code LIKE "%' . $key . '%" OR notes LIKE "%' . $key . '%")';
 
-            $response = $this->providers_model->get_batch($where);
+            $response = $this->providers_model->get_batch($where, NULL, NULL, NULL, $secretary);
         }
         catch (Exception $exception)
         {

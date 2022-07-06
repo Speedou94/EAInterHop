@@ -530,7 +530,7 @@ class Providers_model extends EA_Model {
      *
      * @return array Returns the rows from the database.
      */
-    public function get_batch($where = NULL, $limit = NULL, $offset = NULL, $order_by = NULL)
+    public function get_batch($where = NULL, $limit = NULL, $offset = NULL, $order_by = NULL, $secretary = NULL)
     {
         // CI db class may confuse two where clauses made in the same time, so get the role id first and then apply the
         // get_batch() where clause.
@@ -546,7 +546,9 @@ class Providers_model extends EA_Model {
             $this->db->order_by($order_by);
         }
 
-        $batch = $this->db->get_where('users', ['id_roles' => $role_id], $limit, $offset)->result_array();
+        if ($secretary === null) $batch = $this->db->get_where('users', ['id_roles' => $role_id], $limit, $offset)->result_array();
+        else $batch = $this->db->join('users', 'secretaries_providers.id_users_provider = users.id', 'inner')
+            ->get_where('secretaries_providers','id_users_secretary = ' . $secretary)->result_array();
 
         // Include each provider services and settings.
         foreach ($batch as &$provider)
