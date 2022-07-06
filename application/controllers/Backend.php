@@ -250,6 +250,8 @@ class Backend extends EA_Controller {
         $view['time_format'] = $this->settings_model->get_setting('time_format');
         $view['first_weekday'] = $this->settings_model->get_setting('first_weekday');
         $view['providers'] = $this->providers_model->get_batch(($this->session->userdata('role_slug') == DB_SLUG_PROVIDER) ? 'id = ' . $this->session->userdata('user_id') : null);
+        $view['working_plan'] = $this->settings_model->get_setting('company_working_plan');
+        $view['working_plan_exceptions'] = '{}';
 
         $this->set_user_data($view);
 

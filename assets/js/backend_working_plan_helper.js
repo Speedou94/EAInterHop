@@ -32,6 +32,17 @@
     WorkingPlanHelper.prototype.bindEventHandlers = function ()
     {
         /**
+         * Event: Reset Working Plan Button "Click".
+         */
+        $('#workingplan').on('click', '#reset-working-plan', function () {
+            $('.breaks tbody').empty();
+            $('.working-plan-exceptions tbody').empty();
+            $('.work-start, .work-end').val('');
+            BackendWorkingPlan.wp.setup(GlobalVariables.workingPlan);
+            BackendWorkingPlan.wp.timepickers(false);
+        });
+
+        /**
          * Event: Filter Providers Form "Submit"
          *
          * Filter the provider records with the given key string.
