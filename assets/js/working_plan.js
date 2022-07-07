@@ -113,70 +113,8 @@
                     // We can do a direct string comparison since we have time based on 24 hours clock.
                     return (break1.start).localeCompare(break2.start);
                 });
+                workingDay.breaks.forEach(function (workingDay) {displayPlanningForm(workingDay, "break").appendTo('.breaks tbody')});
 
-                workingDay.breaks.forEach(function (workingDayBreak) {
-                    $('<tr/>', {
-                        'html': [
-                            $('<td/>', {
-                                'class': 'break-day editable',
-                                'text': dayDisplayName
-                            }),
-                            $('<td/>', {
-                                'class': 'break-start editable',
-                                'text': Date.parse(workingDayBreak.start).toString(timeFormat).toLowerCase()
-                            }),
-                            $('<td/>', {
-                                'class': 'break-end editable',
-                                'text': Date.parse(workingDayBreak.end).toString(timeFormat).toLowerCase()
-                            }),
-                            $('<td/>', {
-                                'html': [
-                                    $('<button/>', {
-                                        'type': 'button',
-                                        'class': 'btn btn-outline-secondary btn-sm edit-break',
-                                        'title': EALang.edit,
-                                        'html': [
-                                            $('<span/>', {
-                                                'class': 'fas fa-edit'
-                                            })
-                                        ]
-                                    }),
-                                    $('<button/>', {
-                                        'type': 'button',
-                                        'class': 'btn btn-outline-secondary btn-sm delete-break',
-                                        'title': EALang.delete,
-                                        'html': [
-                                            $('<span/>', {
-                                                'class': 'fas fa-trash-alt'
-                                            })
-                                        ]
-                                    }),
-                                    $('<button/>', {
-                                        'type': 'button',
-                                        'class': 'btn btn-outline-secondary btn-sm save-break d-none',
-                                        'title': EALang.save,
-                                        'html': [
-                                            $('<span/>', {
-                                                'class': 'fas fa-check-circle'
-                                            })
-                                        ]
-                                    }),
-                                    $('<button/>', {
-                                        'type': 'button',
-                                        'class': 'btn btn-outline-secondary btn-sm cancel-break d-none',
-                                        'title': EALang.cancel,
-                                        'html': [
-                                            $('<span/>', {
-                                                'class': 'fas fa-ban'
-                                            })
-                                        ]
-                                    })
-                                ]
-                            })
-                        ]
-                    })
-                        .appendTo('.breaks tbody');
-                });
 
                 // Sort day's specialized planning according to the starting hour
                 workingDay.specialized.sort(function (specialized1, specialized2) {
@@ -444,33 +382,36 @@
         });
 
         /**
-         * Event: Add Break Button "Click"
+         * Event: Add Break or Specialized Button "Click"
          *
          * A new row is added on the table and the user can enter the new break
          * data. After that he can either press the save or cancel button.
          */
-        $('.add-break').on('click', function () {
+        $('.add-break, .add-specialized').on('click', function () {
+
+            let name = $(this).hasClass('add-break') ? 'break' : 'specialized';
+
             var timeFormat = GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm';
 
             var $newBreak = $('<tr/>', {
                 'html': [
                     $('<td/>', {
-                        'class': 'break-day editable',
+                        'class': name + '-day editable',
                         'text': EALang.sunday
                     }),
                     $('<td/>', {
-                        'class': 'break-start editable',
+                        'class':  name + '-start editable',
                         'text': Date.parse('12:00:00').toString(timeFormat).toLowerCase()
                     }),
                     $('<td/>', {
-                        'class': 'break-end editable',
+                        'class': name + '-end editable',
                         'text': Date.parse('14:00:00').toString(timeFormat).toLowerCase()
                     }),
                     $('<td/>', {
                         'html': [
                             $('<button/>', {
                                 'type': 'button',
-                                'class': 'btn btn-outline-secondary btn-sm edit-break',
+                                'class': 'btn btn-outline-secondary btn-sm edit-' + name,
                                 'title': EALang.edit,
                                 'html': [
                                     $('<span/>', {
@@ -480,7 +421,7 @@
                             }),
                             $('<button/>', {
                                 'type': 'button',
-                                'class': 'btn btn-outline-secondary btn-sm delete-break',
+                                'class': 'btn btn-outline-secondary btn-sm delete-' + name,
                                 'title': EALang.delete,
                                 'html': [
                                     $('<span/>', {
@@ -490,7 +431,7 @@
                             }),
                             $('<button/>', {
                                 'type': 'button',
-                                'class': 'btn btn-outline-secondary btn-sm save-break d-none',
+                                'class': 'btn btn-outline-secondary btn-sm save-' + name + ' d-none',
                                 'title': EALang.save,
                                 'html': [
                                     $('<span/>', {
@@ -500,7 +441,7 @@
                             }),
                             $('<button/>', {
                                 'type': 'button',
-                                'class': 'btn btn-outline-secondary btn-sm cancel-break d-none',
+                                'class': 'btn btn-outline-secondary btn-sm cancel-' + name + ' d-none',
                                 'title': EALang.cancel,
                                 'html': [
                                     $('<span/>', {
@@ -512,20 +453,21 @@
                     })
                 ]
             })
-                .appendTo('.breaks tbody');
+                .appendTo('.' + name + 's tbody');
 
             // Bind editable and event handlers.
-            this.editableDayCell($newBreak.find('.break-day'));
-            this.editableTimeCell($newBreak.find('.break-start, .break-end'));
-            $newBreak.find('.edit-break').trigger('click');
+            this.editableDayCell($newBreak.find('.' + name + '-day'));
+            this.editableTimeCell($newBreak.find('.' + name + '-start, .' + name + '-end'));
+            $newBreak.find('.edit-' + name).trigger('click');
         }.bind(this));
 
         /**
-         * Event: Edit Break Button "Click"
+         * Event: Edit Break  or Specialized Button "Click"
          *
-         * Enables the row editing for the "Breaks" table rows.
+         * Enables the row editing for the "Breaks"  or "Specialized" table rows.
          */
-        $(document).on('click', '.edit-break', function () {
+        $(document).on('click', '.edit-break, .edit-specialized', function () {
+            let name = $(this).hasClass('edit-break') ? 'break' : 'specialized';
             // Reset previous editable table cells.
             var $previousEdits = $(this).closest('table').find('.editable');
 
@@ -537,7 +479,7 @@
 
             // Make all cells in current row editable.
             $(this).parent().parent().children().trigger('edit');
-            $(this).parent().parent().find('.break-start input, .break-end input').timepicker({
+            $(this).parent().parent().find('.' + name + '-start input, .' + name + '-end input').timepicker({
                 timeFormat: GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm',
                 currentText: EALang.now,
                 closeText: EALang.close,
@@ -546,66 +488,73 @@
                 hourText: EALang.hour,
                 minuteText: EALang.minutes
             });
-            $(this).parent().parent().find('.break-day select').focus();
+            $(this).parent().parent().find('.' + name + '-day select').focus();
 
             // Show save - cancel buttons.
             var $tr = $(this).closest('tr');
-            $tr.find('.edit-break, .delete-break').addClass('d-none');
-            $tr.find('.save-break, .cancel-break').removeClass('d-none');
+            $tr.find('.edit-' + name + ', .delete-' + name).addClass('d-none');
+            $tr.find('.save-' + name + ', .cancel-' + name).removeClass('d-none');
             $tr.find('select,input:text').addClass('form-control form-control-sm')
         });
 
         /**
-         * Event: Delete Break Button "Click"
+         * Event: Delete or Specialized Break Button "Click"
          *
-         * Removes the current line from the "Breaks" table.
+         * Removes the current line from the "Breaks" or "Specialized" table.
          */
-        $(document).on('click', '.delete-break', function () {
+        $(document).on('click', '.delete-break, .delete-specialized', function () {
             $(this).parent().parent().remove();
         });
 
         /**
-         * Event: Cancel Break Button "Click"
+         * Event: Cancel Break or Specialized Button "Click"
          *
          * Bring the ".breaks" table back to its initial state.
          *
          * @param {jQuery.Event} event
          */
-        $(document).on('click', '.cancel-break', function (event) {
-            var element = event.target;
-            var $modifiedRow = $(element).closest('tr');
+        $(document).on('click', '.cancel-break, .cancel-specialized', function (event) {
+
+            let element = event.target;
+            let $modifiedRow = $(element).closest('tr');
+            let name = $($modifiedRow).find('.cancel-break').hasClass('cancel-break') ? 'break' : 'specialized';
+
             this.enableCancel = true;
             $modifiedRow.find('.cancel-editable').trigger('click');
             this.enableCancel = false;
 
-            $modifiedRow.find('.edit-break, .delete-break').removeClass('d-none');
-            $modifiedRow.find('.save-break, .cancel-break').addClass('d-none');
+            $modifiedRow.find('.edit-' + name + ', .delete-' + name).removeClass('d-none');
+            $modifiedRow.find('.save-' + name + ', .cancel-' + name).addClass('d-none');
         }.bind(this));
 
         /**
-         * Event: Save Break Button "Click"
+         * Event: Save Break or Specialized Button "Click"
          *
          * Save the editable values and restore the table to its initial state.
          *
          * @param {jQuery.Event} e
          */
-        $(document).on('click', '.save-break', function (event) {
+        $(document).on('click', '.save-break, .save-specialized', function (event) {
+
             // Break's start time must always be prior to break's end.
             var element = event.target;
             var $modifiedRow = $(element).closest('tr');
-            var start = Date.parse($modifiedRow.find('.break-start input').val());
-            var end = Date.parse($modifiedRow.find('.break-end input').val());
+
+            let name = $($modifiedRow).find('.save-break').hasClass('save-break') ? 'break' : 'specialized';
+
+            var start = Date.parse($modifiedRow.find('.' + name + '-start input').val());
+            var end = Date.parse($modifiedRow.find('.' + name + '-end input').val());
 
             if (start > end) {
-                $modifiedRow.find('.break-end input').val(start.addHours(1).toString(GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm').toLowerCase());
+                $modifiedRow.find('.' + name + '-end input').val(start.addHours(1).toString(GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm').toLowerCase());
             }
 
             this.enableSubmit = true;
             $modifiedRow.find('.editable .submit-editable').trigger('click');
             this.enableSubmit = false;
 
-            $modifiedRow.find('.save-break, .cancel-break').addClass('d-none');
-            $modifiedRow.find('.edit-break, .delete-break').removeClass('d-none');
+            $modifiedRow.find('.save-' + name + ', .cancel-' + name).addClass('d-none');
+            $modifiedRow.find('.edit-' + name + ', .delete-' + name).removeClass('d-none');
         }.bind(this));
 
         /**
