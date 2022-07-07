@@ -130,7 +130,7 @@
 
                         <br>
 
-                        <table class="specialized table table-striped">
+                        <table class="specializeds table table-striped">
                             <thead>
                             <tr>
                                 <th><?= lang('day') ?></th>

@@ -664,6 +664,31 @@ body .form-horizontal .controls {
     margin-left: 10px;
 }
 
+/* BACKEND WORKINGPLAN PAGE
+   -------------------------------------------------------------------- */
+#workingplan-page #working-plan .breaks.table{
+    table-layout: fixed;
+}
+
+#workingplan-page #working-plan .breaks .btn {
+    margin-right: 5px;
+    padding: 4px 7px;
+}
+
+#workingplan-page #working-plan .specializeds.table{
+    table-layout: fixed;
+}
+
+#workingplan-page #working-plan .specializeds .btn {
+    margin-right: 5px;
+    padding: 4px 7px;
+}
+#workingplan-page #working-plan .work-start,
+#workingplan-page #working-plan .work-end {
+    max-width: 100px;
+}
+
+
 /* BACKEND USERS PAGE
    -------------------------------------------------------------------- */
 

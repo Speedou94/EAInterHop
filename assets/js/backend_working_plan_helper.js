@@ -36,6 +36,7 @@
          */
         $('#workingplan').on('click', '#reset-working-plan', function () {
             $('.breaks tbody').empty();
+            $('.specializeds tbody').empty();
             $('.working-plan-exceptions tbody').empty();
             $('.work-start, .work-end').val('');
             BackendWorkingPlan.wp.setup(GlobalVariables.workingPlan);
@@ -106,7 +107,7 @@
 
             $('#working-plan').find('input, select, textarea').prop('disabled', false);
 
-            $('#working-plan').find('.add-break, .edit-break, .delete-break, .add-working-plan-exception, .edit-working-plan-exception, .delete-working-plan-exception, #reset-working-plan').prop('disabled', false);
+            $('#working-plan').find('.add-break, .edit-break, .delete-break, .add-specialized, .edit-specialized, .delete-specialized, .add-working-plan-exception, .edit-working-plan-exception, .delete-working-plan-exception, #reset-working-plan').prop('disabled', false);
             $('#working-plan input:checkbox').prop('disabled', false);
             BackendWorkingPlan.wp.timepickers(false);
         });
@@ -205,10 +206,11 @@
         $('.record-details .form-message').hide();
 
         // Disable add slot in working plan.
-        $('.add-break, .add-working-plan-exception, #reset-working-plan').prop('disabled', true);
+        $('.add-break, .add-specialized, .add-working-plan-exception, #reset-working-plan').prop('disabled', true);
         // Empty the working plan.
         $('.working-plan tbody').empty();
         $('.breaks tbody').empty();
+        $('.specializeds tbody').empty();
         $('.working-plan-exceptions tbody').empty();
     };
 
@@ -227,6 +229,7 @@
         BackendWorkingPlan.wp.setup(workingPlan);
         $('.working-plan').find('input').prop('disabled', true);
         $('.breaks').find('.edit-break, .delete-break').prop('disabled', true);
+        $('.specializeds').find('.edit-specialized, .delete-specialized').prop('disabled', true);
         $('.working-plan-exceptions tbody').empty();
         var workingPlanExceptions = $.parseJSON(provider.settings.working_plan_exceptions);
         BackendWorkingPlan.wp.setupWorkingPlanExceptions(workingPlanExceptions);

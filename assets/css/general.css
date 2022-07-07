@@ -178,7 +178,7 @@ body .ui-widget button {
 body .ui-datepicker .ui-datepicker-buttonpane button {
     padding: 6px 16px;
 }
-
+.specializeds tr:hover td ,
 .breaks tr:hover td {
     background: #FFFFC2 !important;
 }

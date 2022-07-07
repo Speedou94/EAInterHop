@@ -52,6 +52,7 @@
 
         $('.working-plan tbody').empty();
         $('.breaks tbody').empty();
+        $('.specializeds tbody').empty();
 
         // Build working plan day list starting with the first weekday as set in the General settings
         var timeFormat = GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm';
@@ -117,12 +118,12 @@
 
 
                 // Sort day's specialized planning according to the starting hour
-                workingDay.specialized.sort(function (specialized1, specialized2) {
+                workingDay.specializeds.sort(function (specialized1, specialized2) {
                     // We can do a direct string comparison since we have time based on 24 hours clock.
                     return (specialized1.start).localeCompare(specialized2.start);
                 });
 
-                workingDay.specialized.forEach(function (workingDay) {displayPlanningForm(workingDay, "specialized").appendTo('.specialized tbody')});
+                workingDay.specializeds.forEach(function (workingDay) {displayPlanningForm(workingDay, "specialized").appendTo('.specializeds tbody')});
 
             } else {
                 $('#' + index).prop('checked', false);
@@ -134,6 +135,8 @@
         // Make break cells editable.
         this.editableDayCell($('.breaks .break-day'));
         this.editableTimeCell($('.breaks').find('.break-start, .break-end'));
+        this.editableDayCell($('.specializeds .specialized-day'));
+        this.editableTimeCell($('.specializeds').find('.specialized-start, .specialized-end'));
     };
 
     /**
@@ -387,10 +390,9 @@
          * A new row is added on the table and the user can enter the new break
          * data. After that he can either press the save or cancel button.
          */
-        $('.add-break, .add-specialized').on('click', function () {
+        $('.add-break, .add-specialized').on('click', function (event) {
 
-            let name = $(this).hasClass('add-break') ? 'break' : 'specialized';
-
+            let name = $(event.target).hasClass('add-break') ? 'break' : 'specialized';
             var timeFormat = GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm';
 
             var $newBreak = $('<tr/>', {
@@ -466,8 +468,12 @@
          *
          * Enables the row editing for the "Breaks"  or "Specialized" table rows.
          */
-        $(document).on('click', '.edit-break, .edit-specialized', function () {
-            let name = $(this).hasClass('edit-break') ? 'break' : 'specialized';
+        $(document).on('click', '.edit-break, .edit-specialized', function (event) {
+
+            let element = event.target;
+            let $modifiedRow = $(element).closest('tr');
+            let name = $($modifiedRow).find('.edit-break').hasClass('edit-break') ? 'break' : 'specialized';
+
             // Reset previous editable table cells.
             var $previousEdits = $(this).closest('table').find('.editable');
 
@@ -630,7 +636,8 @@
                 workingPlan[id] = {
                     start: Date.parse($('#' + id + '-start').val()).toString('HH:mm'),
                     end: Date.parse($('#' + id + '-end').val()).toString('HH:mm'),
-                    breaks: []
+                    breaks: [],
+                    specializeds: []
                 };
 
                 $('.breaks tr').each(function (index, tr) {
@@ -647,10 +654,30 @@
                     }
                 }.bind(this));
 
+                $('.specializeds tr').each(function (index, tr) {
+                    var day = this.convertDayToValue($(tr).find('.specialized-day').text());
+
+                    if (day === id) {
+                        var start = $(tr).find('.specialized-start').text();
+                        var end = $(tr).find('.specialized-end').text();
+
+                        workingPlan[id].specializeds.push({
+                            start: Date.parse(start).toString('HH:mm'),
+                            end: Date.parse(end).toString('HH:mm')
+                        });
+                    }
+                }.bind(this));
+
                 // Sort breaks increasingly by hour within day
                 workingPlan[id].breaks.sort(function (break1, break2) {
                     // We can do a direct string comparison since we have time based on 24 hours clock.
                     return (break1.start).localeCompare(break2.start);
+                });
+
+                // Sort day's specialized planning according to the starting hour
+                workingPlan[id].specializeds.sort(function (specialized1, specialized2) {
+                    // We can do a direct string comparison since we have time based on 24 hours clock.
+                    return (specialized1.start).localeCompare(specialized2.start);
                 });
             } else {
                 workingPlan[id] = null;
