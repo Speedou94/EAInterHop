@@ -10,6 +10,7 @@
         csrfToken: <?= json_encode($this->security->get_csrf_hash()) ?>,
         baseUrl: <?= json_encode($base_url) ?>,
         providers: <?= json_encode($providers) ?>,
+        categories: <?= json_encode($categories) ?>,
         dateFormat: <?= json_encode($date_format) ?>,
         timeFormat: <?= json_encode($time_format) ?>,
         firstWeekday: <?= json_encode($first_weekday) ?>,
@@ -136,6 +137,7 @@
                                 <th><?= lang('day') ?></th>
                                 <th><?= lang('start') ?></th>
                                 <th><?= lang('end') ?></th>
+                                <th><?= lang('category') ?></th>
                                 <th><?= lang('actions') ?></th>
                             </tr>
                             </thead>

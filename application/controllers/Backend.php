@@ -246,6 +246,7 @@ class Backend extends EA_Controller {
         $view['user_display_name'] = $this->user_model->get_user_display_name($this->session->userdata('user_id'));
         $view['active_menu'] = PRIV_WORKING_PLAN;
         $view['company_name'] = $this->settings_model->get_setting('company_name');
+        $view['categories'] = $this->services_model->get_all_categories();
         $view['date_format'] = $this->settings_model->get_setting('date_format');
         $view['time_format'] = $this->settings_model->get_setting('time_format');
         $view['first_weekday'] = $this->settings_model->get_setting('first_weekday');

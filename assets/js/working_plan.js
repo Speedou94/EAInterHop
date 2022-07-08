@@ -45,6 +45,7 @@
      * @param {Object} workingPlan Contains the working hours and breaks for each day of the week.
      */
     var dayDisplayName = "";    // used to display the day name in the working plan
+    var currentCategoryName = "toto"; // used to display the category name in the working plan
 
     WorkingPlan.prototype.setup = function (workingPlan) {
         var weekDayId = GeneralFunctions.getWeekDayId(GlobalVariables.firstWeekday);
@@ -60,7 +61,7 @@
         $.each(workingPlanSorted, function (index, workingDay) {
             var day = this.convertValueToDay(index);
 
-             dayDisplayName = GeneralFunctions.upperCaseFirstLetter(day)
+            dayDisplayName = GeneralFunctions.upperCaseFirstLetter(day)
 
             $('<tr/>', {
                 'html': [
@@ -114,7 +115,9 @@
                     // We can do a direct string comparison since we have time based on 24 hours clock.
                     return (break1.start).localeCompare(break2.start);
                 });
-                workingDay.breaks.forEach(function (workingDay) {displayPlanningForm(workingDay, "break").appendTo('.breaks tbody')});
+                workingDay.breaks.forEach(function (workingDay) {
+                    displayPlanningForm(workingDay, "break").appendTo('.breaks tbody')
+                });
 
 
                 // Sort day's specialized planning according to the starting hour
@@ -123,7 +126,9 @@
                     return (specialized1.start).localeCompare(specialized2.start);
                 });
 
-                workingDay.specializeds.forEach(function (workingDay) {displayPlanningForm(workingDay, "specialized").appendTo('.specializeds tbody')});
+                workingDay.specializeds.forEach(function (workingDay) {
+                    displayPlanningForm(workingDay, "specialized").appendTo('.specializeds tbody')
+                });
 
             } else {
                 $('#' + index).prop('checked', false);
@@ -132,11 +137,12 @@
             }
         }.bind(this));
 
-        // Make break cells editable.
+        // Make cells editable.
         this.editableDayCell($('.breaks .break-day'));
         this.editableTimeCell($('.breaks').find('.break-start, .break-end'));
         this.editableDayCell($('.specializeds .specialized-day'));
         this.editableTimeCell($('.specializeds').find('.specialized-start, .specialized-end'));
+        this.editableCategoryCell($('.specializeds').find('.specialized-category'));
     };
 
     /**
@@ -146,8 +152,9 @@
     function displayPlanningForm(workingDay, name) {
 
         let timeFormat = GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm';
+        let isSpecialized = (name === "specialized");
 
-        return $('<tr/>', {
+        let row = $('<tr/>', {
             'html': [
                 $('<td/>', {
                     'class': name + "-day editable",
@@ -206,7 +213,14 @@
                     ]
                 })
             ]
-        })
+        });
+        if (isSpecialized) {
+                $('<td/>', {
+                    'class': name + "-category editable",
+                    'text': currentCategoryName
+                }).insertAfter(row.find('.specialized-end'));
+        }
+        return row;
     }
 
     /**
@@ -263,6 +277,42 @@
             }.bind(this)
         });
     };
+
+    /**
+     * Enable editable specialized category.
+     *
+     * This method makes editable the specialized category cells.
+     *
+     * @param {Object} $selector The jquery selector ready for use.
+     */
+    WorkingPlan.prototype.editableCategoryCell = function ($selector) {
+
+        let categories = [];
+        GlobalVariables.categories.forEach(category => categories.push(category.name));
+
+        $selector.editable(function (value, settings) {
+            return value;
+        }, {
+            type: 'select',
+            data: categories,
+            event: 'edit',
+            height: '30px',
+            submit: '<button type="button" class="d-none submit-editable">Submit</button>',
+            cancel: '<button type="button" class="d-none cancel-editable">Cancel</button>',
+            onblur: 'ignore',
+            onreset: function (settings, td) {
+                if (!this.enableCancel) {
+                    return false; // disable ESC button
+                }
+            }.bind(this),
+            onsubmit: function (settings, td) {
+                if (!this.enableSubmit) {
+                    return false; // disable Enter button
+                }
+            }.bind(this)
+        });
+    };
+
 
     /**
      * Enable editable break time.
@@ -395,6 +445,7 @@
             let name = $(event.target).hasClass('add-break') ? 'break' : 'specialized';
             var timeFormat = GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm';
 
+            //TODO: Change the first weekday sunday to monday.
             var $newBreak = $('<tr/>', {
                 'html': [
                     $('<td/>', {
@@ -402,7 +453,7 @@
                         'text': EALang.sunday
                     }),
                     $('<td/>', {
-                        'class':  name + '-start editable',
+                        'class': name + '-start editable',
                         'text': Date.parse('12:00:00').toString(timeFormat).toLowerCase()
                     }),
                     $('<td/>', {
