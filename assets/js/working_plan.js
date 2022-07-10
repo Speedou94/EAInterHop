@@ -45,7 +45,7 @@
      * @param {Object} workingPlan Contains the working hours and breaks for each day of the week.
      */
     var dayDisplayName = "";    // used to display the day name in the working plan
-    var currentCategoryName = "toto"; // used to display the category name in the working plan
+    var currentCategoryName = ""; // used to display the category name in the working plan
 
     WorkingPlan.prototype.setup = function (workingPlan) {
         var weekDayId = GeneralFunctions.getWeekDayId(GlobalVariables.firstWeekday);
@@ -127,6 +127,8 @@
                 });
 
                 workingDay.specializeds.forEach(function (workingDay) {
+                    let category = GlobalVariables.categories.find(category => category.id === workingDay.category);
+                    currentCategoryName = category ? category.name : EALang.select;
                     displayPlanningForm(workingDay, "specialized").appendTo('.specializeds tbody')
                 });
 
@@ -288,7 +290,8 @@
     WorkingPlan.prototype.editableCategoryCell = function ($selector) {
 
         let categories = [];
-        GlobalVariables.categories.forEach(category => categories.push(category.name));
+
+        GlobalVariables.categories.forEach(category => categories[category.name] = category.name);
 
         $selector.editable(function (value, settings) {
             return value;
@@ -423,11 +426,12 @@
          * Enable or disable the time selection for each day.
          */
         $('.working-plan tbody').on('click', 'input:checkbox', function () {
-            var id = $(this).attr('id');
+            let id = $(this).attr('id');
+            let timeFormat = GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm';
 
             if ($(this).prop('checked') === true) {
-                $('#' + id + '-start').prop('disabled', false).val('9:00 AM');
-                $('#' + id + '-end').prop('disabled', false).val('6:00 PM');
+                $('#' + id + '-start').prop('disabled', false).val(Date.parse('09:00:00').toString(timeFormat).toLowerCase());
+                $('#' + id + '-end').prop('disabled', false).val(Date.parse('18:00:00').toString(timeFormat).toLowerCase());
             } else {
                 $('#' + id + '-start').prop('disabled', true).val('');
                 $('#' + id + '-end').prop('disabled', true).val('');
@@ -443,14 +447,15 @@
         $('.add-break, .add-specialized').on('click', function (event) {
 
             let name = $(event.target).hasClass('add-break') ? 'break' : 'specialized';
-            var timeFormat = GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm';
+            let timeFormat = GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm';
+            let isSpecialized = (name === "specialized");
 
             //TODO: Change the first weekday sunday to monday.
-            var $newBreak = $('<tr/>', {
+            var newRow = $('<tr/>', {
                 'html': [
                     $('<td/>', {
                         'class': name + '-day editable',
-                        'text': EALang.sunday
+                        'text':this.convertValueToDay(GlobalVariables.firstWeekday)
                     }),
                     $('<td/>', {
                         'class': name + '-start editable',
@@ -505,13 +510,22 @@
                         ]
                     })
                 ]
-            })
-                .appendTo('.' + name + 's tbody');
+            });
+
+            if (isSpecialized) {
+                $('<td/>', {
+                    'class': name + "-category editable",
+                    'text': EALang.select
+                }).insertAfter(newRow.find('.specialized-end'));
+            }
+            newRow.appendTo('.' + name + 's tbody');
+
 
             // Bind editable and event handlers.
-            this.editableDayCell($newBreak.find('.' + name + '-day'));
-            this.editableTimeCell($newBreak.find('.' + name + '-start, .' + name + '-end'));
-            $newBreak.find('.edit-' + name).trigger('click');
+            this.editableDayCell(newRow.find('.' + name + '-day'));
+            this.editableTimeCell(newRow.find('.' + name + '-start, .' + name + '-end'));
+            if (isSpecialized) this.editableCategoryCell(newRow.find('.' + name + '-category'));
+            newRow.find('.edit-' + name).trigger('click');
         }.bind(this));
 
         /**
@@ -711,10 +725,14 @@
                     if (day === id) {
                         var start = $(tr).find('.specialized-start').text();
                         var end = $(tr).find('.specialized-end').text();
+                        var categoryName = $(tr).find('.specialized-category').text();
+                        let categoryObject =  GlobalVariables.categories.find(category => category.name === categoryName);
+                        let categoryId = categoryObject ? categoryObject.id : 0;
 
                         workingPlan[id].specializeds.push({
                             start: Date.parse(start).toString('HH:mm'),
-                            end: Date.parse(end).toString('HH:mm')
+                            end: Date.parse(end).toString('HH:mm'),
+                            category: categoryId
                         });
                     }
                 }.bind(this));

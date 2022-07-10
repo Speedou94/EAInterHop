@@ -13,6 +13,8 @@
         timeFormat: <?= json_encode($time_format) ?>,
         userSlug: <?= json_encode($role_slug) ?>,
         timezones: <?= json_encode($timezones) ?>,
+        categories: <?= json_encode($categories) ?>,
+
         settings: {
             system: <?= json_encode($system_settings) ?>,
             user: <?= json_encode($user_settings) ?>

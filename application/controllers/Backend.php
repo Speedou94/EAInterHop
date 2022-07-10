@@ -323,6 +323,7 @@ class Backend extends EA_Controller {
         $view['providers'] = $this->providers_model->get_batch();
         $view['secretaries'] = $this->secretaries_model->get_batch();
         $view['services'] = $this->services_model->get_batch();
+        $view['categories'] = $this->services_model->get_all_categories();
         $view['working_plan'] = $this->settings_model->get_setting('company_working_plan');
         $view['timezones'] = $this->timezones->to_array();
         $view['working_plan_exceptions'] = '{}';
@@ -361,6 +362,7 @@ class Backend extends EA_Controller {
         $view['date_format'] = $this->settings_model->get_setting('date_format');
         $view['first_weekday'] = $this->settings_model->get_setting('first_weekday');
         $view['time_format'] = $this->settings_model->get_setting('time_format');
+        $view['categories'] = $this->services_model->get_all_categories();
         $view['role_slug'] = $this->session->userdata('role_slug');
         $view['system_settings'] = $this->settings_model->get_settings();
         $view['user_settings'] = $this->user_model->get_user($user_id);
