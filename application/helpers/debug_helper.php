@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Create an specialised user with predifined settings.
+ * Create a specialised user with predefined settings.
  *
  * @param $faker     Faker used to retrieve random data.
  * @param $timezones Array of timezones.
@@ -63,7 +63,7 @@ function rangeSplit($list, $range)
         {
             $list[$i]['end'] = $range['start'];
         }
-        if ((strcmp($range['start'], $current['start']) <= 0) && (strcmp($range['end'], $current['end']) >= 0))
+        else if ((strcmp($range['start'], $current['start']) <= 0) && (strcmp($range['end'], $current['end']) >= 0))
         {
             unset($list[$i]);
         }
