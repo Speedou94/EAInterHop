@@ -88,7 +88,7 @@
             $('#providers .save-cancel-group').show();
             $('#providers .record-details').find('input, select, textarea').prop('disabled', false);
             $('#provider-password, #provider-password-confirm').addClass('required');
-            $('#providers').find('.add-break, .edit-break, .delete-break, .add-working-plan-exception, .edit-working-plan-exception, .delete-working-plan-exception, #reset-working-plan').prop('disabled', false);
+            $('#providers').find('.add-specialized, .edit-specialized, .delete-specialized, .add-break, .edit-break, .delete-break, .add-working-plan-exception, .edit-working-plan-exception, .delete-working-plan-exception, #reset-working-plan').prop('disabled', false);
             $('#provider-services input:checkbox').prop('disabled', false);
 
             // Apply default working plan
@@ -107,7 +107,7 @@
             $('#providers .record-details').find('input, select, textarea').prop('disabled', false);
             $('#provider-password, #provider-password-confirm').removeClass('required');
             $('#provider-services input:checkbox').prop('disabled', false);
-            $('#providers').find('.add-break, .edit-break, .delete-break, .add-working-plan-exception, .edit-working-plan-exception, .delete-working-plan-exception, #reset-working-plan').prop('disabled', false);
+            $('#providers').find('.add-specialized, .edit-specialized, .delete-specialized, .add-break, .edit-break, .delete-break, .add-working-plan-exception, .edit-working-plan-exception, .delete-working-plan-exception, #reset-working-plan').prop('disabled', false);
             $('#providers input:checkbox').prop('disabled', false);
             BackendUsers.wp.timepickers(false);
         });
@@ -352,11 +352,12 @@
             .prop('disabled', true);
         $('#providers .record-details #provider-calendar-view').val('default');
         $('#providers .record-details #provider-timezone').val(GlobalVariables.enableDefaultTimezone ? GlobalVariables.defaultTimezone : 'UTC');
-        $('#providers .add-break, .add-working-plan-exception, #reset-working-plan').prop('disabled', true);
+        $('#providers .add-specialized, .add-break, .add-working-plan-exception, #reset-working-plan').prop('disabled', true);
         BackendUsers.wp.timepickers(true);
         $('#providers .working-plan input:text').timepicker('destroy');
         $('#providers .working-plan input:checkbox').prop('disabled', true);
         $('.breaks').find('.edit-break, .delete-break').prop('disabled', true);
+        $('.specializeds').find('.edit-specialized, .delete-specialized').prop('disabled', true);
         $('.working-plan-exceptions').find('.edit-working-plan-exception, .delete-working-plan-exception').prop('disabled', true);
 
         $('#providers .record-details .has-error').removeClass('has-error');
@@ -368,6 +369,7 @@
             .prop('checked', false);
         $('#provider-services a').remove();
         $('#providers .working-plan tbody').empty();
+        $('#providers .specializeds tbody').empty();
         $('#providers .breaks tbody').empty();
         $('#providers .working-plan-exceptions tbody').empty();
     };
@@ -445,6 +447,7 @@
         BackendUsers.wp.setup(workingPlan);
         $('.working-plan').find('input').prop('disabled', true);
         $('.breaks').find('.edit-break, .delete-break').prop('disabled', true);
+        $('.specializeds').find('.edit-specialized, .delete-specialized').prop('disabled', true);
         $('#providers .working-plan-exceptions tbody').empty();
         var workingPlanExceptions = $.parseJSON(provider.settings.working_plan_exceptions);
         BackendUsers.wp.setupWorkingPlanExceptions(workingPlanExceptions);
@@ -543,67 +546,66 @@
      *
      * @param {Object} $selector The cells to be initialized.
      */
-    ProvidersHelper.prototype.editableDayCell = function ($selector) {
-        var weekDays = {};
-        weekDays[EALang.monday] = 'Monday';
-        weekDays[EALang.tuesday] = 'Tuesday';
-        weekDays[EALang.wednesday] = 'Wednesday';
-        weekDays[EALang.thursday] = 'Thursday';
-        weekDays[EALang.friday] = 'Friday';
-        weekDays[EALang.saturday] = 'Saturday';
-        weekDays[EALang.sunday] = 'Sunday';
-
-
-        $selector.editable(function (value, settings) {
-            return value;
-        }, {
-            type: 'select',
-            data: weekDays,
-            event: 'edit',
-            height: '30px',
-            submit: '<button type="button" class="d-none submit-editable">Submit</button>',
-            cancel: '<button type="button" class="d-none cancel-editable">Cancel</button>',
-            onblur: 'ignore',
-            onreset: function (settings, td) {
-                if (!BackendUsers.enableCancel) {
-                    return false; // disable ESC button
-                }
-            },
-            onsubmit: function (settings, td) {
-                if (!BackendUsers.enableSubmit) {
-                    return false; // disable Enter button
-                }
-            }
-        });
-    };
+   // ProvidersHelper.prototype.editableDayCell = function ($selector) {
+   //      var weekDays = {};
+   //      weekDays[EALang.monday] = 'Monday';
+   //      weekDays[EALang.tuesday] = 'Tuesday';
+   //      weekDays[EALang.wednesday] = 'Wednesday';
+   //      weekDays[EALang.thursday] = 'Thursday';
+   //      weekDays[EALang.friday] = 'Friday';
+   //      weekDays[EALang.saturday] = 'Saturday';
+   //      weekDays[EALang.sunday] = 'Sunday';
+   //
+   //      $selector.editable(function (value, settings) {
+   //          return value;
+   //      }, {
+   //          type: 'select',
+   //          data: weekDays,
+   //          event: 'edit',
+   //          height: '30px',
+   //          submit: '<button type="button" class="d-none submit-editable">Submit</button>',
+   //          cancel: '<button type="button" class="d-none cancel-editable">Cancel</button>',
+   //          onblur: 'ignore',
+   //          onreset: function (settings, td) {
+   //              if (!BackendUsers.enableCancel) {
+   //                  return false; // disable ESC button
+   //              }
+   //          },
+   //          onsubmit: function (settings, td) {
+   //              if (!BackendUsers.enableSubmit) {
+   //                  return false; // disable Enter button
+   //              }
+   //          }
+   //      });
+   //  };
 
     /**
      * Initialize the editable functionality to the break time table cells.
      *
      * @param {jQuery} $selector The cells to be initialized.
      */
-    ProvidersHelper.prototype.editableTimeCell = function ($selector) {
-        $selector.editable(function (value, settings) {
-            // Do not return the value because the user needs to press the "Save" button.
-            return value;
-        }, {
-            event: 'edit',
-            height: '25px',
-            submit: '<button type="button" class="d-none submit-editable">Submit</button>',
-            cancel: '<button type="button" class="d-none cancel-editable">Cancel</button>',
-            onblur: 'ignore',
-            onreset: function (settings, td) {
-                if (!BackendUsers.enableCancel) {
-                    return false; // disable ESC button
-                }
-            },
-            onsubmit: function (settings, td) {
-                if (!BackendUsers.enableSubmit) {
-                    return false; // disable Enter button
-                }
-            }
-        });
-    };
+    // ProvidersHelper.prototype.editableTimeCell = function ($selector) {
+    //     $selector.editable(function (value, settings) {
+    //         // Do not return the value because the user needs to press the "Save" button.
+    //         return value;
+    //     }, {
+    //         event: 'edit',
+    //         height: '25px',
+    //         submit: '<button type="button" class="d-none submit-editable">Submit</button>',
+    //         cancel: '<button type="button" class="d-none cancel-editable">Cancel</button>',
+    //         onblur: 'ignore',
+    //         onreset: function (settings, td) {
+    //             if (!BackendUsers.enableCancel) {
+    //                 return false; // disable ESC button
+    //             }
+    //         },
+    //         onsubmit: function (settings, td) {
+    //             if (!BackendUsers.enableSubmit) {
+    //                 return false; // disable Enter button
+    //             }
+    //         }
+    //     });
+    // };
 
     /**
      * Select and display a providers filter result on the form.

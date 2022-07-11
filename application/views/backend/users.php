@@ -305,6 +305,34 @@
                             </table>
 
                             <br>
+                            <h3><?= lang('specialized_working_plan') ?></h3>
+
+                            <p>
+                                <?= lang('add_specialized_working_plan_during_each_day') ?>
+                            </p>
+
+                            <div>
+                                <button type="button" class="add-specialized btn btn-primary">
+                                    <i class="fas fa-plus-square mr-2"></i>
+                                    <?= lang('add_specialized_working_plan') ?>
+                                </button>
+                            </div>
+
+                            <br>
+
+                            <table class="specializeds table table-striped">
+                                <thead>
+                                <tr>
+                                    <th><?= lang('day') ?></th>
+                                    <th><?= lang('start') ?></th>
+                                    <th><?= lang('end') ?></th>
+                                    <th><?= lang('category') ?></th>
+                                    <th><?= lang('actions') ?></th>
+                                </tr>
+                                </thead>
+                                <tbody><!-- Dynamic Content --></tbody>
+                            </table>
+                            <br>
 
                             <h3><?= lang('breaks') ?></h3>
 

@@ -333,4 +333,5 @@ $lang['manage_working_plane_hint'] = 'Gestion du planning';
 $lang['specialized_working_plan'] = 'Horaires dédiés';
 $lang['add_specialized_working_plan_during_each_day'] = 'Ajouter des horaires dédiés pour des catégories de consultations spécifiques.';
 $lang['add_specialized_working_plan'] = 'Ajouter des horaires dédiés';
+$lang['category_color'] = 'Couleur associée à la catégorie';
 // End

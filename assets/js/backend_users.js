@@ -79,7 +79,7 @@ window.BackendUsers = window.BackendUsers || {};
                             }),
                             $('<label/>', {
                                 'class': 'form-check-label',
-                                'text': service.name,
+                                'text': service.name + ' - ' + GlobalVariables.categories.find(category => category.id === service.id_service_categories).name,
                                 'for': service.id
                             })
                         ]

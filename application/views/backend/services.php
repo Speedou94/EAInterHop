@@ -261,6 +261,17 @@
                         </label>
                         <textarea id="category-description" rows="4" class="form-control"></textarea>
                     </div>
+
+                    <div class="form-group">
+                        <label for="category-color">
+                            <?= lang('category_color') ?>
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input id="category-color" type="color">
+
+                    </div>
+
+
                 </div>
             </div>
         </div>
