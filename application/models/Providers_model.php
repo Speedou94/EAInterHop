@@ -530,7 +530,7 @@ class Providers_model extends EA_Model {
      *
      * @return array Returns the rows from the database.
      */
-    public function get_batch($where = NULL, $limit = NULL, $offset = NULL, $order_by = NULL, $secretary = NULL)
+    public function get_batch($where = NULL, $limit = NULL, $offset = NULL, $order_by = 'first_name ASC', $secretary = NULL)
     {
         // CI db class may confuse two where clauses made in the same time, so get the role id first and then apply the
         // get_batch() where clause.

@@ -1279,7 +1279,7 @@ class Backend_api extends EA_Controller {
                 'OR city LIKE "%' . $key . '%" OR state LIKE "%' . $key . '%" ' .
                 'OR zip_code LIKE "%' . $key . '%" OR notes LIKE "%' . $key . '%")';
 
-            $response = $this->providers_model->get_batch($where, NULL, NULL, NULL, $secretary);
+            $response = $this->providers_model->get_batch($where, NULL, NULL, 'first_name ASC', $secretary);
         }
         catch (Exception $exception)
         {

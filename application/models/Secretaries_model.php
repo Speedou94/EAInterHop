@@ -519,7 +519,7 @@ class Secretaries_model extends EA_Model {
      *
      * @return array Returns an array with secretary records.
      */
-    public function get_batch($where = NULL, $limit = NULL, $offset = NULL, $order_by = NULL)
+    public function get_batch($where = NULL, $limit = NULL, $offset = NULL, $order_by = 'first_name ASC')
     {
         $role_id = $this->get_secretary_role_id();
 

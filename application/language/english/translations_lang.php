@@ -334,5 +334,8 @@ $lang['specialized_working_plan'] = "Specialized's Working Plan";
 $lang['add_specialized_working_plan_during_each_day'] = 'Add specialized hours inside the working plan for each day .';
 $lang['add_specialized_working_plan'] = 'Add Specialized Working Plan';
 $lang['category_color'] = 'Assigned category color';
+$lang['no_public_category'] = 'When activated, the category becomes private and cannot be accessed by patients';
+$lang['category_private'] = 'Private category';
+
 
 // End

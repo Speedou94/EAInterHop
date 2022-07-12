@@ -116,7 +116,8 @@
                             <?= lang('duration_minutes') ?>
                             <span class="text-danger">*</span>
                         </label>
-                        <input id="service-duration" class="form-control required" type="number" min="<?= EVENT_MINIMUM_DURATION ?>">
+                        <input id="service-duration" class="form-control required" type="number"
+                               min="<?= EVENT_MINIMUM_DURATION ?>">
                     </div>
 
                     <div class="form-group">
@@ -267,10 +268,19 @@
                             <?= lang('category_color') ?>
                             <span class="text-danger">*</span>
                         </label>
-                        <input id="category-color" type="color">
-
+                        <input id="category-color" type="color" class="form-control">
                     </div>
 
+                    <div class="form-group">
+                        <div class="custom-control custom-switch">
+                            <input id="category-private" type="checkbox" name="category-private"
+                                   class="custom-control-input">
+                            <label for="category-private" class="custom-control-label">
+                                <?= lang('category_private') ?>
+                            </label>
+                        </div>
+                        <span class="form-text text-muted"><?= lang('no_public_category') ?></span>
+                    </div>
 
                 </div>
             </div>

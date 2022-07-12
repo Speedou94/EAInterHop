@@ -132,7 +132,10 @@
         $('#categories').on('click', '#save-category', function () {
             var category = {
                 name: $('#category-name').val(),
-                description: $('#category-description').val()
+                description: $('#category-description').val(),
+                color: $('#category-color').val(),
+                is_private: $('#category-private').prop('checked'),
+
             };
 
             if ($('#category-id').val() !== '') {
@@ -282,6 +285,8 @@
         $('#category-id').val(category.id);
         $('#category-name').val(category.name);
         $('#category-description').val(category.description);
+        $('#category-color').val(category.color);
+        $('#category-private').prop('checked', category.is_private * 1);// * 1 converts to int
     };
 
     /**

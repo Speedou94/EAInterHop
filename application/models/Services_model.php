@@ -332,7 +332,7 @@ class Services_model extends EA_Model {
      *
      * @return array Returns the rows from the database.
      */
-    public function get_batch($where = NULL, $limit = NULL, $offset = NULL, $order_by = NULL)
+    public function get_batch($where = NULL, $limit = NULL, $offset = NULL, $order_by = 'name ASC')
     {
         if ($where !== NULL)
         {
@@ -495,7 +495,7 @@ class Services_model extends EA_Model {
      *
      * @return array Returns an array that contains all the service category records.
      */
-    public function get_all_categories($where = NULL, $limit = NULL, $offset = NULL, $order_by = NULL)
+    public function get_all_categories($where = NULL, $limit = NULL, $offset = NULL, $order_by = 'name ASC')
     {
         if ($where !== NULL)
         {

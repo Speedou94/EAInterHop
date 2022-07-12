@@ -334,4 +334,6 @@ $lang['specialized_working_plan'] = 'Horaires dédiés';
 $lang['add_specialized_working_plan_during_each_day'] = 'Ajouter des horaires dédiés pour des catégories de consultations spécifiques.';
 $lang['add_specialized_working_plan'] = 'Ajouter des horaires dédiés';
 $lang['category_color'] = 'Couleur associée à la catégorie';
+$lang['no_public_category'] = 'Si l\'option est activée, la catégorie devient privée et ne peut être accessible aux patients.';
+$lang['category_private'] = 'Catégorie privée';
 // End
