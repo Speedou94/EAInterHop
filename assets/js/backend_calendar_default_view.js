@@ -1406,6 +1406,7 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
 
         var firstWeekday = GlobalVariables.firstWeekday;
         var firstWeekdayNumber = GeneralFunctions.getWeekDayId(firstWeekday);
+        var date = Date();
 
         // Initialize page calendar
         $('#calendar').fullCalendar({
@@ -1413,7 +1414,7 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
             height: getCalendarHeight(),
             editable: true,
             firstDay: firstWeekdayNumber,
-            slotDuration: '00:30:00',
+            slotDuration: '00:15:00',
             snapDuration: '00:30:00',
             slotLabelInterval: '01:00',
             timeFormat: timeFormat,
@@ -1425,6 +1426,14 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
                 center: 'title',
                 right: 'agendaDay,agendaWeek,month'
             },
+            annotations: [{
+                start: new Date(date.getFullYear(), date.getMonth(),  date.getDate(), 10, 0),
+                end:new Date(date.getFullYear(), date.getMonth(),  date.getDate(), 10, 30),
+                title: 'My 1st annotation', //optional
+                cls: 'open', //optional
+                color: '#777777', //optional
+                background: '#eeeeff' //optional
+            }],
 
             // Selectable
             selectable: true,
