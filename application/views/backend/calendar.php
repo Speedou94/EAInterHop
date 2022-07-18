@@ -23,6 +23,7 @@
         editAppointment: <?= json_encode($edit_appointment) ?>,
         customers: <?= json_encode($customers) ?>,
         secretaryProviders: <?= json_encode($secretary_providers) ?>,
+        categories: <?= json_encode($categories) ?>,
         calendarView: <?= json_encode($calendar_view) ?>,
         timezones: <?= json_encode($timezones) ?>,
         user: {

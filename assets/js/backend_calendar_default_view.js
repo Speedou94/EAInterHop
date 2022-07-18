@@ -1102,6 +1102,9 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
                     var viewEnd;
                     var breakStart;
                     var breakEnd;
+                    var specializedStart;
+                    var specializedEnd;
+                    var specializedColor;
                     var workingPlanExceptionStart;
                     var workingPlanExceptionEnd;
                     var weekdayNumber;
@@ -1233,6 +1236,31 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
                                 calendarEventSource.push(unavailablePeriod);
                             });
 
+                            // Add specialized periods.
+                            sortedWorkingPlan[weekdayName].specializeds.forEach(function (specializedPeriod) {
+                                var specializedStartString = specializedPeriod.start.split(':');
+                                specializedStart = viewStart.clone();
+                                specializedStart.hour(parseInt(specializedStartString[0]));
+                                specializedStart.minute(parseInt(specializedStartString[1]));
+
+                                var specializedEndString = specializedPeriod.end.split(':');
+                                specializedEnd = viewStart.clone();
+                                specializedEnd.hour(parseInt(specializedEndString[0]));
+                                specializedEnd.minute(parseInt(specializedEndString[1]));
+
+                                var specializedSlot =
+                                    {
+                                        start: specializedStart,
+                                        end: specializedEnd,
+                                        rendering: 'background',
+                                        editable: false,
+                                        allDay: false,
+                                        color: '#2f322d'
+                                    };
+
+                                calendarEventSource.push(specializedSlot);
+                            });
+
                             break;
 
                         case 'agendaWeek':
@@ -1353,6 +1381,37 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
                                     calendarEventSource.push(unavailabilityEvent);
                                 });
 
+                                // Add specialized periods during day.
+                                sortedWorkingPlan[weekdayName].specializeds.forEach(function (specializedPeriod) {
+                                    var specializedStartString = specializedPeriod.start.split(':');
+                                    specializedStart = calendarDate.clone();
+                                    specializedStart.hour(parseInt(specializedStartString[0]));
+                                    specializedStart.minute(parseInt(specializedStartString[1]));
+
+                                    var specializedEndString = specializedPeriod.end.split(':');
+                                    specializedEnd = calendarDate.clone();
+                                    specializedEnd.hour(parseInt(specializedEndString[0]));
+                                    specializedEnd.minute(parseInt(specializedEndString[1]));
+
+                                    specializedColor = 0;
+
+                                    GlobalVariables.categories.forEach(
+                                        category => { if (category.id === specializedPeriod.category) specializedColor = category.color; }
+                                    );
+
+                                    var specializedSlot =
+                                        {
+                                            start: moment(calendarDate.format('YYYY-MM-DD') + ' ' + specializedPeriod.start),
+                                            end: moment(calendarDate.format('YYYY-MM-DD') + ' ' + specializedPeriod.end),
+                                            rendering: 'background',
+                                            editable: false,
+                                            allDay: false,
+                                            color: specializedColor
+                                        };
+
+                                    calendarEventSource.push(specializedSlot);
+                                });
+
                                 calendarDate.add(1, 'day');
                             }
 
@@ -1406,7 +1465,6 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
 
         var firstWeekday = GlobalVariables.firstWeekday;
         var firstWeekdayNumber = GeneralFunctions.getWeekDayId(firstWeekday);
-        var date = Date();
 
         // Initialize page calendar
         $('#calendar').fullCalendar({
@@ -1415,7 +1473,7 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
             editable: true,
             firstDay: firstWeekdayNumber,
             slotDuration: '00:15:00',
-            snapDuration: '00:30:00',
+            snapDuration: '00:15:00',
             slotLabelInterval: '01:00',
             timeFormat: timeFormat,
             slotLabelFormat: slotTimeFormat,
@@ -1426,14 +1484,6 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
                 center: 'title',
                 right: 'agendaDay,agendaWeek,month'
             },
-            annotations: [{
-                start: new Date(date.getFullYear(), date.getMonth(),  date.getDate(), 10, 0),
-                end:new Date(date.getFullYear(), date.getMonth(),  date.getDate(), 10, 30),
-                title: 'My 1st annotation', //optional
-                cls: 'open', //optional
-                color: '#777777', //optional
-                background: '#eeeeff' //optional
-            }],
 
             // Selectable
             selectable: true,
