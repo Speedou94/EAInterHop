@@ -335,8 +335,10 @@
         $('#categories .add-edit-delete-group').show();
         $('#categories .save-cancel-group').hide();
         $('#categories .record-details')
+            .find('input[type!="color"], select, textarea')
+            .val('');
+        $('#categories .record-details')
             .find('input, select, textarea')
-            .val('')
             .prop('disabled', true);
         $('#edit-category, #delete-category').prop('disabled', true);
 

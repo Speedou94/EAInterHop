@@ -915,6 +915,32 @@ window.BackendCalendarTableView = window.BackendCalendarTableView || {};
             calendarEventSource.push(unavailablePeriod);
         });
 
+        // Add specialized periods.
+        sortedWorkingPlan[weekdayName].specializeds.forEach(function (specializedPeriod) {
+            var specializedStartString = specializedPeriod.start.split(':');
+            specializedStart = viewStart.clone();
+            specializedStart.hour(parseInt(specializedStartString[0]));
+            specializedStart.minute(parseInt(specializedStartString[1]));
+
+            var specializedEndString = specializedPeriod.end.split(':');
+            specializedEnd = viewStart.clone();
+            specializedEnd.hour(parseInt(specializedEndString[0]));
+            specializedEnd.minute(parseInt(specializedEndString[1]));
+
+            var specializedSlot =
+                {
+                    start: specializedStart,
+                    end: specializedEnd,
+                    rendering: 'background',
+                    editable: false,
+                    allDay: false,
+                    color: '#2f322d'
+                };
+
+            calendarEventSource.push(specializedSlot);
+        });
+
+
         $calendar.fullCalendar('addEventSource', calendarEventSource);
     }
 

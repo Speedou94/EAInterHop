@@ -266,9 +266,8 @@
                     <div class="form-group">
                         <label for="category-color">
                             <?= lang('category_color') ?>
-                            <span class="text-danger">*</span>
                         </label>
-                        <input id="category-color" type="color" class="form-control">
+                        <input id="category-color" type="color" class="form-control" value="#ffffff">
                     </div>
 
                     <div class="form-group">
