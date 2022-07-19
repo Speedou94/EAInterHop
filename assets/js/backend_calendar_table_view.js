@@ -897,6 +897,8 @@ window.BackendCalendarTableView = window.BackendCalendarTableView || {};
         // Add unavailable periods for breaks.
         var breakStart;
         var breakEnd;
+        var specializedStart;
+        var specializedEnd;
 
         workingPlan[selDayName].breaks.forEach(function (currentBreak) {
             breakStart = moment(start.toDate().toString('yyyy-MM-dd') + ' ' + currentBreak.start);
@@ -916,16 +918,15 @@ window.BackendCalendarTableView = window.BackendCalendarTableView || {};
         });
 
         // Add specialized periods.
-        sortedWorkingPlan[weekdayName].specializeds.forEach(function (specializedPeriod) {
-            var specializedStartString = specializedPeriod.start.split(':');
-            specializedStart = viewStart.clone();
-            specializedStart.hour(parseInt(specializedStartString[0]));
-            specializedStart.minute(parseInt(specializedStartString[1]));
+        workingPlan[selDayName].specializeds.forEach(function (specializedPeriod) {
+            specializedStart = moment(start.toDate().toString('yyyy-MM-dd') + ' ' + specializedPeriod.start);
+            specializedEnd = moment(start.toDate().toString('yyyy-MM-dd') + ' ' + specializedPeriod.end);
 
-            var specializedEndString = specializedPeriod.end.split(':');
-            specializedEnd = viewStart.clone();
-            specializedEnd.hour(parseInt(specializedEndString[0]));
-            specializedEnd.minute(parseInt(specializedEndString[1]));
+            var specializedColor = 0;
+
+            GlobalVariables.categories.forEach(
+                category => { if(category.id === specializedPeriod.category) specializedColor = category.color; }
+            );
 
             var specializedSlot =
                 {
@@ -934,7 +935,7 @@ window.BackendCalendarTableView = window.BackendCalendarTableView || {};
                     rendering: 'background',
                     editable: false,
                     allDay: false,
-                    color: '#2f322d'
+                    color: specializedColor
                 };
 
             calendarEventSource.push(specializedSlot);
