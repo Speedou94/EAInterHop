@@ -1248,6 +1248,12 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
                                 specializedEnd.hour(parseInt(specializedEndString[0]));
                                 specializedEnd.minute(parseInt(specializedEndString[1]));
 
+                                var specializedColor = 0;
+
+                                GlobalVariables.categories.forEach(
+                                    category => { if(category.id === specializedPeriod.category) specializedColor = category.color; }
+                                );
+
                                 var specializedSlot =
                                     {
                                         start: specializedStart,
@@ -1255,7 +1261,7 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
                                         rendering: 'background',
                                         editable: false,
                                         allDay: false,
-                                        color: '#2f322d'
+                                        color: specializedColor
                                     };
 
                                 calendarEventSource.push(specializedSlot);
