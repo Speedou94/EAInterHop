@@ -150,7 +150,7 @@
                                         foreach ($grouped_services as $key => $group)
                                         {
                                             $group_label = ($key != 'uncategorized')
-                                                ? $group[0]['category_name'] : 'Uncategorized';
+                                                ? $group[0]['category_name'] : lang('uncategorized');
 
                                             if (count($group) > 0)
                                             {
