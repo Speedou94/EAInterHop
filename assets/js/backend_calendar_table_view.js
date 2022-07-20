@@ -719,18 +719,43 @@ window.BackendCalendarTableView = window.BackendCalendarTableView || {};
                     return;
                 }
 
-                $('#insert-appointment').trigger('click');
-
                 // Preselect service & provider.
                 var $providerColumn = $(jsEvent.target).parents('.provider-column');
                 var providerId = $providerColumn.data('provider').id;
+
+                // Retrieve the provider's working plan.
+                var providerWorkingPlan = JSON.parse($providerColumn.data('provider').settings.working_plan);
+
+                // Retrieve specialized slots from the working plan.
+                var specializeds = providerWorkingPlan[start.locale('en').format('dddd').toLowerCase()]['specializeds'];
+
+                // No category found by default.
+                var cat = -1;
+
+                // Check if the selected period is within a specialized slot.
+                specializeds.some(function (specialized)
+                {
+                    // If a slot is found.
+                    if ((start.format('HH:mm') >= specialized.start) && (start.format('HH:mm') <= specialized.end))
+                    {
+                        // retrieve the category id.
+                        cat = specialized.category;
+                        // And stop the loop
+                        return true;
+                    }
+                    else
+                        // Not already found, so continue.
+                        return false;
+                });
+
+                $('#insert-appointment').trigger('click');
 
                 var provider = GlobalVariables.availableProviders.find(function (provider) {
                     return Number(provider.id) === Number(providerId);
                 });
 
                 var service = GlobalVariables.availableServices.find(function (service) {
-                    return provider.services.indexOf(service.id) !== -1
+                    return ((provider.services.indexOf(service.id) !== -1) && ((cat === -1) || (service.id_service_categories === cat)));
                 });
 
                 if (service) {
