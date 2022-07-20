@@ -1120,6 +1120,7 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
                     // breaks in the calendar display.
                     var firstWeekdayNumber = GeneralFunctions.getWeekDayId(GlobalVariables.firstWeekday);
                     var sortedWorkingPlan = GeneralFunctions.sortWeekDictionary(workingPlan, firstWeekdayNumber);
+                    GlobalVariables.workingPlan = workingPlan;
 
                     switch (calendarView.name) {
                         case 'agendaDay':
@@ -1436,6 +1437,8 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
         // Dynamic date formats.
         var columnFormat = {};
 
+        GlobalVariables.workingPlan = null;
+
         switch (GlobalVariables.dateFormat) {
             case 'DMY':
                 columnFormat = 'ddd D/M';
@@ -1499,6 +1502,28 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
                     return;
                 }
 
+                // Retrieve specialized slots from the working plan.
+                var specializeds = GlobalVariables.workingPlan[start.locale('en').format('dddd').toLowerCase()]['specializeds'];
+
+                // No category found by default.
+                var cat = -1;
+
+                // Check if the selected period is within a specialized slot.
+                specializeds.some(function (specialized)
+                {
+                    // If a slot is found.
+                    if ((start.format('HH:mm') >= specialized.start) && (start.format('HH:mm') <= specialized.end))
+                    {
+                        // retrieve the category id.
+                        cat = specialized.category;
+                        // And stop the loop
+                        return true;
+                    }
+                    else
+                        // Not already found, so continue.
+                        return false;
+                });
+
                 $('#insert-appointment').trigger('click');
 
                 // Preselect service & provider.
@@ -1516,7 +1541,7 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
                     });
 
                     service = GlobalVariables.availableServices.find(function (service) {
-                        return provider.services.indexOf(service.id) !== -1
+                        return ((provider.services.indexOf(service.id) !== -1) && ((cat === -1) || (service.id_service_categories === cat)));
                     });
 
                     if (service) {
