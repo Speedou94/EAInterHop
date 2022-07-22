@@ -64,6 +64,8 @@ class Availability {
         return $this->consider_book_advance_timeout($date, $available_hours, $provider);
     }
 
+
+
     /**
      * Get an array containing the free time periods (start - end) of a selected date.
      *
@@ -79,12 +81,158 @@ class Availability {
      *
      * @throws Exception
      */
-    protected function get_available_periods(
-        $date,
-        $provider,
-        $exclude_appointment_id = NULL
-    )
+
+    protected function my_get_available_periods($date, $provider, $exclude_appointment_id = NULL)
     {
+        // Get the service, provider's working plan and provider appointments.
+        $working_plan = json_decode($provider['settings']['working_plan'], TRUE);
+
+        // Get the provider's working plan exceptions.
+        $working_plan_exceptions_json = $provider['settings']['working_plan_exceptions'];
+        $working_plan_exceptions = $working_plan_exceptions_json ? json_decode($working_plan_exceptions_json, TRUE) : NULL;
+
+        $conditions['id_users_provider'] = $provider['id'];
+
+        // Sometimes it might be necessary to exclude an appointment from the calculation (e.g. when editing an existing appointment).
+        if ($exclude_appointment_id) $conditions['id !='] = $exclude_appointment_id;
+
+        // Read all the appointments.
+        $appointments = $this->CI->appointments_model->get_batch($conditions) ?? array();
+
+        // Read all categories.
+        $categories = $this->CI->services_model->get_all_categories() ?? array();
+
+        // A day consists of 24*4 quarter hours completely free by default.
+        for ($i = 0; $i < 24 * 4; $i++) $day[$i] = FALSE;
+
+        // Working plan corresponding to the selected date.
+        $date_working_plan = $working_plan[strtolower(date('l', strtotime($date)))] ?? NULL;
+
+        // Search if the $date is an custom availability period added outside the normal working plan.
+        if (isset($working_plan_exceptions[$date])) $date_working_plan = $working_plan_exceptions[$date];
+
+        // Add the working slot, depending weither it is normal or custom availability period.
+        $this->putSlot($date_working_plan['start'], $date_working_plan['end'], $day, TRUE);
+
+        // Subtract all the breaks from the working day.
+        if (isset($date_working_plan['breaks']))
+            foreach ($date_working_plan['breaks'] as $break)
+                $this->putSlot($break['start'], $break['end'], $day, FALSE);
+
+        // Subtract all the private specialized slots from the working day.
+        if (isset($date_working_plan['specializeds']))
+            foreach ($date_working_plan['specializeds'] as $specialized)
+                if ($this->isPrivate($specialized['category'], $categories)) $this->putSlot($specialized['start'], $specialized['end'], $day, FALSE);
+
+        // Subtract all the appointments from the working day.
+        foreach ($appointments as $appointment)
+        {
+            $start = $appointment['start_datetime'];
+            $end = $appointment['end_datetime'];
+            if (date_format($start, 'dmo') != date_format($date, 'dmo')) continue;
+
+            $this->putSlot($start, $end, $day, FALSE);
+        }
+
+        return $this->searchSlots($day, true);
+    }
+
+    /**
+     * Mark a period of time as available or not depending of the $state parameter.
+     *
+     * @param String $startHour
+     * @param String $endHour
+     * @param Array    $day
+     * @param Bool     $state
+     *
+     * @return void
+     */
+
+    private function putSlot(string $startHour, string $endHour, Array &$day, Bool $state)
+    {
+        $startDate = new DateTime($startHour);
+        $endDate = new DateTime($endHour);
+
+        $start = (date_format($startDate, 'H') * 4 + date_format($startDate, 'i') / 15) *1;
+        $end = (date_format($endDate, 'H') * 4 + date_format($endDate, 'i') / 15) *1;
+
+        for ($i = $start; $i < $end; $i++) $day[$i] = $state;
+    }
+
+    /**
+     * Search for the desired slots in the working day.
+     *
+     * @param $day
+     * @param $state
+     *
+     * @return array
+     * @throws Exception
+     */
+
+    private function searchSlots($day, $state): array
+    {
+        $slots = array();
+
+        // Scan the day supplied in parameters.
+        for ($i = 0, $start = NULL, $end = NULL, $put = FALSE; $i < 24 * 4; $i++)
+        {
+            // if the beginning or a desired slot is found.
+            if ($day[$i] == $state)
+            {
+                if ($start == NULL) $start = $i;
+                $end = $i + 1;
+                $put = ($i == 24 * 4 - 1);
+            }
+            else
+            {
+                $put = ($start != NULL);
+            }
+
+            // If a slot is entirely found.
+            if ($put)
+            {
+                // Converts number of quarter hours to hours and minutes.
+                $startStr = strval(intval($start * 15 / 60)) . ':' . strval($start * 15 % 60);
+                $endStr = strval(intval($end * 15 / 60)) . ':' . strval($end * 15 % 60);
+
+                // Create a slot.
+                $slots[] = array('start' => (new DateTime($startStr))->format('H:i'), 'end' => (new DateTime($endStr))->format('H:i'));
+
+                // Reset the variables for the next slot.
+                $start = NULL;
+                $end = NULL;
+                $put = FALSE;
+            }
+        }
+
+        return $slots;
+    }
+
+    /**
+     * Détermine if the given category is private or not.
+     *
+     * @param int   $category
+     * @param array $categories
+     *
+     * @return bool
+     */
+
+    private function isPrivate(int $category, array $categories): bool
+    {
+        foreach ($categories as $cat) if ($cat['id'] == $category) return $cat['is_private'];
+
+        return false;
+    }
+
+
+
+
+    protected function get_available_periods($date, $provider, $exclude_appointment_id = NULL)
+    {
+        $periods = $this->my_get_available_periods($date, $provider, $exclude_appointment_id);
+
+        return $periods;
+
         // Get the service, provider's working plan and provider appointments.
         $working_plan = json_decode($provider['settings']['working_plan'], TRUE);
 
