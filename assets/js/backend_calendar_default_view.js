@@ -1389,6 +1389,7 @@ window.BackendCalendarDefaultView = window.BackendCalendarDefaultView || {};
                                 });
 
                                 // Add specialized periods during day.
+                                if(sortedWorkingPlan[weekdayName].specializeds)
                                 sortedWorkingPlan[weekdayName].specializeds.forEach(function (specializedPeriod) {
                                     var specializedStartString = specializedPeriod.start.split(':');
                                     specializedStart = calendarDate.clone();
