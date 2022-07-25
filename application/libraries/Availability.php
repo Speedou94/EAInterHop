@@ -134,7 +134,7 @@ class Availability {
             $start = $appointment['start_datetime'];
             $end = $appointment['end_datetime'];
             $startDay = date_create_from_format('Y-m-d', substr($appointment['start_datetime'], 0, 10));
-            $curDay = date_create_from_format('Y-m-d', substr($appointment['end_datetime'], 0, 10));
+            $curDay = date_create_from_format('Y-m-d', substr($date, 0, 10));
 
             if (date_format($startDay, 'dmo') != date_format($curDay, 'dmo')) continue;
 
