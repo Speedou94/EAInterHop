@@ -11,7 +11,6 @@
  * @since       v1.4.0
  * ---------------------------------------------------------------------------- */
 
-
 /**
  * Class Availability
  *
@@ -22,6 +21,9 @@ class Availability {
      * @var EA_Controller
      */
     protected $CI;
+
+    const FREE_SLOT = true;
+    const BUSY_SLOT = false;
 
     /**
      * Availability constructor.
@@ -64,8 +66,6 @@ class Availability {
         return $this->consider_book_advance_timeout($date, $available_hours, $provider);
     }
 
-
-
     /**
      * Get an array containing the free time periods (start - end) of a selected date.
      *
@@ -103,7 +103,7 @@ class Availability {
         $categories = $this->CI->services_model->get_all_categories() ?? array();
 
         // A day consists of 24*4 quarter hours completely free by default.
-        for ($i = 0; $i < 24 * 4; $i++) $day[$i] = FALSE;
+        for ($i = 0; $i < 24 * 4; $i++) $day[$i] = self::BUSY_SLOT;
 
         // Working plan corresponding to the selected date.
         $date_working_plan = $working_plan[strtolower(date('l', strtotime($date)))] ?? NULL;
@@ -112,17 +112,18 @@ class Availability {
         if (isset($working_plan_exceptions[$date])) $date_working_plan = $working_plan_exceptions[$date];
 
         // Add the working slot, depending weither it is normal or custom availability period.
-        $this->putSlot($date_working_plan['start'], $date_working_plan['end'], $day, TRUE);
+        $this->putSlot($date_working_plan['start'], $date_working_plan['end'], $day, self::FREE_SLOT);
 
         // Subtract all the breaks from the working day.
         if (isset($date_working_plan['breaks']))
             foreach ($date_working_plan['breaks'] as $break)
-                $this->putSlot($break['start'], $break['end'], $day, FALSE);
+                $this->putSlot($break['start'], $break['end'], $day, self::BUSY_SLOT);
 
         // Subtract all the private specialized slots from the working day.
         if (isset($date_working_plan['specializeds']))
             foreach ($date_working_plan['specializeds'] as $specialized)
-                if ($this->isPrivate($specialized['category'], $categories)) $this->putSlot($specialized['start'], $specialized['end'], $day, FALSE);
+                if ($this->isPrivate($specialized['category'], $categories))
+                    $this->putSlot($specialized['start'], $specialized['end'], $day, self::BUSY_SLOT);
 
         // Subtract all the appointments from the working day.
         foreach ($appointments as $appointment)
@@ -134,10 +135,10 @@ class Availability {
 
             if (date_format($startDay, 'dmo') != date_format($curDay, 'dmo')) continue;
 
-            $this->putSlot($start, $end, $day, FALSE);
+            $this->putSlot($start, $end, $day, self::BUSY_SLOT);
         }
 
-        return $this->searchSlots($day, true);
+        return $this->searchSlots($day, self::FREE_SLOT);
     }
 
     /**
@@ -427,6 +428,7 @@ class Availability {
     }
 
 
+
     /**
      * Calculate the available appointment hours.
      *
@@ -443,11 +445,8 @@ class Availability {
      *
      * @throws Exception
      */
-    protected function generate_available_hours(
-        $date,
-        $service,
-        $empty_periods
-    )
+
+    protected function generate_available_hours($date, $service, $empty_periods)
     {
         $available_hours = [];
 
@@ -485,12 +484,8 @@ class Availability {
      *
      * @throws Exception
      */
-    protected function consider_multiple_attendants(
-        $date,
-        $service,
-        $provider,
-        $exclude_appointment_id = NULL
-    )
+
+    protected function consider_multiple_attendants($date, $service, $provider, $exclude_appointment_id = NULL)
     {
         $unavailability_events = $this->CI->appointments_model->get_batch([
             'is_unavailable' => TRUE,
@@ -589,6 +584,7 @@ class Availability {
      * @return array Returns the available time periods without the breaks.
      * @throws Exception
      */
+
     public function remove_breaks($selected_date, $periods, $breaks)
     {
         if ( ! $breaks)
@@ -653,6 +649,7 @@ class Availability {
      *
      * @throws Exception
      */
+
     public function remove_unavailability_events($periods, $unavailability_events)
     {
         foreach ($unavailability_events as $unavailability_event)
@@ -717,6 +714,7 @@ class Availability {
      *
      * @throws Exception
      */
+
     protected function consider_book_advance_timeout($selected_date, $available_hours, $provider)
     {
         $provider_timezone = new DateTimeZone($provider['timezone']);
