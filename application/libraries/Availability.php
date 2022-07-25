@@ -111,6 +111,9 @@ class Availability {
         // Search if the $date is an custom availability period added outside the normal working plan.
         if (isset($working_plan_exceptions[$date])) $date_working_plan = $working_plan_exceptions[$date];
 
+        // If no working plane is defined for the selected date, return an empty array.
+        if (!isset($date_working_plan)) return array();
+
         // Add the working slot, depending weither it is normal or custom availability period.
         $this->putSlot($date_working_plan['start'], $date_working_plan['end'], $day, self::FREE_SLOT);
 
