@@ -302,6 +302,16 @@
                 throw new Error(EALang.fields_are_required);
             }
 
+            // Validate names.
+            if (!GeneralFunctions.validateName($('#provider-first-name').val())) {
+                $('#provider-first-name').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_first_name);
+            }
+            if (!GeneralFunctions.validateName($('#provider-last-name').val())) {
+                $('#provider-last-name').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_last_name);
+            }
+
             // Validate passwords.
             if ($('#provider-password').val() !== $('#provider-password-confirm').val()) {
                 $('#provider-password, #provider-password-confirm').closest('.form-group').addClass('has-error');
@@ -314,17 +324,42 @@
                 throw new Error(EALang.password_length_notice.replace('$number', BackendUsers.MIN_PASSWORD_LENGTH));
             }
 
+            if(!GeneralFunctions.validatePassword($('#provider-password').val())){
+                $('#provider-password').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_password);
+            }
+
+
             // Validate user email.
             if (!GeneralFunctions.validateEmail($('#provider-email').val())) {
                 $('#provider-email').closest('.form-group').addClass('has-error');
                 throw new Error(EALang.invalid_email);
             }
 
+            // Validate user phone number.
+            if (!GeneralFunctions.validatePhone($('#provider-phone-number').val())) {
+                $('#provider-phone-number').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_phone_number);
+            }
+
+            // Validate user mobile number.
+            if (!GeneralFunctions.validatePhone($('#provider-mobile-number').val())) {
+                $('#provider-mobile-number').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_phone_number);
+            }
+
+
             // Check if username exists
             if ($('#provider-username').attr('already-exists') === 'true') {
                 $('#provider-username').closest('.form-group').addClass('has-error');
                 throw new Error(EALang.username_already_exists);
             }
+            // Validate username.
+            if (!GeneralFunctions.validateUsername($('#provider-username').val())) {
+                $('#provider-username').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_username);
+            }
+
 
             return true;
         } catch (error) {

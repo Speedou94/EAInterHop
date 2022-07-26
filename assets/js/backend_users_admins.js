@@ -264,6 +264,15 @@
                 throw new Error('Fields with * are  required.');
             }
 
+            // Validate names.
+            if (!GeneralFunctions.validateName($('#admin-first-name').val())) {
+                $('#admin-first-name').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_first_name);
+            }
+            if (!GeneralFunctions.validateName($('#admin-last-name').val())) {
+                $('#admin-last-name').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_last_name);
+            }
             // Validate passwords.
             if ($('#admin-password').val() !== $('#admin-password-confirm').val()) {
                 $('#admin-password, #admin-password-confirm').closest('.form-group').addClass('has-error');
@@ -276,10 +285,34 @@
                 throw new Error(EALang.password_length_notice.replace('$number', BackendUsers.MIN_PASSWORD_LENGTH));
             }
 
+            if (!GeneralFunctions.validatePassword($('#admin-password').val())) {
+                $('#admin-password').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_password);
+            }
+
+
             // Validate user email.
             if (!GeneralFunctions.validateEmail($('#admin-email').val())) {
                 $('#admin-email').closest('.form-group').addClass('has-error');
                 throw new Error(EALang.invalid_email);
+            }
+
+            // Validate user phone number.
+            if (!GeneralFunctions.validatePhone($('#admin-phone-number').val())) {
+                $('#admin-phone-number').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_phone_number);
+            }
+
+            // Validate user mobile number.
+            if (!GeneralFunctions.validatePhone($('#admin-mobile-number').val())) {
+                $('#admin-mobile-number').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_phone_number);
+            }
+
+            // Validate username.
+            if (!GeneralFunctions.validateUsername($('#admin-username').val())) {
+                $('#admin-username').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_username);
             }
 
             // Check if username exists

@@ -273,8 +273,18 @@
                     missingRequired = true;
                 }
             });
+
             if (missingRequired) {
                 throw new Error('Fields with * are  required.');
+            }
+            // Validate names.
+            if (!GeneralFunctions.validateName($('#secretary-first-name').val())) {
+                $('#secretary-first-name').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_first_name);
+            }
+            if (!GeneralFunctions.validateName($('#secretary-last-name').val())) {
+                $('#secretary-last-name').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_last_name);
             }
 
             // Validate passwords.
@@ -290,16 +300,39 @@
                     + ' characters long.');
             }
 
+            if(!GeneralFunctions.validatePassword($('#secretary-password').val())){
+                $('#secretary-password').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_password);
+            }
+
             // Validate user email.
             if (!GeneralFunctions.validateEmail($('#secretary-email').val())) {
                 $('#secretary-email').closest('.form-group').addClass('has-error');
                 throw new Error('Invalid email address!');
             }
 
+            // Validate user phone number.
+            if (!GeneralFunctions.validatePhone($('#secretary-phone-number').val())) {
+                $('#secretary-phone-number').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_phone_number);
+            }
+
+            // Validate user mobile number.
+            if (!GeneralFunctions.validatePhone($('#secretary-mobile-number').val())) {
+                $('#secretary-mobile-number').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_phone_number);
+            }
+
             // Check if username exists
             if ($('#secretary-username').attr('already-exists') === 'true') {
                 $('#secretary-username').closest('.form-group').addClass('has-error');
                 throw new Error('Username already exists.');
+            }
+
+            // Validate username.
+            if (!GeneralFunctions.validateUsername($('#secretary-username').val())) {
+                $('#secretary-username').closest('.form-group').addClass('has-error');
+                throw new Error(EALang.invalid_username);
             }
 
             return true;

@@ -231,6 +231,65 @@ window.GeneralFunctions = window.GeneralFunctions || {};
         return re.test(email);
     };
 
+    /**
+     * Validate phone number
+     *
+     * This method validates a phone number. If the phone number is not on the proper
+     * form then the result is FALSE.
+     *
+     * @param {String} phone The phone number to be checked.
+
+     * @return {Boolean} Returns the validation result.
+     */
+    exports.validatePhone = function (phone) {
+        var re = /^(\+\d+(\s)?)?\(?0?\)?\d(\s)?(\d{2}(\s)?){4}/;
+        return re.test(phone);
+    };
+
+    /**
+     * Validate password
+     *
+     * This method validates a password. If the password is not on the proper
+     * form then the result is FALSE.
+     *
+     * @param {String} password The password to be checked.
+
+     * @return {Boolean} Returns the validation result.
+     */
+    exports.validatePassword = function (password) {
+        var re = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-+!*$@%_&])([-+!*$@%_&\w]{7,30})$/;
+        return re.test(password);
+    };
+
+    /**
+     * Validate firstname and lastname
+     *
+     * This method validates names. If the name is not on the proper
+     * form then the result is FALSE.
+     *
+     * @param {String} firstname The first name to be checked.
+
+     * @return {Boolean} Returns the validation result.
+     */
+    exports.validateName = function (name) {
+        var re = /^[A-Za-zéèëêùàçÉÈËÊÙÀ'-]+$/;
+        return re.test(name);
+    };
+
+    /**
+     * Validate username
+     *
+     * This method validates a username. If the username is not on the proper
+     * form then the result is FALSE.
+     *
+     * @param {String} username The username to be checked.
+
+     * @return {Boolean} Returns the validation result.
+     */
+    exports.validateUsername = function (username) {
+        var re = /^[A-Za-z\déèëêùàçÉÈËÊÙÀ'-]+$/;
+        return re.test(username);
+    };
 
     /**
      * Makes the first letter of the string upper case.

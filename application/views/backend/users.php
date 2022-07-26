@@ -173,7 +173,7 @@
                                             <?= lang('phone_number') ?>
                                             <span class="text-danger">*</span>
                                         </label>
-                                        <input id="provider-phone-number" class="form-control required" max="128">
+                                        <input id="provider-phone-number" type="tel" class="form-control required" max="128" >
                                     </div>
 
                                     <div class="form-group">
@@ -181,7 +181,7 @@
                                             <?= lang('mobile_number') ?>
 
                                         </label>
-                                        <input id="provider-mobile-number" class="form-control" maxlength="128">
+                                        <input id="provider-mobile-number" type="tel" class="form-control" maxlength="128" >
                                     </div>
 
                                     <div class="form-group">
@@ -236,7 +236,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <input type="password" id="provider-password" class="form-control required"
-                                               maxlength="512" autocomplete="new-password">
+                                               maxlength="30" minlength="7" autocomplete="new-password">
                                     </div>
 
                                     <div class="form-group">
@@ -245,7 +245,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <input type="password" id="provider-password-confirm"
-                                               class="form-control required" maxlength="512"
+                                               class="form-control required" maxlength="30" minlength="7"
                                                autocomplete="new-password">
                                     </div>
 
