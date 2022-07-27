@@ -58,13 +58,16 @@ class Availability {
 
         $available_hours = $this->generate_available_hours($date, $service, $available_periods);
 
-        if ($service['attendants_number'] > 1)
+        /*if ($service['attendants_number'] > 1)
         {
             $available_hours = $this->consider_multiple_attendants($date, $service, $provider, $exclude_appointment_id);
-        }
+        }*/
 
         return $this->consider_book_advance_timeout($date, $available_hours, $provider);
     }
+
+
+
 
     /**
      * Get an array containing the free time periods (start - end) of a selected date.
@@ -75,21 +78,22 @@ class Availability {
      *
      * @param string $date Select date string.
      * @param array $provider Provider record.
-     * @param int|null $exclude_appointment_id Exclude an appointment from the availability generation.
+     * @param array $askedServices
+     * @param mixed $exclude_appointment_id Exclude an appointment from the availability generation.
      *
      * @return array Returns an array with the available time periods of the provider.
      *
      * @throws Exception
      */
 
-    protected function my_get_available_periods($date, $provider, $exclude_appointment_id = NULL)
+    protected function my_get_available_periods(String $date, Array $provider, Array $askedServices = null, String $exclude_appointment_id = null) : Array
     {
         // Get the service, provider's working plan and provider appointments.
-        $working_plan = json_decode($provider['settings']['working_plan'], TRUE);
+        $working_plan = json_decode($provider['settings']['working_plan'], true);
 
         // Get the provider's working plan exceptions.
         $working_plan_exceptions_json = $provider['settings']['working_plan_exceptions'];
-        $working_plan_exceptions = $working_plan_exceptions_json ? json_decode($working_plan_exceptions_json, TRUE) : NULL;
+        $working_plan_exceptions = $working_plan_exceptions_json ? json_decode($working_plan_exceptions_json, true) : null;
 
         $conditions['id_users_provider'] = $provider['id'];
 
@@ -102,8 +106,11 @@ class Availability {
         // Read all categories.
         $categories = $this->CI->services_model->get_all_categories() ?? array();
 
+        // Read all services.
+        $services = $this->CI->services_model->get_available_services() ?? array();
+
         // A day consists of 24*4 quarter hours completely free by default.
-        for ($i = 0; $i < 24 * 4; $i++) $day[$i] = self::BUSY_SLOT;
+        for ($i = 0; $i < 24 * 4; $i++) { $day[$i] = self::BUSY_SLOT; $servicesDay[$i] = 0; }
 
         // Working plan corresponding to the selected date.
         $date_working_plan = $working_plan[strtolower(date('l', strtotime($date)))] ?? NULL;
@@ -136,9 +143,23 @@ class Availability {
             $startDay = date_create_from_format('Y-m-d', substr($appointment['start_datetime'], 0, 10));
             $curDay = date_create_from_format('Y-m-d', substr($date, 0, 10));
 
+            // If this is not for the current day, skip-it.
             if (date_format($startDay, 'dmo') != date_format($curDay, 'dmo')) continue;
 
-            $this->putSlot($start, $end, $day, self::BUSY_SLOT);
+            // Search the service this appointment belongs to.
+            for ($ser = 0; $ser < count($services); $ser++) if ($services[$ser]['id'] == $appointment['id_services']) break;
+
+            // If no service was found, ignore the appointment.
+            if ($ser == count($services)) continue;
+
+            // Search the category of the service.
+            for ($cat = 0; $cat < count($categories); $cat++) if ($categories[$cat]['id'] == $services[$ser]['id_service_categories']) break;
+
+            // If the category of the appointment service is private, ignore the appointment.
+            if ( ($cat != count($categories)) && ($categories[$cat]['is_private']) ) continue;
+
+            // Handle the appointment according to his attendants customers.
+            $this->putAppointment($start, $end, $day, $servicesDay, $services[$ser]['attendants_number']);
         }
 
         return $this->searchSlots($day, self::FREE_SLOT);
@@ -149,8 +170,8 @@ class Availability {
      *
      * @param String $startHour
      * @param String $endHour
-     * @param Array    $day
-     * @param Bool     $state
+     * @param Array  $day
+     * @param Bool   $state
      *
      * @return void
      */
@@ -231,12 +252,47 @@ class Availability {
         return false;
     }
 
+    /**
+     * @param string $startHour
+     * @param string $endHour
+     * @param array  $day
+     * @param array  $servicesDay
+     * @param int    $attendants
+     *
+     * @return void
+     * @throws Exception
+     */
+
+    private function putAppointment(string $startHour, string $endHour, Array &$day, Array &$servicesDay, int $attendants)
+    {
+        $startDate = new DateTime($startHour);
+        $endDate = new DateTime($endHour);
+
+        $start = (date_format($startDate, 'H') * 4 + date_format($startDate, 'i') / 15) * 1;
+        $end = (date_format($endDate, 'H') * 4 + date_format($endDate, 'i') / 15) * 1;
+
+        for ($i = $start; $i < $end; $i++)
+        {
+            if (!$servicesDay[$i]) $servicesDay[$i] = $attendants;
+
+            $servicesDay[$i]--;
+
+            $day[$i] = $servicesDay[$i] ? self::FREE_SLOT : self::BUSY_SLOT;
+        }
+    }
+
+
+
+
+
+
+
 
 
 
     protected function get_available_periods($date, $provider, $exclude_appointment_id = NULL)
     {
-        $periods = $this->my_get_available_periods($date, $provider, $exclude_appointment_id);
+        $periods = $this->my_get_available_periods($date, $provider, null, $exclude_appointment_id);
 
         return $periods;
 
@@ -429,8 +485,6 @@ class Availability {
 
         return array_values($periods);
     }
-
-
 
     /**
      * Calculate the available appointment hours.
