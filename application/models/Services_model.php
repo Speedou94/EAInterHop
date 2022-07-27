@@ -352,19 +352,22 @@ class Services_model extends EA_Model {
      *
      * @return array Returns an object array with all the database services.
      */
-    public function get_available_services()
+    public function get_available_services($where = NULL)
     {
         $this->db->distinct();
-        return $this->db
-            ->select('services.*, service_categories.name AS category_name, '
+
+        $this->db->select('services.*, service_categories.name AS category_name, '
                 . 'service_categories.id AS category_id')
             ->from('services')
             ->join('services_providers',
                 'services_providers.id_services = services.id', 'inner')
             ->join('service_categories',
                 'service_categories.id = services.id_service_categories', 'left')
-            ->order_by('name ASC')
-            ->get()->result_array();
+            ->order_by('name ASC');
+
+        if ($where) $this->db->where($where);
+
+        return $this->db->get()->result_array();
     }
 
     /**

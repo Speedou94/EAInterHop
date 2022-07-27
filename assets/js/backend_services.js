@@ -45,7 +45,7 @@ window.BackendServices = window.BackendServices || {};
             $('#service-category').append(new Option(category.name, category.id));
         });
 
-        $('#service-category').append(new Option('- ' + EALang.no_category + ' -', null)).val('null');
+        // $('#service-category').append(new Option('- ' + EALang.no_category + ' -', null)).val('null');
 
         // Instantiate helper object (service helper by default).
         helper = servicesHelper;

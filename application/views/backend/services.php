@@ -139,14 +139,14 @@
                     <div class="form-group">
                         <label for="service-category">
                             <?= lang('category') ?>
+                            <span class="text-danger">*</span>
                         </label>
-                        <select id="service-category" class="form-control"></select>
+                        <select id="service-category" class="form-control required"></select>
                     </div>
 
                     <div class="form-group">
                         <label for="service-availabilities-type">
                             <?= lang('availabilities_type') ?>
-
                         </label>
                         <select id="service-availabilities-type" class="form-control">
                             <option value="<?= AVAILABILITIES_TYPE_FLEXIBLE ?>">

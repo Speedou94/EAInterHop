@@ -58,7 +58,7 @@ class Appointments extends EA_Controller {
                 return;
             }
 
-            $available_services = $this->services_model->get_available_services();
+            $available_services = $this->services_model->get_available_services("is_private = 0");
             $available_providers = $this->providers_model->get_available_providers();
             $company_name = $this->settings_model->get_setting('company_name');
             $book_advance_timeout = $this->settings_model->get_setting('book_advance_timeout');
