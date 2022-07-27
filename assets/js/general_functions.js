@@ -243,7 +243,7 @@ window.GeneralFunctions = window.GeneralFunctions || {};
      */
     exports.validatePhone = function (phone) {
         var re = /^(\+\d+(\s)?)?\(?0?\)?\d(\s)?(\d{2}(\s)?){4}/;
-        return re.test(phone);
+        return !phone || re.test(phone);
     };
 
     /**
@@ -258,7 +258,7 @@ window.GeneralFunctions = window.GeneralFunctions || {};
      */
     exports.validatePassword = function (password) {
         var re = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-+!*$@%_&])([-+!*$@%_&\w]{7,30})$/;
-        return re.test(password);
+        return !password || re.test(password);
     };
 
     /**
