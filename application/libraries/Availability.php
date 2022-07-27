@@ -54,7 +54,9 @@ class Availability {
      */
     public function get_available_hours($date, $service, $provider, $exclude_appointment_id = NULL)
     {
-        $available_periods = $this->get_available_periods($date, $provider, $exclude_appointment_id);
+        //$available_periods = $this->get_available_periods($date, $provider, $exclude_appointment_id);
+
+        $available_periods = $this->my_get_available_periods($date, $provider, $service, $exclude_appointment_id);
 
         $available_hours = $this->generate_available_hours($date, $service, $available_periods);
 
@@ -78,7 +80,7 @@ class Availability {
      *
      * @param string $date Select date string.
      * @param array $provider Provider record.
-     * @param array $askedServices
+     * @param array $askedService
      * @param mixed $exclude_appointment_id Exclude an appointment from the availability generation.
      *
      * @return array Returns an array with the available time periods of the provider.
@@ -86,7 +88,7 @@ class Availability {
      * @throws Exception
      */
 
-    protected function my_get_available_periods(String $date, Array $provider, Array $askedServices = null, String $exclude_appointment_id = null) : Array
+    protected function my_get_available_periods(String $date, Array $provider, Array $askedService = null, String $exclude_appointment_id = null) : Array
     {
         // Get the service, provider's working plan and provider appointments.
         $working_plan = json_decode($provider['settings']['working_plan'], true);
@@ -110,7 +112,7 @@ class Availability {
         $services = $this->CI->services_model->get_available_services() ?? array();
 
         // A day consists of 24*4 quarter hours completely free by default.
-        for ($i = 0; $i < 24 * 4; $i++) { $day[$i] = self::BUSY_SLOT; $servicesDay[$i] = 0; }
+        for ($i = 0; $i < 24 * 4; $i++) { $day[$i] = self::BUSY_SLOT; $servicesDay[$i] = 0; $categoriesDay[$i] = 0; }
 
         // Working plan corresponding to the selected date.
         $date_working_plan = $working_plan[strtolower(date('l', strtotime($date)))] ?? NULL;
@@ -124,6 +126,9 @@ class Availability {
         // Add the working slot, depending weither it is normal or custom availability period.
         $this->putSlot($date_working_plan['start'], $date_working_plan['end'], $day, self::FREE_SLOT);
 
+        // Search the category of the possible supplied service.
+        $askedCat = $this->searchCategory($askedService, $categories);
+
         // Subtract all the breaks from the working day.
         if (isset($date_working_plan['breaks']))
             foreach ($date_working_plan['breaks'] as $break)
@@ -131,9 +136,17 @@ class Availability {
 
         // Subtract all the private specialized slots from the working day.
         if (isset($date_working_plan['specializeds']))
+        {
             foreach ($date_working_plan['specializeds'] as $specialized)
+            {
+                // If the category is private, subtract the slot by marking it busy.
                 if ($this->isPrivate($specialized['category'], $categories))
                     $this->putSlot($specialized['start'], $specialized['end'], $day, self::BUSY_SLOT);
+
+                // Categorize this period of the day.
+                $this->putCat($specialized['start'], $specialized['end'], $categoriesDay, $specialized['category']);
+            }
+        }
 
         // Subtract all the appointments from the working day.
         foreach ($appointments as $appointment)
@@ -152,17 +165,14 @@ class Availability {
             // If no service was found, ignore the appointment.
             if ($ser == count($services)) continue;
 
-            // Search the category of the service.
-            for ($cat = 0; $cat < count($categories); $cat++) if ($categories[$cat]['id'] == $services[$ser]['id_service_categories']) break;
-
-            // If the category of the appointment service is private, ignore the appointment.
-            if ( ($cat != count($categories)) && ($categories[$cat]['is_private']) ) continue;
+            // Search the category of the service this appointment belongs to and ignore-it if private
+            if ( ($cat = $this->searchCategory($services[$ser], $categories)) && ($this->isPrivate($cat, $categories)) ) continue;
 
             // Handle the appointment according to his attendants customers.
             $this->putAppointment($start, $end, $day, $servicesDay, $services[$ser]['attendants_number']);
         }
 
-        return $this->searchSlots($day, self::FREE_SLOT);
+        return $this->searchSlots($day, $categoriesDay, $askedCat, self::FREE_SLOT);
     }
 
     /**
@@ -188,24 +198,45 @@ class Availability {
     }
 
     /**
-     * Search for the desired slots in the working day.
+     * @param string $startHour
+     * @param string $endHour
+     * @param array  $categoriesDay
+     * @param int    $categoryId
      *
+     * @return void
+     * @throws Exception
+     */
+
+    private function putCat(string $startHour, string $endHour, Array &$categoriesDay, int $categoryId)
+    {
+        $startDate = new DateTime($startHour);
+        $endDate = new DateTime($endHour);
+
+        $start = (date_format($startDate, 'H') * 4 + date_format($startDate, 'i') / 15) *1;
+        $end = (date_format($endDate, 'H') * 4 + date_format($endDate, 'i') / 15) *1;
+
+        for ($i = $start; $i < $end; $i++) $categoriesDay[$i] = $categoryId;
+    }
+
+    /**
      * @param $day
+     * @param $categoriesDay
+     * @param $askedCat
      * @param $state
      *
      * @return array
      * @throws Exception
      */
 
-    private function searchSlots($day, $state): array
+    private function searchSlots(&$day, &$categoriesDay, $askedCat, $state): array
     {
         $slots = array();
 
         // Scan the day supplied in parameters.
         for ($i = 0, $start = NULL, $end = NULL, $put = FALSE; $i < 24 * 4; $i++)
         {
-            // if the beginning or a desired slot is found.
-            if ($day[$i] == $state)
+            // if the beginning of a desired slot is found.
+            if (($day[$i] == $state) && !(($askedCat) && ($categoriesDay[$i] != $askedCat)))
             {
                 if ($start == NULL) $start = $i;
                 $end = $i + 1;
@@ -253,6 +284,25 @@ class Availability {
     }
 
     /**
+     * @param array $service
+     * @param array $categories
+     *
+     * @return int
+     */
+
+    private function searchCategory(array $service, array $categories): int
+    {
+        // If no service is supplied or has no category, return 0.
+        if ( (!isset($service)) || (!$service['id_service_categories']) ) return 0;
+
+        // Search the category of the service.
+        foreach ($categories as $cat) if ($cat['id'] == $service['id_service_categories']) return $cat['id'];
+
+        // If no category was found, return 0.
+        return 0;
+    }
+
+    /**
      * @param string $startHour
      * @param string $endHour
      * @param array  $day
@@ -273,6 +323,8 @@ class Availability {
 
         for ($i = $start; $i < $end; $i++)
         {
+            if ($day[$i] == self::BUSY_SLOT) continue;
+
             if (!$servicesDay[$i]) $servicesDay[$i] = $attendants;
 
             $servicesDay[$i]--;
