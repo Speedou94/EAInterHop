@@ -307,7 +307,7 @@ window.FrontendBook = window.FrontendBook || {};
                         }
                     }
 
-
+                    FrontendBookApi.sendVerificationCode();
                 }
             }
 

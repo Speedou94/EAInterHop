@@ -222,6 +222,24 @@ window.FrontendBookApi = window.FrontendBookApi || {};
             });
     };
 
+    exports.sendVerificationCode = function () {
+        var url = GlobalVariables.baseUrl + '/index.php/appointments/ajax_send_verification_code';
+
+        var email = { email: $('#email').val() };
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: email,
+            dataType: 'json'
+        })
+            .done(function (response) {
+            })
+            .fail(function (jqxhr, textStatus, errorThrown) {
+            console.log(textStatus);
+        })
+    }
+
     /**
      * Get the unavailable dates of a provider.
      *

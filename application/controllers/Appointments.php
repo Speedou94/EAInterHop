@@ -463,6 +463,13 @@ class Appointments extends EA_Controller {
             ->set_output(json_encode($response));
     }
 
+    protected function ajax_send_notification_code()
+    {
+        $post_data = $this->input->post('post_data');
+        $post_data = json_decode($post_data, true);
+        echo($post_data['email']);
+    }
+
     /**
      * Search for any provider that can handle the requested service.
      *
@@ -506,7 +513,6 @@ class Appointments extends EA_Controller {
 
         return $provider_id;
     }
-
 
     /**
      * Register the appointment to the database.
@@ -775,6 +781,4 @@ class Appointments extends EA_Controller {
 
         return $provider_list;
     }
-
-
 }
