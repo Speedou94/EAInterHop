@@ -306,11 +306,14 @@ window.FrontendBook = window.FrontendBook || {};
                             FrontendBookApi.saveConsent(privacyPolicyConsent);
                         }
                     }
+
+
                 }
             }
 
             if ($(this).attr('data-step_index') === '4') {
-                if (!validateCustomerForm(4)) return; // Validation failed, do not continue.
+                if (!validateCustomerForm(4))
+                    return; // Validation failed, do not continue.
             }
 
             // Display the next step tab (uses jquery animation effect).

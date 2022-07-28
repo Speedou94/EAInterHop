@@ -342,4 +342,6 @@ $lang['category_color'] = 'Couleur associée à la catégorie';
 $lang['no_public_category'] = 'Si l\'option est activée, la catégorie devient privée et ne peut être accessible aux patients.';
 $lang['category_private'] = 'Catégorie privée';
 $lang['email_validation'] = 'Validation de l\'email.';
+$lang['email_validation_hint'] = 'Veuillez saisir le code de vérification reçu par email.';
+$lang['email_validation_code'] = 'Code de validation';
 // End

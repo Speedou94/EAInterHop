@@ -364,13 +364,12 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <p>
-                                    validation code will be sent to your email address.
-                                    <?= lang('first_name') ?>
+                                    <?= lang('email_validation_hint') ?>
                                 </p>
                             </div>
                             <div class="form-group">
                                 <label for="code" class="control-label">
-                                    <?= lang('last_name') ?>
+                                    <?= lang('email_validation_code') ?>
                                 </label>
                                 <input type="text" id="code" class="required form-control" maxlength="120"/>
                             </div>
