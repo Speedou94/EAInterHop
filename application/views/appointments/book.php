@@ -46,8 +46,12 @@
                         <strong>3</strong>
                     </div>
                     <div id="step-4" class="book-step" data-toggle="tooltip"
-                         data-tippy-content="<?= lang('appointment_confirmation') ?>">
+                         data-tippy-content="<?= lang('email_validation') ?>">
                         <strong>4</strong>
+                    </div>
+                    <div id="step-5" class="book-step" data-toggle="tooltip"
+                         data-tippy-content="<?= lang('appointment_confirmation') ?>">
+                        <strong>5</strong>
                     </div>
                 </div>
             </div>
@@ -349,9 +353,76 @@
                 </div>
             </div>
 
-            <!-- APPOINTMENT DATA CONFIRMATION -->
+            <!-- EMAIL VALIDATION -->
 
             <div id="wizard-frame-4" class="wizard-frame" style="display:none;">
+                <div class="frame-container">
+
+                    <h2 class="frame-title"><?= lang('email_validation') ?></h2>
+
+                    <div class="row frame-content">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <p>
+                                    <?= lang('first_name') ?>
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="code" class="control-label">
+                                    <?= lang('last_name') ?>
+                                </label>
+                                <input type="text" id="code" class="required form-control" maxlength="120"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <?php if ($display_terms_and_conditions): ?>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="required form-check-input" id="accept-to-terms-and-conditions">
+                        <label class="form-check-label" for="accept-to-terms-and-conditions">
+                            <?= strtr(lang('read_and_agree_to_terms_and_conditions'),
+                                [
+                                    '{$link}' => '<a href="#" data-toggle="modal" data-target="#terms-and-conditions-modal">',
+                                    '{/$link}' => '</a>'
+                                ])
+                            ?>
+                        </label>
+                    </div>
+                <?php endif ?>
+
+                <?php if ($display_privacy_policy): ?>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="required form-check-input" id="accept-to-privacy-policy">
+                        <label class="form-check-label" for="accept-to-privacy-policy">
+                            <?= strtr(lang('read_and_agree_to_privacy_policy'),
+                                [
+                                    '{$link}' => '<a href="#" data-toggle="modal" data-target="#privacy-policy-modal">',
+                                    '{/$link}' => '</a>'
+                                ])
+                            ?>
+                        </label>
+                    </div>
+                <?php endif ?>
+
+                <div class="command-buttons">
+                    <button type="button" id="button-back-4" class="btn button-back btn-outline-secondary"
+                            data-step_index="4">
+                        <i class="fas fa-chevron-left mr-2"></i>
+                        <?= lang('back') ?>
+                    </button>
+                    <button type="button" id="button-next-4" class="btn button-next btn-dark"
+                            data-step_index="4">
+                        <?= lang('next') ?>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- APPOINTMENT DATA CONFIRMATION -->
+
+            <div id="wizard-frame-5" class="wizard-frame" style="display:none;">
                 <div class="frame-container">
                     <h2 class="frame-title"><?= lang('appointment_confirmation') ?></h2>
                     <div class="row frame-content">
@@ -376,8 +447,8 @@
                 </div>
 
                 <div class="command-buttons">
-                    <button type="button" id="button-back-4" class="btn button-back btn-outline-secondary"
-                            data-step_index="4">
+                    <button type="button" id="button-back-5" class="btn button-back btn-outline-secondary"
+                            data-step_index="5">
                         <i class="fas fa-chevron-left mr-2"></i>
                         <?= lang('back') ?>
                     </button>

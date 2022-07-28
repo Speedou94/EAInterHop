@@ -341,4 +341,5 @@ $lang['add_specialized_working_plan'] = 'Ajouter des horaires dédiés';
 $lang['category_color'] = 'Couleur associée à la catégorie';
 $lang['no_public_category'] = 'Si l\'option est activée, la catégorie devient privée et ne peut être accessible aux patients.';
 $lang['category_private'] = 'Catégorie privée';
+$lang['email_validation'] = 'Validation de l\'email.';
 // End

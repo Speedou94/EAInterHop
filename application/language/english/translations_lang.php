@@ -342,6 +342,7 @@ $lang['add_specialized_working_plan'] = 'Add Specialized Working Plan';
 $lang['category_color'] = 'Assigned category color';
 $lang['no_public_category'] = 'When activated, the category becomes private and cannot be accessed by patients';
 $lang['category_private'] = 'Private category';
+$lang['email_validation'] = 'Email validation .';
 
 
 // End
