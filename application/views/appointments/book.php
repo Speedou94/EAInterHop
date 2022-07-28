@@ -364,6 +364,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <p>
+                                    validation code will be sent to your email address.
                                     <?= lang('first_name') ?>
                                 </p>
                             </div>

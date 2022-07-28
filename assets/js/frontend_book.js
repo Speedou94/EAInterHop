@@ -272,7 +272,7 @@ window.FrontendBook = window.FrontendBook || {};
             // If we are on the 3rd tab then we will need to validate the user's input before proceeding to the next
             // step.
             if ($(this).attr('data-step_index') === '3') {
-                if (!validateCustomerForm()) {
+                if (!validateCustomerForm(3)) {
                     return; // Validation failed, do not continue.
                 } else {
                     FrontendBook.updateConfirmFrame();
@@ -307,6 +307,10 @@ window.FrontendBook = window.FrontendBook || {};
                         }
                     }
                 }
+            }
+
+            if ($(this).attr('data-step_index') === '4') {
+                if (!validateCustomerForm(4)) return; // Validation failed, do not continue.
             }
 
             // Display the next step tab (uses jquery animation effect).
@@ -451,14 +455,18 @@ window.FrontendBook = window.FrontendBook || {};
      *
      * @return {Boolean} Returns the validation result.
      */
-    function validateCustomerForm() {
+    function validateCustomerForm(activeTabIndex) {
         $('#wizard-frame-3 .has-error').removeClass('has-error');
         $('#wizard-frame-3 label.text-danger').removeClass('text-danger');
+
+        $('#wizard-frame-4 .has-error').removeClass('has-error');
+        $('#wizard-frame-4 label.text-danger').removeClass('text-danger');
 
         try {
             // Validate required fields.
             var missingRequiredField = false;
-            $('.required').each(function (index, requiredField) {
+
+            $('#wizard-frame-'+ activeTabIndex + ' .required').each(function (index, requiredField) {
                 if (!$(requiredField).val()) {
                     $(requiredField).parents('.form-group').addClass('has-error');
                     missingRequiredField = true;
