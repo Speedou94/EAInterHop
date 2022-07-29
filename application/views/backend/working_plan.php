@@ -26,7 +26,7 @@
         }
     };
 
-    $(function () { BackendWorkingPlan.initialize(true); })
+    $(function () { BackendWorkingPlan.initialize(); })
 </script>
 
 <div class="container-fluid backend-page" id="workingplan-page">

@@ -20,8 +20,8 @@ window.BackendWorkingPlan = window.BackendWorkingPlan || {};
  *
  * @module BackendCustomers
  */
-(function (exports) {
-
+(function (exports)
+{
     'use strict';
 
     /**
@@ -46,14 +46,15 @@ window.BackendWorkingPlan = window.BackendWorkingPlan || {};
      * @param {Boolean} defaultEventHandlers Optional (false), whether to bind the default
      * event handlers or not.
      */
-    exports.initialize = function (defaultEventHandlers) {
-        defaultEventHandlers = defaultEventHandlers || false;
 
+    exports.initialize = function ()
+    {
         exports.wp = new WorkingPlan();
         exports.wp.bindEventHandlers();
 
         // Add the available languages to the language dropdown.
-        availableLanguages.forEach(function (language) {
+        availableLanguages.forEach(function (language)
+        {
             $('#language').append(new Option(language, language));
         });
 
@@ -64,15 +65,5 @@ window.BackendWorkingPlan = window.BackendWorkingPlan || {};
         else helper.filter('');
 
         helper.bindEventHandlers();
-
-        if (defaultEventHandlers) bindEventHandlers();
     };
-
-    /**
-     * Default event handlers declaration for backend working plan page.
-     */
-    function bindEventHandlers() {
-        //
-    }
-
 })(window.BackendWorkingPlan);

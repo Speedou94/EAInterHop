@@ -463,11 +463,13 @@ class Appointments extends EA_Controller {
             ->set_output(json_encode($response));
     }
 
-    protected function ajax_send_notification_code()
+    public function ajax_send_verification_code()
     {
-        $post_data = $this->input->post('post_data');
-        $post_data = json_decode($post_data, true);
-        echo($post_data['email']);
+        $email = $this->input->get('email');
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output('Verification code sent');
     }
 
     /**
