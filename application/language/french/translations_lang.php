@@ -341,7 +341,10 @@ $lang['add_specialized_working_plan'] = 'Ajouter des horaires dédiés';
 $lang['category_color'] = 'Couleur associée à la catégorie';
 $lang['no_public_category'] = 'Si l\'option est activée, la catégorie devient privée et ne peut être accessible aux patients.';
 $lang['category_private'] = 'Catégorie privée';
-$lang['email_validation'] = 'Validation de l\'email.';
+$lang['email_validation'] = 'Vérification de l\'email.';
 $lang['email_validation_hint'] = 'Veuillez saisir le code de vérification reçu par email.';
 $lang['email_validation_code'] = 'Code de validation';
+$lang['email_validation_mail_title'] = 'Vérification de votre email';
+$lang['validation_code_is'] = 'Voici votre code de vérification d\'email à saisir sur le site :';
+$lang['invalid_validation_code'] = 'Code de validation de l\'email invalide.';
 // End

@@ -303,6 +303,42 @@ class Email {
         }
     }
 
+
+    /**
+     * This method sends an email with the new password of a user.
+     *
+     * @param string $code Contains the code.
+     * @param \EA\Engine\Types\Email $recipientEmail The receiver's email address.
+     * @param array $settings The company settings to be included in the email.
+     *
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
+    public function send_validation_code(string $code, EmailAddress $recipientEmail, array $settings)
+    {
+        $html = $this->CI->load->view('emails/validation_code', [
+            'email_title' => lang('email_validation_mail_title'),
+            'email_message' => lang('validation_code_is'),
+            'validation_code' => $code,
+            'company_name' => $settings['company_name'],
+            'company_email' => $settings['company_email'],
+            'company_link' => $settings['company_link'],
+        ], TRUE);
+
+        $mailer = $this->create_mailer();
+
+        $mailer->From = $settings['company_email'];
+        $mailer->FromName = $settings['company_name'];
+        $mailer->AddAddress($recipientEmail->get()); // "Name" argument crushes the phpmailer class.
+        $mailer->Subject = lang('email_validation');
+        $mailer->Body = $html;
+
+        if ( ! $mailer->Send())
+        {
+            throw new RuntimeException('Email could not been sent. Mailer Error (Line ' . __LINE__ . '): '
+                . $mailer->ErrorInfo);
+        }
+    }
+
     /**
      * Create PHP Mailer Instance
      *

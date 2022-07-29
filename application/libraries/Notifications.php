@@ -224,4 +224,28 @@ class Notifications {
             $exceptions[] = $exception;
         }
     }
+
+    /**
+     * Send the required notifications, related to an email verification.
+     *
+     * @param string $code Verification code.
+     * @param string $customerEmail Customer email.
+     * @param array $settings Required settings for the notification content.
+     */
+    public function notify_validation_code(string $code, string $customerEmail, array $settings)
+    {
+        // Send email notification to customer and provider.
+        try {
+            $email = new EmailClient($this->CI, $this->CI->config->config);
+
+            $email->send_validation_code($code,new Email($customerEmail) ,$settings);
+        }
+        catch (Exception $exception)
+        {
+            log_message('error', $exception->getMessage());
+            log_message('error', $exception->getTraceAsString());
+        }
+    }
+
+
 }

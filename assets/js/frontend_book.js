@@ -314,6 +314,7 @@ window.FrontendBook = window.FrontendBook || {};
             if ($(this).attr('data-step_index') === '4') {
                 if (!validateCustomerForm(4))
                     return; // Validation failed, do not continue.
+                FrontendBook.updateConfirmFrame();
             }
 
             // Display the next step tab (uses jquery animation effect).
@@ -642,6 +643,8 @@ window.FrontendBook = window.FrontendBook || {};
             id_users_provider: $('#select-provider').val(),
             id_services: $('#select-service').val()
         };
+
+        data.validation_code = $('#wizard-frame-4 #code').val();
 
         data.manage_mode = FrontendBook.manageMode;
 

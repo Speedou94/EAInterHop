@@ -343,6 +343,10 @@ $lang['category_color'] = 'Assigned category color';
 $lang['no_public_category'] = 'When activated, the category becomes private and cannot be accessed by patients';
 $lang['category_private'] = 'Private category';
 $lang['email_validation'] = 'Email validation .';
-
+$lang['email_validation_mail_title'] = 'Email validation';
+$lang['validation_code_is'] = 'Here is your email validation code, please type it on the website :';
+$lang['email_validation_hint'] = 'Please enter the code you recieved by email.';
+$lang['email_validation_code'] = 'Validation code';
+$lang['invalid_validation_code'] = 'Invalide validation code.';
 
 // End

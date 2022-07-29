@@ -16,7 +16,8 @@
  *
  * @package Controllers
  */
-class Appointments extends EA_Controller {
+class Appointments extends EA_Controller
+{
     /**
      * Class Constructor
      */
@@ -50,10 +51,8 @@ class Appointments extends EA_Controller {
      */
     public function index($appointment_hash = '')
     {
-        try
-        {
-            if ( ! is_app_installed())
-            {
+        try {
+            if (!is_app_installed()) {
                 redirect('installation/index');
                 return;
             }
@@ -76,8 +75,7 @@ class Appointments extends EA_Controller {
             $timezones = $this->timezones->to_array();
 
             // Remove the data that are not needed inside the $available_providers array.
-            foreach ($available_providers as $index => $provider)
-            {
+            foreach ($available_providers as $index => $provider) {
                 $stripped_data = [
                     'id' => $provider['id'],
                     'first_name' => $provider['first_name'],
@@ -89,8 +87,7 @@ class Appointments extends EA_Controller {
             }
 
             // Remove the data that are not needed inside the $available_services array.
-            foreach ($available_services as $index => $service)
-            {
+            foreach ($available_services as $index => $service) {
                 $stripped_data = [
                     'id' => $service['id'],
                     'name' => $service['name'],
@@ -107,15 +104,13 @@ class Appointments extends EA_Controller {
 
             // If an appointment hash is provided then it means that the customer is trying to edit a registered
             // appointment record.
-            if ($appointment_hash !== '')
-            {
+            if ($appointment_hash !== '') {
                 // Load the appointments data and enable the manage mode of the page.
                 $manage_mode = TRUE;
 
                 $results = $this->appointments_model->get_batch(['hash' => $appointment_hash]);
 
-                if (empty($results))
-                {
+                if (empty($results)) {
                     // The requested appointment doesn't exist in the database. Display a message to the customer.
                     $variables = [
                         'message_title' => lang('appointment_not_found'),
@@ -133,8 +128,7 @@ class Appointments extends EA_Controller {
                 $startDate = strtotime($results[0]['start_datetime']);
                 $limit = strtotime('+' . $book_advance_timeout . ' minutes', strtotime('now'));
 
-                if ($startDate < $limit)
-                {
+                if ($startDate < $limit) {
                     $hours = floor($book_advance_timeout / 60);
                     $minutes = ($book_advance_timeout % 60);
 
@@ -190,9 +184,7 @@ class Appointments extends EA_Controller {
 
                 // Save the token for 10 minutes.
                 $this->cache->save('customer-token-' . $customer_token, $customer['id'], 600);
-            }
-            else
-            {
+            } else {
                 // The customer is going to book a new appointment so there is no need for the manage functionality to
                 // be initialized.
                 $manage_mode = FALSE;
@@ -225,9 +217,7 @@ class Appointments extends EA_Controller {
                 'timezones' => $timezones,
                 'display_any_provider' => $display_any_provider,
             ];
-        }
-        catch (Exception $exception)
-        {
+        } catch (Exception $exception) {
             $variables['exceptions'][] = $exception;
         }
 
@@ -245,20 +235,17 @@ class Appointments extends EA_Controller {
      */
     public function cancel($appointment_hash)
     {
-        try
-        {
+        try {
             $cancel_reason = $this->input->post('cancel_reason');
 
-            if ($this->input->method() !== 'post' || empty($cancel_reason))
-            {
+            if ($this->input->method() !== 'post' || empty($cancel_reason)) {
                 show_error('Bad Request', 400);
             }
 
             // Check whether the appointment hash exists in the database.
             $appointments = $this->appointments_model->get_batch(['hash' => $appointment_hash]);
 
-            if (empty($appointments))
-            {
+            if (empty($appointments)) {
                 throw new Exception('No record matches the provided hash.');
             }
 
@@ -276,16 +263,13 @@ class Appointments extends EA_Controller {
             ];
 
             // Remove the appointment record from the data.
-            if ( ! $this->appointments_model->delete($appointment['id']))
-            {
+            if (!$this->appointments_model->delete($appointment['id'])) {
                 throw new Exception('Appointment could not be deleted from the database.');
             }
 
             $this->synchronization->sync_appointment_deleted($appointment, $provider);
             $this->notifications->notify_appointment_deleted($appointment, $service, $provider, $customer, $settings);
-        }
-        catch (Exception $exception)
-        {
+        } catch (Exception $exception) {
             // Display the error message to the customer.
             $exceptions[] = $exception;
         }
@@ -296,8 +280,7 @@ class Appointments extends EA_Controller {
             'message_icon' => base_url('assets/img/success.png')
         ];
 
-        if (isset($exceptions))
-        {
+        if (isset($exceptions)) {
             $view['exceptions'] = $exceptions;
         }
 
@@ -315,8 +298,7 @@ class Appointments extends EA_Controller {
     {
         $appointments = $this->appointments_model->get_batch(['hash' => $appointment_hash]);
 
-        if (empty($appointments))
-        {
+        if (empty($appointments)) {
             $vars = [
                 'message_title' => lang('appointment_not_found'),
                 'message_text' => lang('appointment_does_not_exist_in_db'),
@@ -339,17 +321,17 @@ class Appointments extends EA_Controller {
         $company_name = $this->settings_model->get_setting('company_name');
 
         $provider_timezone_instance = new DateTimeZone($provider['timezone']);
-        
+
         $utc_timezone_instance = new DateTimeZone('UTC');
-        
+
         $appointment_start_instance = new DateTime($appointment['start_datetime'], $provider_timezone_instance);
-        
+
         $appointment_start_instance->setTimezone($utc_timezone_instance);
 
         $appointment_end_instance = new DateTime($appointment['end_datetime'], $provider_timezone_instance);
 
         $appointment_end_instance->setTimezone($utc_timezone_instance);
-        
+
         $add_to_google_url_params = [
             'action' => 'TEMPLATE',
             'text' => $service['name'],
@@ -388,8 +370,7 @@ class Appointments extends EA_Controller {
             'add_to_google_url' => $add_to_google_url,
         ];
 
-        if ($exceptions)
-        {
+        if ($exceptions) {
             $view['exceptions'] = $exceptions;
         }
 
@@ -406,15 +387,13 @@ class Appointments extends EA_Controller {
      */
     public function ajax_get_available_hours()
     {
-        try
-        {
+        try {
             $provider_id = $this->input->post('provider_id');
             $service_id = $this->input->post('service_id');
             $selected_date = $this->input->post('selected_date');
 
             // Do not continue if there was no provider selected (more likely there is no provider in the system).
-            if (empty($provider_id))
-            {
+            if (empty($provider_id)) {
                 $this->output
                     ->set_content_type('application/json')
                     ->set_output(json_encode([]));
@@ -428,12 +407,10 @@ class Appointments extends EA_Controller {
 
             // If the user has selected the "any-provider" option then we will need to search for an available provider
             // that will provide the requested service.
-            if ($provider_id === ANY_PROVIDER)
-            {
+            if ($provider_id === ANY_PROVIDER) {
                 $provider_id = $this->search_any_provider($service_id, $selected_date);
 
-                if ($provider_id === NULL)
-                {
+                if ($provider_id === NULL) {
                     $this->output
                         ->set_content_type('application/json')
                         ->set_output(json_encode([]));
@@ -447,9 +424,7 @@ class Appointments extends EA_Controller {
             $provider = $this->providers_model->get_row($provider_id);
 
             $response = $this->availability->get_available_hours($selected_date, $service, $provider, $exclude_appointment_id);
-        }
-        catch (Exception $exception)
-        {
+        } catch (Exception $exception) {
             $this->output->set_status_header(500);
 
             $response = [
@@ -463,13 +438,31 @@ class Appointments extends EA_Controller {
             ->set_output(json_encode($response));
     }
 
+
     public function ajax_send_verification_code()
     {
         $email = $this->input->get('email');
 
+        $settings = [
+            'company_name' => $this->settings_model->get_setting('company_name'),
+            'company_email' => $this->settings_model->get_setting('company_email'),
+            'company_link' => $this->settings_model->get_setting('company_link'),
+        ];
+        //generate a verification code
+        $code = $this->generate_verification_code();
+        $_SESSION['validation_code'] = $code;
+
+        $this->notifications->notify_validation_code($code, $email, $settings);
+
         $this->output
             ->set_content_type('application/json')
             ->set_output('Verification code sent');
+    }
+
+    protected function generate_verification_code()
+    {
+        $code = rand(100000, 999999);
+        return $code;
     }
 
     /**
@@ -495,17 +488,13 @@ class Appointments extends EA_Controller {
 
         $max_hours_count = 0;
 
-        foreach ($available_providers as $provider)
-        {
-            foreach ($provider['services'] as $provider_service_id)
-            {
-                if ($provider_service_id == $service_id)
-                {
+        foreach ($available_providers as $provider) {
+            foreach ($provider['services'] as $provider_service_id) {
+                if ($provider_service_id == $service_id) {
                     // Check if the provider is available for the requested date.
                     $available_hours = $this->availability->get_available_hours($date, $service, $provider);
 
-                    if (count($available_hours) > $max_hours_count && (empty($hour) || in_array($hour, $available_hours, FALSE)))
-                    {
+                    if (count($available_hours) > $max_hours_count && (empty($hour) || in_array($hour, $available_hours, FALSE))) {
                         $provider_id = $provider['id'];
                         $max_hours_count = count($available_hours);
                     }
@@ -523,8 +512,7 @@ class Appointments extends EA_Controller {
      */
     public function ajax_register_appointment()
     {
-        try
-        {
+        try {
             $post_data = $this->input->post('post_data');
             $captcha = $this->input->post('captcha');
             $manage_mode = filter_var($post_data['manage_mode'], FILTER_VALIDATE_BOOLEAN);
@@ -534,8 +522,11 @@ class Appointments extends EA_Controller {
             // Check appointment availability before registering it to the database.
             $appointment['id_users_provider'] = $this->check_datetime_availability();
 
-            if ( ! $appointment['id_users_provider'])
-            {
+            if($post_data['validation_code'] != $_SESSION['validation_code']){
+                throw new Exception(lang('invalid_validation_code'));
+            }
+
+            if (!$appointment['id_users_provider']) {
                 throw new Exception(lang('requested_hour_is_unavailable'));
             }
 
@@ -546,8 +537,7 @@ class Appointments extends EA_Controller {
             $captcha_phrase = $this->session->userdata('captcha_phrase');
 
             // Validate the CAPTCHA string.
-            if ($require_captcha === '1' && strtolower($captcha_phrase) !== strtolower($captcha))
-            {
+            if ($require_captcha === '1' && strtolower($captcha_phrase) !== strtolower($captcha)) {
                 $this->output
                     ->set_content_type('application/json')
                     ->set_output(json_encode([
@@ -557,13 +547,11 @@ class Appointments extends EA_Controller {
                 return;
             }
 
-            if ($this->customers_model->exists($customer))
-            {
+            if ($this->customers_model->exists($customer)) {
                 $customer['id'] = $this->customers_model->find_record_id($customer);
             }
 
-            if (empty($appointment['location']) && ! empty($service['location']))
-            {
+            if (empty($appointment['location']) && !empty($service['location'])) {
                 $appointment['location'] = $service['location'];
             }
 
@@ -576,8 +564,7 @@ class Appointments extends EA_Controller {
                 ->add(new DateInterval('PT' . $service['duration'] . 'M'))
                 ->format('Y-m-d H:i:s');
 
-            if ( ! in_array($service['id'], $provider['services']))
-            {
+            if (!in_array($service['id'], $provider['services'])) {
                 throw new Exception('Invalid provider record selected for appointment.');
             }
 
@@ -601,9 +588,7 @@ class Appointments extends EA_Controller {
                 'appointment_id' => $appointment['id'],
                 'appointment_hash' => $appointment['hash']
             ];
-        }
-        catch (Exception $exception)
-        {
+        } catch (Exception $exception) {
             $this->output->set_status_header(500);
 
             $response = [
@@ -611,6 +596,8 @@ class Appointments extends EA_Controller {
                 'trace' => config('debug') ? $exception->getTrace() : []
             ];
         }
+
+        unset($_SESSION['validation_code']);
 
         $this->output
             ->set_content_type('application/json')
@@ -640,8 +627,7 @@ class Appointments extends EA_Controller {
         $date = $appointment_start->format('Y-m-d');
         $hour = $appointment_start->format('H:i');
 
-        if ($appointment['id_users_provider'] === ANY_PROVIDER)
-        {
+        if ($appointment['id_users_provider'] === ANY_PROVIDER) {
             $appointment['id_users_provider'] = $this->search_any_provider($appointment['id_services'], $date, $hour);
 
             return $appointment['id_users_provider'];
@@ -659,10 +645,8 @@ class Appointments extends EA_Controller {
 
         $appointment_hour = date('H:i', strtotime($appointment['start_datetime']));
 
-        foreach ($available_hours as $available_hour)
-        {
-            if ($appointment_hour === $available_hour)
-            {
+        foreach ($available_hours as $available_hour) {
+            if ($appointment_hour === $available_hour) {
                 $is_still_available = TRUE;
                 break;
             }
@@ -682,8 +666,7 @@ class Appointments extends EA_Controller {
      */
     public function ajax_get_unavailable_dates()
     {
-        try
-        {
+        try {
             $provider_id = $this->input->get('provider_id');
             $service_id = $this->input->get('service_id');
             $appointment_id = $this->input->get_post('appointment_id');
@@ -702,20 +685,17 @@ class Appointments extends EA_Controller {
             // Get the service record.
             $service = $this->services_model->get_row($service_id);
 
-            for ($i = 1; $i <= $number_of_days_in_month; $i++)
-            {
+            for ($i = 1; $i <= $number_of_days_in_month; $i++) {
                 $current_date = new DateTime($selected_date->format('Y-m') . '-' . $i);
 
-                if ($current_date < new DateTime(date('Y-m-d 00:00:00')))
-                {
+                if ($current_date < new DateTime(date('Y-m-d 00:00:00'))) {
                     // Past dates become immediately unavailable.
                     $unavailable_dates[] = $current_date->format('Y-m-d');
                     continue;
                 }
 
                 // Finding at least one slot of availability.
-                foreach ($provider_ids as $current_provider_id)
-                {
+                foreach ($provider_ids as $current_provider_id) {
                     $provider = $this->providers_model->get_row($current_provider_id);
 
                     $available_hours = $this->availability->get_available_hours(
@@ -725,23 +705,19 @@ class Appointments extends EA_Controller {
                         $exclude_appointment_id
                     );
 
-                    if ( ! empty($available_hours))
-                    {
+                    if (!empty($available_hours)) {
                         break;
                     }
                 }
 
                 // No availability amongst all the provider.
-                if (empty($available_hours))
-                {
+                if (empty($available_hours)) {
                     $unavailable_dates[] = $current_date->format('Y-m-d');
                 }
             }
 
             $response = $unavailable_dates;
-        }
-        catch (Exception $exception)
-        {
+        } catch (Exception $exception) {
             $this->output->set_status_header(500);
 
             $response = [
@@ -769,12 +745,9 @@ class Appointments extends EA_Controller {
         $available_providers = $this->providers_model->get_available_providers();
         $provider_list = [];
 
-        foreach ($available_providers as $provider)
-        {
-            foreach ($provider['services'] as $provider_service_id)
-            {
-                if ($provider_service_id === $service_id)
-                {
+        foreach ($available_providers as $provider) {
+            foreach ($provider['services'] as $provider_service_id) {
+                if ($provider_service_id === $service_id) {
                     // Check if the provider is affected to the selected service.
                     $provider_list[] = $provider['id'];
                 }
