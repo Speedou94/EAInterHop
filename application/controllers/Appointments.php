@@ -588,6 +588,9 @@ class Appointments extends EA_Controller
                 'appointment_id' => $appointment['id'],
                 'appointment_hash' => $appointment['hash']
             ];
+
+            unset($_SESSION['validation_code']);
+
         } catch (Exception $exception) {
             $this->output->set_status_header(500);
 
@@ -596,8 +599,6 @@ class Appointments extends EA_Controller
                 'trace' => config('debug') ? $exception->getTrace() : []
             ];
         }
-
-        unset($_SESSION['validation_code']);
 
         $this->output
             ->set_content_type('application/json')

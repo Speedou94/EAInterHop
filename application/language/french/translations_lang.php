@@ -345,6 +345,6 @@ $lang['email_validation'] = 'Vérification de l\'email.';
 $lang['email_validation_hint'] = 'Veuillez saisir le code de vérification reçu par email.';
 $lang['email_validation_code'] = 'Code de validation';
 $lang['email_validation_mail_title'] = 'Vérification de votre email';
-$lang['validation_code_is'] = 'Voici votre code de vérification d\'email à saisir sur le site :';
+$lang['validation_code_is'] = 'Voici votre code de vérification d\'email à saisir sur le site (usage unique) :';
 $lang['invalid_validation_code'] = 'Code de validation de l\'email invalide.';
 // End
