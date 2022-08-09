@@ -50,9 +50,16 @@ The application is designed to be flexible enough so that it can handle any ente
 * Working plan and booking rules.
 * Google Calendar synchronization.
 * Email notifications system.
+* Email validation for customers.
 * Self hosted installation.
 * Translated user interface.
 * User community support. 
+---
+* Email validation for customers.
+* Color's categories and private mode for services.
+* Working plan management for providers and secretaries.
+* Enhanced security.
+* Local settings in config.php to manage default TIMEZONE, TIME_FORMAT and FIRST_WEEKDAY.
 
 ## Setup
 
@@ -60,7 +67,7 @@ To clone and run this application, you'll need [Git](https://git-scm.com), [Node
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/alextselegidis/easyappointments.git
+$ git clone https://github.com/e-ikasus/easyappointments.git
 
 # Go into the repository
 $ cd easyappointments
