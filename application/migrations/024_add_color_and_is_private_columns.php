@@ -12,7 +12,7 @@
  * ---------------------------------------------------------------------------- */
 
 /**
- * Class Add_Working_Plan_Column_To_Roles
+ * Class Add_Color_And_Is_Private_Columns_To_Service_Categories
  *
  * @property CI_DB_query_builder $db
  * @property CI_DB_forge         $dbforge

@@ -305,7 +305,7 @@ class Email {
 
 
     /**
-     * This method sends an email with the new password of a user.
+     * This method sends an email with the verification code of a user.
      *
      * @param string $code Contains the code.
      * @param \EA\Engine\Types\Email $recipientEmail The receiver's email address.
