@@ -43,7 +43,7 @@ server and of course share an existing database.
 
 ## Features
 
-The application is designed to be flexible enough so that it can handle any enterprise work flow. 
+The application is designed to be flexible enough so that it can handle any medical working plan flow with enhanced security. 
 
 * Customers and appointments management.
 * Services and providers organization.
@@ -54,7 +54,7 @@ The application is designed to be flexible enough so that it can handle any ente
 * Self hosted installation.
 * Translated user interface.
 * User community support. 
----
+----
 * Email validation for customers.
 * Color's categories and private mode for services.
 * Working plan management for providers and secretaries.
@@ -111,6 +111,9 @@ Code Licensed Under [GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) | C
 Website [alextselegidis.com](https://alextselegidis.com) &nbsp;&middot;&nbsp;
 GitHub [alextselegidis](https://github.com/alextselegidis) &nbsp;&middot;&nbsp;
 Twitter [@alextselegidis](https://twitter.com/AlexTselegidis)
+
+Additional features :
+Wilfried Catteau - Nadège Rampon - David Urbain - Alexandre Bouriche
 
 ###### More Projects On Github
 ###### ⇾ [Plainpad &middot; Self Hosted Note Taking App](https://github.com/alextselegidis/plainpad)
