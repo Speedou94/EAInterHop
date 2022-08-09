@@ -56,7 +56,7 @@ The application is designed to be flexible enough so that it can handle any medi
 * User community support. 
 ----
 * Email validation for customers.
-* Color's categories and private mode for services.
+* Categories customizing with color and private mode for services.
 * Working plan management for providers and secretaries.
 * Enhanced security.
 * Local settings in config.php to manage default TIMEZONE, TIME_FORMAT and FIRST_WEEKDAY.
