@@ -43,16 +43,23 @@ server and of course share an existing database.
 
 ## Features
 
-The application is designed to be flexible enough so that it can handle any enterprise work flow. 
+The application is designed to be flexible enough so that it can handle any medical working plan flow with enhanced security. 
 
 * Customers and appointments management.
 * Services and providers organization.
 * Working plan and booking rules.
 * Google Calendar synchronization.
 * Email notifications system.
+* Email validation for customers.
 * Self hosted installation.
 * Translated user interface.
 * User community support. 
+----
+* Email validation for customers.
+* Categories customizing with color and private mode for services.
+* Working plan management for providers and secretaries.
+* Enhanced security.
+* Local settings in config.php to manage default TIMEZONE, TIME_FORMAT and FIRST_WEEKDAY.
 
 ## Setup
 
@@ -60,7 +67,7 @@ To clone and run this application, you'll need [Git](https://git-scm.com), [Node
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/alextselegidis/easyappointments.git
+$ git clone https://github.com/e-ikasus/easyappointments.git
 
 # Go into the repository
 $ cd easyappointments
@@ -104,6 +111,9 @@ Code Licensed Under [GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) | C
 Website [alextselegidis.com](https://alextselegidis.com) &nbsp;&middot;&nbsp;
 GitHub [alextselegidis](https://github.com/alextselegidis) &nbsp;&middot;&nbsp;
 Twitter [@alextselegidis](https://twitter.com/AlexTselegidis)
+
+Additional features :
+Wilfried Catteau - Nadège Rampon - David Urbain - Alexandre Bouriche
 
 ###### More Projects On Github
 ###### ⇾ [Plainpad &middot; Self Hosted Note Taking App](https://github.com/alextselegidis/plainpad)
