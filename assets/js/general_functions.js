@@ -242,7 +242,7 @@ window.GeneralFunctions = window.GeneralFunctions || {};
      * @return {Boolean} Returns the validation result.
      */
     exports.validatePhone = function (phone) {
-        var re = /^(\+\d+(\s)?)?\(?0?\)?\d(\s)?(\d{2}(\s)?){4}/;
+        var re = /^((\+)?[1-9]{1,2})?([-\s\.])?((\(\d{1,4}\))|\d{1,4})(([-\s\.])?[0-9]{1,12}){1,2}/;
         return !phone || re.test(phone);
     };
 
