@@ -369,6 +369,7 @@
      */
     WorkingPlan.prototype.renderWorkingPlanExceptionRow = function (date, workingPlanException) {
         var timeFormat = GlobalVariables.timeFormat === 'regular' ? 'h:mm tt' : 'HH:mm';
+        let category = GlobalVariables.categories.find(category => category.id === workingPlanException.specializeds[0].category);
 
         return $('<tr/>', {
             'data': {
@@ -387,6 +388,10 @@
                 $('<td/>', {
                     'class': 'working-plan-exception--end',
                     'text': Date.parse(workingPlanException.end).toString(timeFormat).toLowerCase()
+                }),
+                $('<td/>', {
+                    'class': 'working-plan-exception--category',
+                    'text': category.name
                 }),
                 $('<td/>', {
                     'html': [
@@ -768,6 +773,7 @@
             var $tr = $(tr);
             var date = $tr.data('date');
             workingPlanExceptions[date] = $tr.data('workingPlanException');
+            var categoryName = $(tr).find('.working-plan-exceptions-category').text();
         });
 
         return workingPlanExceptions;

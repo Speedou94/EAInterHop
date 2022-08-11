@@ -23,6 +23,14 @@
                     <input class="form-control" id="working-plan-exceptions-end">
                 </div>
 
+                <div class="form-group">
+                    <label for="working-plan-exceptions-category">
+                        <?= lang('category') ?>
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select id="working-plan-exceptions-category" class="form-control required"></select>
+                </div>
+
                 <h3><?= lang('breaks') ?></h3>
 
                 <p>

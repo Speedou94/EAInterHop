@@ -5,6 +5,7 @@ $(function () {
     var $date = $('#working-plan-exceptions-date');
     var $start = $('#working-plan-exceptions-start');
     var $end = $('#working-plan-exceptions-end');
+    var $category = $('#working-plan-exceptions-category');
     var $breaks = $('#working-plan-exceptions-breaks');
     var $save = $('#working-plan-exceptions-save');
     var deferred = null;
@@ -19,6 +20,12 @@ $(function () {
         $('.working-plan-exceptions-add-break').prop('disabled', false);
     }
 
+    // Fill available service categories listbox.
+    GlobalVariables.categories.forEach(function (category) {
+        $('#working-plan-exceptions-category').append(new Option(category.name, category.id));
+    });
+
+
     function validate() {
         $modal.find('.is-invalid').removeClass('is-invalid');
 
@@ -27,7 +34,10 @@ $(function () {
         if (!date) {
             $date.addClass('is-invalid');
         }
-
+        var category = $category.val();
+        if (!category) {
+            $category.addClass('is-invalid');
+        }
         var start = $start.timepicker('getDate');
 
         if (!start) {
@@ -86,9 +96,14 @@ $(function () {
 
         var date = $date.datepicker('getDate').toString('yyyy-MM-dd');
 
+        let startString = $start.datetimepicker('getDate').toString('HH:mm');
+        let endString = $end.datetimepicker('getDate').toString('HH:mm');
+
+
         var workingPlanException = {
-            start: $start.datetimepicker('getDate').toString('HH:mm'),
-            end: $end.datetimepicker('getDate').toString('HH:mm'),
+            start: startString,
+            end: endString,
+            specializeds: [{start:startString, end:endString, category:$category.val()}],
             breaks: getBreaks()
         };
 
@@ -151,6 +166,8 @@ $(function () {
         $date.datepicker('setDate', moment(date, 'YYYY-MM-DD').toDate());
         $start.timepicker('setDate', moment(workingPlanException.start, 'HH:mm').toDate());
         $end.timepicker('setDate', moment(workingPlanException.end, 'HH:mm').toDate());
+
+        $category.val(workingPlanException.category);
 
         workingPlanException.breaks.forEach(function (workingPlanExceptionBreak) {
             renderBreakRow(workingPlanExceptionBreak)
