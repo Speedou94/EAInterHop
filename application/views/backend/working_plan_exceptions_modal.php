@@ -28,7 +28,7 @@
                         <?= lang('category') ?>
                         <span class="text-danger">*</span>
                     </label>
-                    <select id="working-plan-exceptions-category" class="form-control required"></select>
+                    <select id="working-plan-exceptions-category" name="working-plan-exceptions-category"class="form-control"></select>
                 </div>
 
                 <h3><?= lang('breaks') ?></h3>

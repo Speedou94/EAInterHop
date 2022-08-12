@@ -25,7 +25,6 @@ $(function () {
         $('#working-plan-exceptions-category').append(new Option(category.name, category.id));
     });
 
-
     function validate() {
         $modal.find('.is-invalid').removeClass('is-invalid');
 
