@@ -21,6 +21,9 @@ use EA\Engine\Types\NonEmptyText;
  * @package Controllers
  */
 class User extends EA_Controller {
+
+    private $keys;
+
     /**
      * User constructor.
      */
@@ -29,6 +32,12 @@ class User extends EA_Controller {
         parent::__construct();
         $this->load->model('settings_model');
         $this->load->model('user_model');
+
+        $this->keys = openssl_pkey_new(array(
+/*            "digest_alg"=>'md5',*/
+            "private_key_bits" => 1024,
+            "private_key_type" => OPENSSL_KEYTYPE_RSA
+        ));
     }
 
     /**
@@ -50,6 +59,7 @@ class User extends EA_Controller {
     {
         $view['base_url'] = config('base_url');
         $view['dest_url'] = $this->session->userdata('dest_url');
+        $view['key'] = openssl_pkey_get_details($this->keys)['key'];
 
         if ( ! $view['dest_url'])
         {
@@ -116,6 +126,19 @@ class User extends EA_Controller {
             {
                 throw new Exception('Invalid credentials given!');
             }
+
+            /*$encrypted = base64_decode($this->input->post('password'));
+
+            $privateKey = openssl_pkey_get_private($this->keys);
+
+            $encrypted2 = '';
+
+            openssl_public_encrypt("StageBDD26*", $encrypted2, openssl_pkey_get_details($this->keys)['key']);
+            while ($msg = openssl_error_string()) echo $msg . "<br />\n";
+
+            openssl_private_decrypt($encrypted, $decrypted, $privateKey);
+            while ($msg = openssl_error_string()) echo $msg . "<br />\n";*/
+
 
             $user_data = $this->user_model->check_login($this->input->post('username'), $this->input->post('password'));
 

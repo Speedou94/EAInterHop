@@ -18,6 +18,7 @@
     <script src="<?= asset_url('assets/ext/jquery/jquery.min.js') ?>"></script>
     <script src="<?= asset_url('assets/ext/jquery-ui/jquery-ui.min.js') ?>"></script>
     <script src="<?= asset_url('assets/ext/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
+    <script src="<?= asset_url('assets/ext/jsencrypt/jsencrypt.min.js') ?>"></script>
     <script src="<?= asset_url('assets/ext/datejs/date.min.js') ?>"></script>
 
     <script>
@@ -25,6 +26,7 @@
             csrfToken: <?= json_encode($this->security->get_csrf_hash()) ?>,
             baseUrl: <?= json_encode($base_url) ?>,
             destUrl: <?= json_encode($dest_url) ?>,
+            publicKey: <?= json_encode($key) ?>,
             AJAX_SUCCESS: 'SUCCESS',
             AJAX_FAILURE: 'FAILURE'
         };

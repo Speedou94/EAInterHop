@@ -14,10 +14,15 @@ $(function () {
 
         var url = GlobalVariables.baseUrl + '/index.php/user/ajax_check_login';
 
+        //var encrypt = new JSEncrypt();
+        //encrypt.setPublicKey(GlobalVariables.publicKey);
+        //var encryptedPassword = encrypt.encrypt($('#password').val());
+        var encryptedPassword = $('#password').val();
+
         var data = {
             'csrfToken': GlobalVariables.csrfToken,
             'username': $('#username').val(),
-            'password': $('#password').val()
+            'password': encryptedPassword
         };
 
         var $alert = $('.alert');
