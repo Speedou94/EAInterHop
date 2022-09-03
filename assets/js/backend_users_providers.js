@@ -171,8 +171,11 @@
             });
 
             // Include password if changed.
-            if ($('#provider-password').val() !== '') {
-                provider.settings.password = $('#provider-password').val();
+            if ($('#provider-password').val() !== '')
+            {
+                let encrypt = new JSEncrypt();
+                encrypt.setPublicKey(atob(GlobalVariables.publicKey));
+                provider.settings.password = encrypt.encrypt($('#provider-password').val());
             }
 
             // Include id if changed.
@@ -329,7 +332,6 @@
                 throw new Error(EALang.invalid_password);
             }
 
-
             // Validate user email.
             if (!GeneralFunctions.validateEmail($('#provider-email').val())) {
                 $('#provider-email').closest('.form-group').addClass('has-error');
@@ -348,7 +350,6 @@
                 throw new Error(EALang.invalid_phone_number);
             }
 
-
             // Check if username exists
             if ($('#provider-username').attr('already-exists') === 'true') {
                 $('#provider-username').closest('.form-group').addClass('has-error');
@@ -359,7 +360,6 @@
                 $('#provider-username').closest('.form-group').addClass('has-error');
                 throw new Error(EALang.invalid_username);
             }
-
 
             return true;
         } catch (error) {

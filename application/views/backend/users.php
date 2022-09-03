@@ -6,6 +6,7 @@
 <script src="<?= asset_url('assets/js/working_plan_exceptions_modal.js') ?>"></script>
 <script src="<?= asset_url('assets/ext/jquery-ui/jquery-ui-timepicker-addon.min.js') ?>"></script>
 <script src="<?= asset_url('assets/ext/jquery-jeditable/jquery.jeditable.min.js') ?>"></script>
+<script src="<?= asset_url('assets/ext/jsencrypt/jsencrypt.min.js') ?>"></script>
 <script>
     var GlobalVariables = {
         csrfToken: <?= json_encode($this->security->get_csrf_hash()) ?>,
@@ -21,6 +22,7 @@
         workingPlan: <?= json_encode(json_decode($working_plan)) ?>,
         workingPlanExceptions: <?= json_encode(json_decode($working_plan_exceptions)) ?>,
         categories: <?= json_encode($categories) ?>,
+        publicKey: '<?= base64_encode($public_key) ?>',
 
         user: {
             id: <?= $user_id ?>,

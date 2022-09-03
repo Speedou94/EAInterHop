@@ -37,6 +37,7 @@ class Backend extends EA_Controller {
         $this->load->model('admins_model');
         $this->load->library('timezones');
         $this->load->library('migration');
+        $this->load->library('security_library');
     }
 
     /**
@@ -307,10 +308,7 @@ class Backend extends EA_Controller {
     {
         $this->session->set_userdata('dest_url', site_url('backend/users'));
 
-        if ( ! $this->has_privileges(PRIV_USERS))
-        {
-            return;
-        }
+        if ( ! $this->has_privileges(PRIV_USERS)) return;
 
         $view['base_url'] = config('base_url');
         $view['page_title'] = lang('users');
@@ -327,8 +325,11 @@ class Backend extends EA_Controller {
         $view['categories'] = $this->services_model->get_all_categories();
         $view['working_plan'] = $this->settings_model->get_setting('company_working_plan');
         $view['timezones'] = $this->timezones->to_array();
+        $view['public_key'] = $this->security_library->getPublicKey();
+
         $view['working_plan_exceptions'] = '{}';
-        $view['enable_default_timezone'] = config('enable_default_timezone');// send to view to enable/disable the default timezone option
+        // send to view to enable/disable the default timezone option
+        $view['enable_default_timezone'] = config('enable_default_timezone');
         $view['default_timezone'] = config('default_timezone');
         $this->set_user_data($view);
 
@@ -369,7 +370,6 @@ class Backend extends EA_Controller {
         $view['user_settings'] = $this->user_model->get_user($user_id);
         $view['timezones'] = $this->timezones->to_array();
         $view['enable_default_time_format'] = config('enable_default_time_format');
-
 
         // book_advance_timeout preview
         $book_advance_timeout = $this->settings_model->get_setting('book_advance_timeout');

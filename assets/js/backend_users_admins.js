@@ -152,8 +152,11 @@
             };
 
             // Include password if changed.
-            if ($('#admin-password').val() !== '') {
-                admin.settings.password = $('#admin-password').val();
+            if ($('#admin-password').val() !== '')
+            {
+                let encrypt = new JSEncrypt();
+                encrypt.setPublicKey(atob(GlobalVariables.publicKey));
+                admin.settings.password = encrypt.encrypt($('#admin-password').val());
             }
 
             // Include id if changed.

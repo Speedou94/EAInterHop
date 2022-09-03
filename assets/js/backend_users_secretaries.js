@@ -166,12 +166,15 @@
             });
 
             // Include password if changed.
-            if ($('#secretary-password').val() !== '') {
-                secretary.settings.password = $('#secretary-password').val();
+            if ($('#secretary-password').val() !== '')
+            {
+                let encrypt = new JSEncrypt();
+                encrypt.setPublicKey(atob(GlobalVariables.publicKey));
+                secretary.settings.password = encrypt.encrypt($('#secretary-password').val());
             }
 
             // Include ID if changed.
-            if ($('#secretary-id').val() !== '') {
+            if ($('#secretary-id').val() !== ''){
                 secretary.id = $('#secretary-id').val();
             }
 

@@ -20,24 +20,18 @@ use EA\Engine\Types\NonEmptyText;
  *
  * @package Controllers
  */
-class User extends EA_Controller {
-
-    private $keys;
-
+class User extends EA_Controller
+{
     /**
      * User constructor.
      */
+
     public function __construct()
     {
         parent::__construct();
         $this->load->model('settings_model');
         $this->load->model('user_model');
-
-        $this->keys = openssl_pkey_new(array(
-/*            "digest_alg"=>'md5',*/
-            "private_key_bits" => 1024,
-            "private_key_type" => OPENSSL_KEYTYPE_RSA
-        ));
+        $this->load->library('security_library');
     }
 
     /**
@@ -45,6 +39,7 @@ class User extends EA_Controller {
      *
      * The default method will redirect the browser to the user/login URL.
      */
+
     public function index()
     {
         header('Location: ' . site_url('user/login'));
@@ -55,16 +50,14 @@ class User extends EA_Controller {
      *
      * @throws Exception
      */
+
     public function login()
     {
         $view['base_url'] = config('base_url');
         $view['dest_url'] = $this->session->userdata('dest_url');
-        $view['key'] = openssl_pkey_get_details($this->keys)['key'];
+        $view['public_key'] = $this->security_library->getPublicKey();
 
-        if ( ! $view['dest_url'])
-        {
-            $view['dest_url'] = site_url('backend');
-        }
+        if (!$view['dest_url']) $view['dest_url'] = site_url('backend');
 
         $view['company_name'] = $this->settings_model->get_setting('company_name');
 
@@ -74,6 +67,7 @@ class User extends EA_Controller {
     /**
      * Display the logout page.
      */
+
     public function logout()
     {
         $this->session->unset_userdata('user_id');
@@ -89,8 +83,10 @@ class User extends EA_Controller {
 
     /**
      * Display the "forgot password" page.
+     *
      * @throws Exception
      */
+
     public function forgot_password()
     {
         $view['base_url'] = config('base_url');
@@ -100,8 +96,10 @@ class User extends EA_Controller {
 
     /**
      * Display the "not authorized" page.
+     *
      * @throws Exception
      */
+
     public function no_privileges()
     {
         $view['base_url'] = config('base_url');
@@ -118,40 +116,26 @@ class User extends EA_Controller {
      *   - 'role_slug'
      *   - 'dest_url'
      */
+
     public function ajax_check_login()
     {
         try
         {
-            if ( ! $this->input->post('username') || ! $this->input->post('password'))
-            {
+            // User name and password should be supplied together.
+            if (!$this->input->post('username') || !$this->input->post('password'))
                 throw new Exception('Invalid credentials given!');
-            }
 
-            /*$encrypted = base64_decode($this->input->post('password'));
+            // Decrypt password.
+            $decrypted = $this->security_library->decrypt($this->input->post('password'));
 
-            $privateKey = openssl_pkey_get_private($this->keys);
+            // Check if username and password are valid.
+            $user_data = $this->user_model->check_login($this->input->post('username'), $decrypted);
 
-            $encrypted2 = '';
+            // If an user is found, save his information in his session.
+            if ($user_data) $this->session->set_userdata($user_data);
 
-            openssl_public_encrypt("StageBDD26*", $encrypted2, openssl_pkey_get_details($this->keys)['key']);
-            while ($msg = openssl_error_string()) echo $msg . "<br />\n";
-
-            openssl_private_decrypt($encrypted, $decrypted, $privateKey);
-            while ($msg = openssl_error_string()) echo $msg . "<br />\n";*/
-
-
-            $user_data = $this->user_model->check_login($this->input->post('username'), $this->input->post('password'));
-
-            if ($user_data)
-            {
-                $this->session->set_userdata($user_data); // Save data on user's session.
-
-                $response = AJAX_SUCCESS;
-            }
-            else
-            {
-                $response = AJAX_FAILURE;
-            }
+            // Result of the operation.
+            $response = ($user_data) ? (AJAX_SUCCESS) : (AJAX_FAILURE);
         }
         catch (Exception $exception)
         {
@@ -177,11 +161,12 @@ class User extends EA_Controller {
      * - string $_POST['username'] Username to be validated.
      * - string $_POST['email'] Email to be validated.
      */
+
     public function ajax_forgot_password()
     {
         try
         {
-            if ( ! $this->input->post('username') || ! $this->input->post('email'))
+            if (!$this->input->post('username') || !$this->input->post('email'))
             {
                 throw new Exception('You must enter a valid username and email address in '
                     . 'order to get a new password!');

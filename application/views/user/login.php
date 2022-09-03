@@ -26,7 +26,7 @@
             csrfToken: <?= json_encode($this->security->get_csrf_hash()) ?>,
             baseUrl: <?= json_encode($base_url) ?>,
             destUrl: <?= json_encode($dest_url) ?>,
-            publicKey: <?= json_encode($key) ?>,
+            publicKey: '<?= base64_encode($public_key) ?>',
             AJAX_SUCCESS: 'SUCCESS',
             AJAX_FAILURE: 'FAILURE'
         };

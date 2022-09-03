@@ -22,7 +22,8 @@ use EA\Engine\Types\Text;
  *
  * @package Controllers
  */
-class Backend_api extends EA_Controller {
+class Backend_api extends EA_Controller
+{
     /**
      * @var array
      */
@@ -50,15 +51,12 @@ class Backend_api extends EA_Controller {
         $this->load->library('notifications');
         $this->load->library('synchronization');
         $this->load->library('timezones');
+        $this->load->library('security_library');
 
         if ($this->session->userdata('role_slug'))
-        {
             $this->privileges = $this->roles_model->get_privileges($this->session->userdata('role_slug'));
-        }
         else
-        {
             show_error('Forbidden', 403);
-        }
     }
 
     /**
@@ -74,7 +72,7 @@ class Backend_api extends EA_Controller {
             {
                 throw new Exception('You do not have the required privileges for this task.');
             }
-            
+
             $start_date = $this->input->post('startDate') . ' 00:00:00';
             $end_date = $this->input->post('endDate') . ' 23:59:59';
 
@@ -128,7 +126,7 @@ class Backend_api extends EA_Controller {
                 $providers = $this->secretaries_model->get_row($user_id)['providers'];
                 foreach ($response['appointments'] as $index => $appointment)
                 {
-                    if ( ! in_array((int)$appointment['id_users_provider'], $providers))
+                    if (!in_array((int)$appointment['id_users_provider'], $providers))
                     {
                         unset($response['appointments'][$index]);
                     }
@@ -136,7 +134,7 @@ class Backend_api extends EA_Controller {
 
                 foreach ($response['unavailability_events'] as $index => $unavailability_event)
                 {
-                    if ( ! in_array((int)$unavailability_event['id_users_provider'], $providers))
+                    if (!in_array((int)$unavailability_event['id_users_provider'], $providers))
                     {
                         unset($response['unavailability_events'][$index]);
                     }
@@ -144,7 +142,7 @@ class Backend_api extends EA_Controller {
             }
 
             $response['appointments'] = array_values($response['appointments']);
-            
+
             $response['unavailability_events'] = array_values($response['unavailability_events']);
 
             $this->output->set_output(json_encode($response));
@@ -179,7 +177,7 @@ class Backend_api extends EA_Controller {
                 throw new Exception('You do not have the required privileges for this task.');
             }
 
-            if ( ! $this->input->post('filter_type'))
+            if (!$this->input->post('filter_type'))
             {
                 $this->output
                     ->set_content_type('application/json')
@@ -268,7 +266,7 @@ class Backend_api extends EA_Controller {
             {
                 $customer = json_decode($this->input->post('customer_data'), TRUE);
 
-                $required_privileges = ( ! isset($customer['id']))
+                $required_privileges = (!isset($customer['id']))
                     ? $this->privileges[PRIV_CUSTOMERS]['add']
                     : $this->privileges[PRIV_CUSTOMERS]['edit'];
                 if ($required_privileges == FALSE)
@@ -284,7 +282,7 @@ class Backend_api extends EA_Controller {
             {
                 $appointment = json_decode($this->input->post('appointment_data'), TRUE);
 
-                $required_privileges = ( ! isset($appointment['id']))
+                $required_privileges = (!isset($appointment['id']))
                     ? $this->privileges[PRIV_APPOINTMENTS]['add']
                     : $this->privileges[PRIV_APPOINTMENTS]['edit'];
                 if ($required_privileges == FALSE)
@@ -296,7 +294,7 @@ class Backend_api extends EA_Controller {
 
                 // If the appointment does not contain the customer record id, then it means that is is going to be
                 // inserted. Get the customer's record ID.
-                if ( ! isset($appointment['id_users_customer']))
+                if (!isset($appointment['id_users_customer']))
                 {
                     $appointment['id_users_customer'] = $customer['id'];
                 }
@@ -353,7 +351,7 @@ class Backend_api extends EA_Controller {
                 throw new Exception('You do not have the required privileges for this task.');
             }
 
-            if ( ! $this->input->post('appointment_id'))
+            if (!$this->input->post('appointment_id'))
             {
                 throw new Exception('No appointment id provided.');
             }
@@ -430,7 +428,7 @@ class Backend_api extends EA_Controller {
 
                 foreach ($admins as $admin)
                 {
-                    if ( ! $admin['settings']['notifications'] === '0')
+                    if (!$admin['settings']['notifications'] === '0')
                     {
                         continue;
                     }
@@ -445,7 +443,7 @@ class Backend_api extends EA_Controller {
 
                 foreach ($secretaries as $secretary)
                 {
-                    if ( ! $secretary['settings']['notifications'] === '0')
+                    if (!$secretary['settings']['notifications'] === '0')
                     {
                         continue;
                     }
@@ -502,13 +500,15 @@ class Backend_api extends EA_Controller {
     {
         try
         {
-            if ( ! $this->input->post('provider_id'))
+            if (!$this->input->post('provider_id'))
             {
                 throw new Exception('Provider id not specified.');
             }
 
-            if ($this->privileges[PRIV_USERS]['edit'] == FALSE
-                && $this->session->userdata('user_id') != $this->input->post('provider_id'))
+            if (
+                $this->privileges[PRIV_USERS]['edit'] == FALSE
+                && $this->session->userdata('user_id') != $this->input->post('provider_id')
+            )
             {
                 throw new Exception('You do not have the required privileges for this task.');
             }
@@ -612,7 +612,7 @@ class Backend_api extends EA_Controller {
             // Check privileges
             $unavailable = json_decode($this->input->post('unavailable'), TRUE);
 
-            $required_privileges = ( ! isset($unavailable['id']))
+            $required_privileges = (!isset($unavailable['id']))
                 ? $this->privileges[PRIV_APPOINTMENTS]['add']
                 : $this->privileges[PRIV_APPOINTMENTS]['edit'];
             if ($required_privileges == FALSE)
@@ -786,7 +786,7 @@ class Backend_api extends EA_Controller {
         {
             // If current user doesn't have permission to edit working plan exceptions neither in users section nor
             // working plan edit section, throw exception
-            if ( ($this->privileges[PRIV_USERS]['edit'] == FALSE) && (($this->privileges[PRIV_WORKING_PLAN]['edit'] == FALSE)) )
+            if (($this->privileges[PRIV_USERS]['edit'] == FALSE) && (($this->privileges[PRIV_WORKING_PLAN]['edit'] == FALSE)))
             {
                 throw new Exception('You do not have the required privileges for this task.');
             }
@@ -874,7 +874,7 @@ class Backend_api extends EA_Controller {
         {
             $customer = json_decode($this->input->post('customer'), TRUE);
 
-            $required_privileges = ( ! isset($customer['id']))
+            $required_privileges = (!isset($customer['id']))
                 ? $this->privileges[PRIV_CUSTOMERS]['add']
                 : $this->privileges[PRIV_CUSTOMERS]['edit'];
             if ($required_privileges == FALSE)
@@ -944,7 +944,7 @@ class Backend_api extends EA_Controller {
         {
             $service = json_decode($this->input->post('service'), TRUE);
 
-            $required_privileges = ( ! isset($service['id']))
+            $required_privileges = (!isset($service['id']))
                 ? $this->privileges[PRIV_SERVICES]['add']
                 : $this->privileges[PRIV_SERVICES]['edit'];
             if ($required_privileges == FALSE)
@@ -1049,7 +1049,7 @@ class Backend_api extends EA_Controller {
         {
             $category = json_decode($this->input->post('category'), TRUE);
 
-            $required_privileges = ( ! isset($category['id']))
+            $required_privileges = (!isset($category['id']))
                 ? $this->privileges[PRIV_SERVICES]['add']
                 : $this->privileges[PRIV_SERVICES]['edit'];
             if ($required_privileges == FALSE)
@@ -1190,34 +1190,25 @@ class Backend_api extends EA_Controller {
         {
             $admin = json_decode($this->input->post('admin'), TRUE);
 
-            $required_privileges = ( ! isset($admin['id']))
-                ? $this->privileges[PRIV_USERS]['add']
-                : $this->privileges[PRIV_USERS]['edit'];
-            if ($required_privileges == FALSE)
-            {
-                throw new Exception('You do not have the required privileges for this task.');
-            }
+            $required_privileges = (!isset($admin['id'])) ? $this->privileges[PRIV_USERS]['add'] : $this->privileges[PRIV_USERS]['edit'];
+
+            if (!$required_privileges) throw new Exception('You do not have the required privileges for this task.');
+
+            // If a password is supplied, decrypt-it.
+            $this->security_library->selfDecrypt($admin['settings']['password']);
 
             $admin_id = $this->admins_model->add($admin);
 
-            $response = [
-                'status' => AJAX_SUCCESS,
-                'id' => $admin_id
-            ];
+            $response = ['status' => AJAX_SUCCESS, 'id' => $admin_id];
         }
         catch (Exception $exception)
         {
             $this->output->set_status_header(500);
 
-            $response = [
-                'message' => $exception->getMessage(),
-                'trace' => config('debug') ? $exception->getTrace() : []
-            ];
+            $response = ['message' => $exception->getMessage(), 'trace' => config('debug') ? $exception->getTrace() : []];
         }
 
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($response));
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
 
     /**
@@ -1258,7 +1249,7 @@ class Backend_api extends EA_Controller {
     {
         try
         {
-            if ( ($this->privileges[PRIV_USERS]['view'] == FALSE) && ($this->privileges[PRIV_WORKING_PLAN]['view'] == FALSE) )
+            if (($this->privileges[PRIV_USERS]['view'] == FALSE) && ($this->privileges[PRIV_WORKING_PLAN]['view'] == FALSE))
             {
                 throw new Exception('You do not have the required privileges for this task.');
             }
@@ -1270,7 +1261,7 @@ class Backend_api extends EA_Controller {
             if (isset($secretary)) $secretary = $this->db->escape_str($secretary);
 
             if (isset($provider)) $where = '(id = ' . $provider . ') AND ';
-            else $where="";
+            else $where = "";
 
             $where .=
                 '(first_name LIKE "%' . $key . '%" OR last_name LIKE "%' . $key . '%" ' .
@@ -1305,40 +1296,28 @@ class Backend_api extends EA_Controller {
         {
             $provider = json_decode($this->input->post('provider'), TRUE);
 
-            $required_privileges = ( ! isset($provider['id']))
-                ? $this->privileges[PRIV_USERS]['add']
-                : $this->privileges[PRIV_USERS]['edit'];
-            if ($required_privileges == FALSE)
-            {
-                throw new Exception('You do not have the required privileges for this task.');
-            }
+            $required_privileges = (!isset($provider['id'])) ? $this->privileges[PRIV_USERS]['add'] : $this->privileges[PRIV_USERS]['edit'];
 
-            if ( ! isset($provider['settings']['working_plan']))
-            {
-                $provider['settings']['working_plan'] = $this->settings_model
-                    ->get_setting('company_working_plan');
-            }
+            if (!$required_privileges) throw new Exception('You do not have the required privileges for this task.');
+
+            if (!isset($provider['settings']['working_plan']))
+                $provider['settings']['working_plan'] = $this->settings_model->get_setting('company_working_plan');
+
+            // If a password is supplied, decrypt-it.
+            $this->security_library->selfDecrypt($provider['settings']['password']);
 
             $provider_id = $this->providers_model->add($provider);
 
-            $response = [
-                'status' => AJAX_SUCCESS,
-                'id' => $provider_id
-            ];
+            $response = ['status' => AJAX_SUCCESS, 'id' => $provider_id];
         }
         catch (Exception $exception)
         {
             $this->output->set_status_header(500);
 
-            $response = [
-                'message' => $exception->getMessage(),
-                'trace' => config('debug') ? $exception->getTrace() : []
-            ];
+            $response = ['message' => $exception->getMessage(), 'trace' => config('debug') ? $exception->getTrace() : []];
         }
 
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($response));
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
 
     /**
@@ -1419,34 +1398,25 @@ class Backend_api extends EA_Controller {
         {
             $secretary = json_decode($this->input->post('secretary'), TRUE);
 
-            $required_privileges = ( ! isset($secretary['id']))
-                ? $this->privileges[PRIV_USERS]['add']
-                : $this->privileges[PRIV_USERS]['edit'];
-            if ($required_privileges == FALSE)
-            {
-                throw new Exception('You do not have the required privileges for this task.');
-            }
+            $required_privileges = (!isset($secretary['id'])) ? $this->privileges[PRIV_USERS]['add'] : $this->privileges[PRIV_USERS]['edit'];
+
+            if (!$required_privileges) throw new Exception('You do not have the required privileges for this task.');
+
+            // If a password is supplied, decrypt-it.
+            $this->security_library->selfDecrypt($secretary['settings']['password']);
 
             $secretary_id = $this->secretaries_model->add($secretary);
 
-            $response = [
-                'status' => AJAX_SUCCESS,
-                'id' => $secretary_id
-            ];
+            $response = ['status' => AJAX_SUCCESS, 'id' => $secretary_id];
         }
         catch (Exception $exception)
         {
             $this->output->set_status_header(500);
 
-            $response = [
-                'message' => $exception->getMessage(),
-                'trace' => config('debug') ? $exception->getTrace() : []
-            ];
+            $response = ['message' => $exception->getMessage(), 'trace' => config('debug') ? $exception->getTrace() : []];
         }
 
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($response));
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
 
     /**
@@ -1576,8 +1546,8 @@ class Backend_api extends EA_Controller {
         try
         {
             $provider_id = $this->input->post('provider_id');
-            
-            if ( ! $provider_id)
+
+            if (!$provider_id)
             {
                 throw new Exception('Provider id is required in order to fetch the google calendars.');
             }
@@ -1629,8 +1599,10 @@ class Backend_api extends EA_Controller {
     {
         try
         {
-            if ($this->privileges[PRIV_USERS]['edit'] == FALSE
-                && $this->session->userdata('user_id') != $this->input->post('provider_id'))
+            if (
+                $this->privileges[PRIV_USERS]['edit'] == FALSE
+                && $this->session->userdata('user_id') != $this->input->post('provider_id')
+            )
             {
                 throw new Exception('You do not have the required privileges for this task.');
             }
