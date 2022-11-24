@@ -153,6 +153,8 @@
                 zip_code: $('#provider-zip-code').val(),
                 notes: $('#provider-notes').val(),
                 timezone: $('#provider-timezone').val(),
+                customers_count: ($('#customers_count').val()),
+
                 settings: {
                     username: $('#provider-username').val(),
                     working_plan: JSON.stringify(BackendUsers.wp.get()),
@@ -161,6 +163,7 @@
                     calendar_view: $('#provider-calendar-view').val()
                 }
             };
+
 
             // Include provider services.
             provider.services = [];
@@ -186,7 +189,6 @@
             if (!this.validate()) {
                 return;
             }
-
             this.save(provider);
         }.bind(this));
 

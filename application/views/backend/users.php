@@ -39,7 +39,6 @@
 </script>
 
 <div class="container-fluid backend-page" id="users-page">
-
     <!-- PAGE NAVIGATION -->
     <ul class="nav nav-pills">
         <li class="nav-item">
@@ -153,7 +152,6 @@
                                         </label>
                                         <input id="provider-first-name" class="form-control required" maxlength="256">
                                     </div>
-
                                     <div class="form-group">
                                         <label for="provider-last-name">
                                             <?= lang('last_name') ?>
@@ -161,7 +159,6 @@
                                         </label>
                                         <input id="provider-last-name" class="form-control required" maxlength="512">
                                     </div>
-
                                     <div class="form-group">
                                         <label for="provider-email">
                                             <?= lang('email') ?>
@@ -169,21 +166,18 @@
                                         </label>
                                         <input id="provider-email" class="form-control required" max="512">
                                     </div>
-
                                     <div class="form-group">
                                         <label for="provider-phone-number">
                                             <?= lang('phone_number') ?>
                                             <span class="text-danger">*</span>
                                         </label>
-                                        <input id="provider-phone-number" type="tel" class="form-control required" max="128" >
+                                        <input id="provider-phone-number" type="tel" class="form-control required">
                                     </div>
-
                                     <div class="form-group">
                                         <label for="provider-mobile-number">
                                             <?= lang('mobile_number') ?>
-
                                         </label>
-                                        <input id="provider-mobile-number" type="tel" class="form-control" maxlength="128" >
+                                        <input id="provider-mobile-number" type="tel" class="form-control" maxlength="10" minlength="1" >
                                     </div>
 
                                     <div class="form-group">
@@ -238,7 +232,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <input type="password" id="provider-password" class="form-control required"
-                                               maxlength="30" minlength="7" autocomplete="new-password">
+                                               maxlength="30" minlength="7" >
                                     </div>
 
                                     <div class="form-group">
@@ -248,7 +242,7 @@
                                         </label>
                                         <input type="password" id="provider-password-confirm"
                                                class="form-control required" maxlength="30" minlength="7"
-                                               autocomplete="new-password">
+                                        >
                                     </div>
 
                                     <div class="form-group">
@@ -263,13 +257,30 @@
                                     </div>
 
                                     <?php if (!$enable_default_timezone) : ?>
-                                    <div class="form-group">
-                                        <label for="provider-timezone">
-                                            <?= lang('timezone') ?>
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <?= render_timezone_dropdown('id="provider-timezone" class="form-control required"') ?>
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="provider-timezone">
+                                                <?= lang('timezone') ?>
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <?= render_timezone_dropdown('id="provider-timezone" class="form-control required"') ?>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="customer">
+                                                <?= lang('customers_count') ?>
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <select id="customers_count" class="form-control required">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="40">40</option>
+                                                <option value="50">50</option>
+                                            </select>
+                                        </div>
+
+
+
                                     <?php endif ?>
 
                                     <br>
@@ -283,8 +294,10 @@
 
                                     <br>
 
-                                    <h4><?= lang('services') ?></h4>
-                                    <div id="provider-services" class="card card-body bg-light border-light"></div>
+                                    <h4><?= lang('services') ?><span class="text-danger">*</span></h4>
+
+
+                                    <div id="provider-services" class="card card-body bg-light border-light "  ></div>
                                 </div>
                             </div>
                         </div>
@@ -582,13 +595,13 @@
                             </div>
 
                             <?php if (!$enable_default_timezone) : ?>
-                            <div class="form-group">
-                                <label for="secretary-timezone">
-                                    <?= lang('timezone') ?>
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <?= render_timezone_dropdown('id="secretary-timezone" class="form-control required"') ?>
-                            </div>
+                                <div class="form-group">
+                                    <label for="secretary-timezone">
+                                        <?= lang('timezone') ?>
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <?= render_timezone_dropdown('id="secretary-timezone" class="form-control required"') ?>
+                                </div>
                             <?php endif; ?>
 
                             <br>
@@ -792,13 +805,13 @@
                             </div>
 
                             <?php if (!$enable_default_timezone) : ?>
-                            <div class="form-group">
-                                <label for="admin-timezone">
-                                    <?= lang('timezone') ?>
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <?= render_timezone_dropdown('id="admin-timezone" class="form-control required"') ?>
-                            </div>
+                                <div class="form-group">
+                                    <label for="admin-timezone">
+                                        <?= lang('timezone') ?>
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <?= render_timezone_dropdown('id="admin-timezone" class="form-control required"') ?>
+                                </div>
                             <?php endif; ?>
 
                             <br>

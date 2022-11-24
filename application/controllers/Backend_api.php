@@ -52,9 +52,11 @@ class Backend_api extends EA_Controller
         $this->load->library('synchronization');
         $this->load->library('timezones');
         $this->load->library('security_library');
-
+        $this->session->user_id;
         if ($this->session->userdata('role_slug'))
-            $this->privileges = $this->roles_model->get_privileges($this->session->userdata('role_slug'));
+            $this->privileges = $this->roles_model->get_privileges($this->session->userdata('role_slug'))
+
+            ;
         else
             show_error('Forbidden', 403);
     }
@@ -274,7 +276,16 @@ class Backend_api extends EA_Controller
                     throw new Exception('You do not have the required privileges for this task.');
                 }
 
-                $customer['id'] = $this->customers_model->add($customer);
+                $test = $this->customers_model->exists($customer);
+
+                if(!$test)
+                {
+                    $customer['id'] = $this->customers_model->check_count_customer($customer);
+                }
+
+
+                    $customer['id'] = $this->customers_model->add($customer);
+
             }
 
             // Save appointment changes to the database.
@@ -535,10 +546,15 @@ class Backend_api extends EA_Controller
     }
 
     /**
-     * Filter the customer records with the given key string.
-     *
-     * Outputs the search results.
+    Filter the customer records with the given key string.
+     *recupére l'id de session
+     * Outputs the search results.*
      */
+
+
+
+
+       // $provider = $this->providers_model->get_row($appointment['id_users_provider']);
     public function ajax_filter_customers()
     {
         try
@@ -548,8 +564,11 @@ class Backend_api extends EA_Controller
                 throw new Exception('You do not have the required privileges for this task.');
             }
 
-            $key = $this->db->escape_str($this->input->post('key'));
+            //requête
+            //connexion a la bdd
+            $key = $this->db->escape_str($this->input->post("key"));
             $key = strtoupper($key);
+
 
             $where =
                 '(first_name LIKE upper("%' . $key . '%") OR ' .
@@ -561,21 +580,59 @@ class Backend_api extends EA_Controller
                 'zip_code LIKE upper("%' . $key . '%") OR ' .
                 'notes LIKE upper("%' . $key . '%"))';
 
+
             $order_by = 'first_name ASC, last_name ASC';
 
             $limit = $this->input->post('limit');
 
             if ($limit === NULL)
             {
-                $limit = 1000;
+                $limit = 100 ;
             }
 
-            $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
+            /*$a = $this->session->user_id;
+            ob_start();
+            var_dump($a);
+            $mydebug = ob_get_clean();
+            error_log($mydebug);
+            //($this->session->id);*/
+            if ($this->session->user_id)
+            {
 
+
+                $a =  $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider';
+                ob_start();
+                var_dump($a);
+                $mydebug = ob_get_clean();
+                error_log($mydebug);
+                //  $sql = 'SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider ='.
+                // $this->session->id;
+                $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider';//.$this->session->id;
+
+                $where =
+                    '(u.first_name LIKE upper("%' . $key . '%") OR ' .
+                    'u.last_name  LIKE upper("%' . $key . '%") OR ' .
+                    'u.email LIKE upper("%' . $key . '%") OR ' .
+                    'u.phone_number LIKE upper("%' . $key . '%") OR ' .
+                    'u.address LIKE upper("%' . $key . '%") OR ' .
+                    'u.city LIKE upper("%' . $key . '%") OR ' .
+                    'u.zip_code LIKE upper("%' . $key . '%") OR ' .
+                    'u.notes LIKE upper("%' . $key . '%"))' ;
+                $sql.= ' where '.$where;
+                $sql.= ' order by '.$order_by;
+                $sql.= ' limit '.$limit;
+
+                $customers = $this->db->query($sql)->result_array();
+            } else
+            {
+                $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
+            }
+            //rempli le tableau de client
             foreach ($customers as &$customer)
             {
                 $appointments = $this->appointments_model->get_batch(['id_users_customer' => $customer['id']]);
 
+                //rempli le tableau de rendez vous  selon le service et le provider
                 foreach ($appointments as &$appointment)
                 {
                     $appointment['service'] = $this->services_model->get_row($appointment['id_services']);
@@ -882,6 +939,8 @@ class Backend_api extends EA_Controller
                 throw new Exception('You do not have the required privileges for this task.');
             }
 
+            //count of customer
+            $customer_id = $this->customers_model->check_count_customer($customer);
             $customer_id = $this->customers_model->add($customer);
 
             $response = [
@@ -1257,6 +1316,7 @@ class Backend_api extends EA_Controller
             $key = $this->db->escape_str($this->input->post('key'));
             $provider = $this->input->post('provider');
             $secretary = $this->input->post('secretary');
+
             if (isset($provider)) $provider = $this->db->escape_str($provider);
             if (isset($secretary)) $secretary = $this->db->escape_str($secretary);
 
@@ -1663,5 +1723,11 @@ class Backend_api extends EA_Controller
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($response));
+    }
+
+    public function display_customer_provider(){
+
+
+
     }
 }

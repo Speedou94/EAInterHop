@@ -61,7 +61,7 @@ gulp.task('package', (done) => {
     fs.copySync('patch.php', 'build/patch.php');
     fs.copySync('composer.json', 'build/composer.json');
     fs.copySync('composer.lock', 'build/composer.lock');
-    fs.copySync('config-sample.php', 'build/config-sample.php');
+    fs.copySync('config.php', 'build/config.php');
     fs.copySync('CHANGELOG.md', 'build/CHANGELOG.md');
     fs.copySync('README.md', 'build/README.md');
     fs.copySync('LICENSE', 'build/LICENSE');

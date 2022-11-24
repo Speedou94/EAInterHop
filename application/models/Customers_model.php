@@ -43,7 +43,7 @@ class Customers_model extends EA_Model {
         // Validate the customer data before doing anything.
         $this->validate($customer);
 
-        // Check if a customer already exists (by email).
+        // Check if a customer already exists (by phone number).
         if ($this->exists($customer) && ! isset($customer['id']))
         {
             // Find the customer id from the database.
@@ -61,6 +61,74 @@ class Customers_model extends EA_Model {
         }
 
         return $customer['id'];
+    }
+
+    /**
+     * * Method to limit the addition of customer by provider
+     * @return bool
+     * @throws Exception
+     *
+     */
+    public function check_count_customer()
+    {
+
+        //get session id
+        $provider = $this->session->user_id;
+
+        //count of customer
+        $sql_count_customer = $this->db
+            ->select('id_users_customer')
+            ->from('users')
+            ->join('appointments','users.id = appointments.id_users_provider','inner')
+            ->where('users.id',$provider)
+            ->count_all_results();
+
+        //limit of provider (customer_count in the database)
+            $sql_column_count_customer = $this->db
+            ->select('customers_count')
+            ->from('users')
+            ->where('id',$provider)
+            ->get()->row();
+
+         if($sql_count_customer > (int)$sql_column_count_customer->customers_count)
+        {
+            throw new Exception('You can no longer add patients.');
+        }
+        return TRUE;
+
+    }
+
+    /**
+     * @return bool
+     *
+     */
+    public function display_customers_by_provider()
+    {
+       /* $a = $provider;
+        ob_start();
+        var_dump($a);
+        $mydebug = ob_get_clean();
+        error_log($mydebug);*/
+
+
+        //get session id
+      // $provider = $this->session->user_id;
+
+       // $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider'
+       // $sql = "SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer  where a.id_users_provider = 5;";
+
+
+       /* if($this->session->user_id) {
+            $sql = $this->db
+                ->select('users.')
+                ->from('users')
+                ->join('appointments', 'users.id = appointments.id_users_customer', 'inner')
+                ->where('appointments.id_users_provider', $provider)
+                ->get();
+        }
+
+        return TRUE;
+       */
     }
 
     /**
@@ -105,7 +173,7 @@ class Customers_model extends EA_Model {
             throw new Exception('Invalid email address provided: ' . $customer['email']);
         }
 
-        // When inserting a record the email address must be unique.
+        // When inserting a record the phone number must be unique.
         $customer_id = isset($customer['id']) ? $customer['id'] : '';
 
         $num_rows = $this->db
@@ -113,16 +181,18 @@ class Customers_model extends EA_Model {
             ->from('users')
             ->join('roles', 'roles.id = users.id_roles', 'inner')
             ->where('roles.slug', DB_SLUG_CUSTOMER)
-            ->where('users.email', $customer['email'])
+            ->where('users.phone_number', $customer['phone_number'])
             ->where('users.id !=', $customer_id)
             ->get()
             ->num_rows();
 
         if ($num_rows > 0)
         {
-            throw new Exception('Given email address belongs to another customer record. '
-                . 'Please use a different email.');
+            throw new Exception('Given phone number belongs to another customer record. '
+                . 'Please use a different phone number.');
         }
+
+
 
         return TRUE;
     }
@@ -131,7 +201,7 @@ class Customers_model extends EA_Model {
      * Check if a particular customer record already exists.
      *
      * This method checks whether the given customer already exists in the database. It doesn't search with the id, but
-     * with the following fields: "email"
+     * with the following fields: "phone_number"
      *
      * @param array $customer Associative array with the customer's data. Each key has the same name with the database
      * fields.
@@ -142,9 +212,9 @@ class Customers_model extends EA_Model {
      */
     public function exists($customer)
     {
-        if (empty($customer['email']))
+        if (empty($customer['phone_number']))
         {
-            throw new Exception('Customer\'s email is not provided.');
+            throw new Exception('Customer\'s phone number is not provided.');
         }
 
         // This method shouldn't depend on another method of this class.
@@ -152,7 +222,7 @@ class Customers_model extends EA_Model {
             ->select('*')
             ->from('users')
             ->join('roles', 'roles.id = users.id_roles', 'inner')
-            ->where('users.email', $customer['email'])
+            ->where('users.phone_number', $customer['phone_number'])
             ->where('roles.slug', DB_SLUG_CUSTOMER)
             ->get()->num_rows();
 
@@ -162,7 +232,7 @@ class Customers_model extends EA_Model {
     /**
      * Find the database id of a customer record.
      *
-     * The customer data should include the following fields in order to get the unique id from the database: "email"
+     * The customer data should include the following fields in order to get the unique id from the database: "phone_number"
      *
      * IMPORTANT: The record must already exists in the database, otherwise an exception is raised.
      *
@@ -175,9 +245,9 @@ class Customers_model extends EA_Model {
      */
     public function find_record_id($customer)
     {
-        if (empty($customer['email']))
+        if (empty($customer['phone_number']))
         {
-            throw new Exception('Customer\'s email was not provided: '
+            throw new Exception('Customer\'s phone number was not provided: '
                 . print_r($customer, TRUE));
         }
 
@@ -186,7 +256,7 @@ class Customers_model extends EA_Model {
             ->select('users.id')
             ->from('users')
             ->join('roles', 'roles.id = users.id_roles', 'inner')
-            ->where('users.email', $customer['email'])
+            ->where('users.phone_number', $customer['phone_number'])
             ->where('roles.slug', DB_SLUG_CUSTOMER)
             ->get();
 
@@ -382,4 +452,6 @@ class Customers_model extends EA_Model {
     {
         return $this->db->get_where('roles', ['slug' => DB_SLUG_CUSTOMER])->row()->id;
     }
+
+
 }
