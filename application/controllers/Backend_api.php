@@ -276,13 +276,14 @@ class Backend_api extends EA_Controller
                     throw new Exception('You do not have the required privileges for this task.');
                 }
 
-                $test = $this->customers_model->exists($customer);
+                //Test si Id exist pour la limite
 
-                if(!$test)
-                {
-                    $customer['id'] = $this->customers_model->check_count_customer($customer);
-                }
+              //  $test = $this->customers_model->exists($customer);
 
+               // if(!$test)
+              //  {
+                 //   $customer['id'] = $this->customers_model->check_count_customer($customer);
+              //  }
 
                     $customer['id'] = $this->customers_model->add($customer);
 
