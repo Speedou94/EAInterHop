@@ -305,7 +305,7 @@
                                 <label for="notes" class="control-label">
                                     <?= lang('notes') ?>
                                 </label>
-                                <textarea id="notes" maxlength="500" class="form-control" rows="1"></textarea>
+                                <textarea id="appointment-notes" maxlength="500" class="form-control" rows="1"></textarea>
                             </div>
                         </div>
                     </div>
