@@ -23,6 +23,7 @@
     function CustomersHelper() {
         this.filterResults = {};
         this.filterLimit = 20;
+
     }
 
     /**

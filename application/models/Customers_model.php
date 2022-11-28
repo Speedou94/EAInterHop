@@ -94,41 +94,9 @@ class Customers_model extends EA_Model {
         {
             throw new Exception('You can no longer add patients.');
         }
-        return TRUE;
-
-    }
-
-    /**
-     * @return bool
-     *
-     */
-    public function display_customers_by_provider()
-    {
-       /* $a = $provider;
-        ob_start();
-        var_dump($a);
-        $mydebug = ob_get_clean();
-        error_log($mydebug);*/
-
-
-        //get session id
-      // $provider = $this->session->user_id;
-
-       // $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider'
-       // $sql = "SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer  where a.id_users_provider = 5;";
-
-
-       /* if($this->session->user_id) {
-            $sql = $this->db
-                ->select('users.')
-                ->from('users')
-                ->join('appointments', 'users.id = appointments.id_users_customer', 'inner')
-                ->where('appointments.id_users_provider', $provider)
-                ->get();
-        }
 
         return TRUE;
-       */
+
     }
 
     /**

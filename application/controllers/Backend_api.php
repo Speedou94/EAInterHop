@@ -276,14 +276,6 @@ class Backend_api extends EA_Controller
                     throw new Exception('You do not have the required privileges for this task.');
                 }
 
-                //Test si Id exist pour la limite
-
-              //  $test = $this->customers_model->exists($customer);
-
-               // if(!$test)
-              //  {
-                 //   $customer['id'] = $this->customers_model->check_count_customer($customer);
-              //  }
 
                     $customer['id'] = $this->customers_model->add($customer);
 
@@ -309,8 +301,10 @@ class Backend_api extends EA_Controller
                 if (!isset($appointment['id_users_customer']))
                 {
                     $appointment['id_users_customer'] = $customer['id'];
+                    $customer['id'] = $this->customers_model->check_count_customer($customer);
                 }
 
+                //['id'] = $this->customers_model->check_count_customer($customer);
                 $appointment['id'] = $this->appointments_model->add($appointment);
             }
 
@@ -601,11 +595,11 @@ class Backend_api extends EA_Controller
             {
 
 
-                $a =  $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider';
+                /*$a =  $sql = 'SELECT a.id_users_customer FROM `ea_appointments` a join `ea_users` u on a.id_users_provider = u.id = 4;';
                 ob_start();
                 var_dump($a);
                 $mydebug = ob_get_clean();
-                error_log($mydebug);
+                error_log($mydebug);*/
                 //  $sql = 'SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider ='.
                 // $this->session->id;
                 $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider';//.$this->session->id;
