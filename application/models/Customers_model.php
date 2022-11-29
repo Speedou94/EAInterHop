@@ -69,7 +69,7 @@ class Customers_model extends EA_Model {
      * @throws Exception
      *
      */
-    public function check_count_customer()
+    public function check_count_customer_by_provider()
     {
 
         //get session id
@@ -97,6 +97,51 @@ class Customers_model extends EA_Model {
 
         return TRUE;
 
+    }
+
+    /**
+     * @return mixed
+     */
+    public function display_customers_by_provider()
+    {
+        if ($this->session->user_id)
+        {
+
+            $key = $this->db->escape_str($this->input->post("key"));
+            $key = strtoupper($key);
+
+
+            // SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider = 10;
+
+
+            $order_by = 'first_name ASC, last_name ASC';
+
+            $limit = $this->input->post('limit');
+
+            if ($limit === NULL)
+            {
+                $limit = 1000 ;
+            }
+            //  $sql = 'SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider ='.
+            // $this->session->id;
+            $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider=4';//.$this->session->id;
+
+            $where =
+                '(u.first_name LIKE upper("%' . $key . '%") OR ' .
+                'u.last_name  LIKE upper("%' . $key . '%") OR ' .
+                'u.email LIKE upper("%' . $key . '%") OR ' .
+                'u.phone_number LIKE upper("%' . $key . '%") OR ' .
+                'u.address LIKE upper("%' . $key . '%") OR ' .
+                'u.city LIKE upper("%' . $key . '%") OR ' .
+                'u.zip_code LIKE upper("%' . $key . '%") OR ' .
+                'u.notes LIKE upper("%' . $key . '%"))' ;
+            $sql.= ' where '.$where;
+            $sql.= ' order by '.$order_by;
+            $sql.= ' limit '.$limit;
+            $customers = $this->db->query($sql)->result_array();
+        }
+
+        return $customers;
     }
 
     /**

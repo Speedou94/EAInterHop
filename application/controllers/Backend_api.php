@@ -301,7 +301,7 @@ class Backend_api extends EA_Controller
                 if (!isset($appointment['id_users_customer']))
                 {
                     $appointment['id_users_customer'] = $customer['id'];
-                    $customer['id'] = $this->customers_model->check_count_customer($customer);
+                    $customer['id'] = $this->customers_model->check_count_customer_by_provider($customer);
                 }
 
                 //['id'] = $this->customers_model->check_count_customer($customer);
@@ -549,7 +549,6 @@ class Backend_api extends EA_Controller
 
 
 
-       // $provider = $this->providers_model->get_row($appointment['id_users_provider']);
     public function ajax_filter_customers()
     {
         try
@@ -558,9 +557,7 @@ class Backend_api extends EA_Controller
             {
                 throw new Exception('You do not have the required privileges for this task.');
             }
-
-            //requête
-            //connexion a la bdd
+            //
             $key = $this->db->escape_str($this->input->post("key"));
             $key = strtoupper($key);
 
@@ -574,6 +571,8 @@ class Backend_api extends EA_Controller
                 'city LIKE upper("%' . $key . '%") OR ' .
                 'zip_code LIKE upper("%' . $key . '%") OR ' .
                 'notes LIKE upper("%' . $key . '%"))';
+            //requete
+            // SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider = 10;
 
 
             $order_by = 'first_name ASC, last_name ASC';
@@ -582,27 +581,22 @@ class Backend_api extends EA_Controller
 
             if ($limit === NULL)
             {
-                $limit = 100 ;
+                $limit = 1000 ;
             }
 
-            /*$a = $this->session->user_id;
-            ob_start();
-            var_dump($a);
-            $mydebug = ob_get_clean();
-            error_log($mydebug);
-            //($this->session->id);*/
-            if ($this->session->user_id)
+
+            //var_dump($this->session->id);
+            //if ($this->session->get_userdata($_SESSION))
+            //$test = $this->db->get_where('users', ['id' => $user_id])->row_array()
+
+
+
+           /* if ($this->session->user_id)
             {
 
-
-                /*$a =  $sql = 'SELECT a.id_users_customer FROM `ea_appointments` a join `ea_users` u on a.id_users_provider = u.id = 4;';
-                ob_start();
-                var_dump($a);
-                $mydebug = ob_get_clean();
-                error_log($mydebug);*/
                 //  $sql = 'SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider ='.
                 // $this->session->id;
-                $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider';//.$this->session->id;
+                $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer a.id_users_provider';//.$this->session->id;
 
                 $where =
                     '(u.first_name LIKE upper("%' . $key . '%") OR ' .
@@ -616,12 +610,14 @@ class Backend_api extends EA_Controller
                 $sql.= ' where '.$where;
                 $sql.= ' order by '.$order_by;
                 $sql.= ' limit '.$limit;
-
                 $customers = $this->db->query($sql)->result_array();
             } else
             {
                 $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
-            }
+            }*/
+
+               $customers = $this->customers_model->display_customers_by_provider($customers);
+
             //rempli le tableau de client
             foreach ($customers as &$customer)
             {
@@ -935,7 +931,7 @@ class Backend_api extends EA_Controller
             }
 
             //count of customer
-            $customer_id = $this->customers_model->check_count_customer($customer);
+            $customer_id = $this->customers_model->check_count_customer_by_provider($customer);
             $customer_id = $this->customers_model->add($customer);
 
             $response = [
