@@ -81,6 +81,7 @@ class Customers_model extends EA_Model {
             ->from('users')
             ->join('appointments','users.id = appointments.id_users_provider','inner')
             ->where('users.id',$provider)
+            ->group_by('id_users_customer')
             ->count_all_results();
 
         //limit of provider (customer_count in the database)
@@ -110,14 +111,17 @@ class Customers_model extends EA_Model {
         //get session id
         $secretary = $this->session->user_id;
 
+        //select id_users_customer from `ea_appointments` a join `ea_secretaries_providers` sp on a.id_users_provider = a.id_users_provider where sp.id_users_secretary;
         //count of customer
         $sql_count_customer = $this->db
             ->select('id_users_customer')
             ->from('appointments')
             ->join('secretaries_providers','appointments.id_users_provider = secretaries_providers.id_users_provider','inner')
             ->where('id_users_secretary',$secretary)
+            ->group_by('id_users_customer')
             ->count_all_results();
 
+       // SELECT customers_count FROM `ea_users` u join `ea_secretaries_providers` sp on u.id = sp.id_users_provider where sp.id_users_secretary;
         //limit of provider (customer_count in the database)
         $sql_column_count_customer = $this->db
             ->select('customers_count')

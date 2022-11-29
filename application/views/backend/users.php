@@ -266,7 +266,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="customer">
+                                            <label for="customer_count">
                                                 <?= lang('customers_count') ?>
                                                 <span class="text-danger">*</span>
                                             <input  type="number" id="customers_count" class="form-control required">
