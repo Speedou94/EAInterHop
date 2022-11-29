@@ -98,6 +98,34 @@ class Customers_model extends EA_Model {
         return TRUE;
 
     }
+    public function check_count_customer_by_secretary()
+    {
+        //$sql = "SELECT * FROM `ea_secretaries_providers` sp join `ea_users` u on sp.id_users_secretary = u.id where sp.id_users_provider;"
+
+        $secretary = $this->check_count_customer();
+
+        $a =
+        $sql_id_secretary_by_provider = $this->db
+            ->select('*')
+            ->from('secreataries_providers')
+            ->join('users','secretaries_providers.id_users_provider = users.id','inner')
+            ->where('secretaries_providers.id_users_secretary',$secretary)
+            ->get();
+        ob_start();
+        var_dump($a);
+        $mydebug = ob_get_clean();
+        error_log($mydebug);
+
+        $sql_id_secretary_by_provider = $this->db
+            ->select('*')
+            ->from('secreataries_providers')
+            ->join('users','secretaries_providers.id_users_provider = users.id','inner')
+            ->where('secretaries_providers.id_users_secretary',$secretary)
+            ->get();
+
+        return $secretary;
+
+    }
 
     /**
      * @return mixed
