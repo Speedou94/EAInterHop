@@ -302,6 +302,7 @@ class Backend_api extends EA_Controller
                 {
                     $appointment['id_users_customer'] = $customer['id'];
                     $customer['id'] = $this->customers_model->check_count_customer_by_provider($customer);
+                    $customer['id'] = $this->customers_model->check_count_customer_by_secretary($customer);
                 }
 
                 //['id'] = $this->customers_model->check_count_customer($customer);
@@ -931,6 +932,7 @@ class Backend_api extends EA_Controller
             }
 
             //count of customer
+            $customer_id = $this->customers_model->check_count_customer_by_secretary($customer);
             $customer_id = $this->customers_model->check_count_customer_by_provider($customer);
             $customer_id = $this->customers_model->add($customer);
 

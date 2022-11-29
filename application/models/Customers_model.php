@@ -73,8 +73,8 @@ class Customers_model extends EA_Model {
     {
 
         //get session id
-        $provider = $this->session->user_id;
 
+        $provider = $this->session->user_id;
         //count of customer
         $sql_count_customer = $this->db
             ->select('id_users_customer')
@@ -98,32 +98,40 @@ class Customers_model extends EA_Model {
         return TRUE;
 
     }
+
+    /**
+     *  Method to limit the addition of customer by provider by his secretary
+     * @return bool
+     * @throws Exception
+     *
+     */
     public function check_count_customer_by_secretary()
     {
-        //$sql = "SELECT * FROM `ea_secretaries_providers` sp join `ea_users` u on sp.id_users_secretary = u.id where sp.id_users_provider;"
+        //get session id
+        $secretary = $this->session->user_id;
 
-        $secretary = $this->check_count_customer();
+        //count of customer
+        $sql_count_customer = $this->db
+            ->select('id_users_customer')
+            ->from('appointments')
+            ->join('secretaries_providers','appointments.id_users_provider = secretaries_providers.id_users_provider','inner')
+            ->where('id_users_secretary',$secretary)
+            ->count_all_results();
 
-        $a =
-        $sql_id_secretary_by_provider = $this->db
-            ->select('*')
-            ->from('secreataries_providers')
-            ->join('users','secretaries_providers.id_users_provider = users.id','inner')
-            ->where('secretaries_providers.id_users_secretary',$secretary)
-            ->get();
-        ob_start();
-        var_dump($a);
-        $mydebug = ob_get_clean();
-        error_log($mydebug);
+        //limit of provider (customer_count in the database)
+        $sql_column_count_customer = $this->db
+            ->select('customers_count')
+            ->from('users')
+            ->join('secretaries_providers','users.id = secretaries_providers.id_users_provider')
+            ->where('id_users_secretary',$secretary)
+            ->get()->row();
 
-        $sql_id_secretary_by_provider = $this->db
-            ->select('*')
-            ->from('secreataries_providers')
-            ->join('users','secretaries_providers.id_users_provider = users.id','inner')
-            ->where('secretaries_providers.id_users_secretary',$secretary)
-            ->get();
+        if($sql_count_customer > (int)$sql_column_count_customer->customers_count)
+        {
+            throw new Exception('You can no longer add patients.');
+        }
 
-        return $secretary;
+        return TRUE;
 
     }
 
@@ -152,7 +160,7 @@ class Customers_model extends EA_Model {
             }
             //  $sql = 'SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider ='.
             // $this->session->id;
-            $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider=4';//.$this->session->id;
+            $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider';//.$this->session->id;
 
             $where =
                 '(u.first_name LIKE upper("%' . $key . '%") OR ' .
