@@ -305,8 +305,9 @@
                                 <label for="notes" class="control-label">
                                     <?= lang('notes') ?>
                                 </label>
-                                <textarea id="customer-notes" maxlength="500" class="form-control" rows="1"></textarea>
-                            </div>
+                                <textarea id="customer-notes" maxlength="500" class="form-control" rows="1"
+                                          placeholder="Si vous prenez rendez-vous pour une tiers personne merci de le préciser "></textarea>
+                            </div
                         </div>
                     </div>
                 </div>
