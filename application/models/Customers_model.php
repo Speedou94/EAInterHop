@@ -144,41 +144,83 @@ class Customers_model extends EA_Model {
      */
     public function display_customers_by_provider()
     {
-        if ($this->session->user_id)
-        {
 
+            //$provider = $this->session->user_id;
+
+        if($this->session->userdata) {
             $key = $this->db->escape_str($this->input->post("key"));
             $key = strtoupper($key);
-
-
-            // SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider = 10;
-
 
             $order_by = 'first_name ASC, last_name ASC';
 
             $limit = $this->input->post('limit');
 
-            if ($limit === NULL)
-            {
-                $limit = 1000 ;
+            if ($limit === NULL) {
+                $limit = 1000;
             }
-            //  $sql = 'SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider ='.
-            // $this->session->id;
-            $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider';//.$this->session->id;
 
+            $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider';
             $where =
-                '(u.first_name LIKE upper("%' . $key . '%") OR ' .
-                'u.last_name  LIKE upper("%' . $key . '%") OR ' .
-                'u.email LIKE upper("%' . $key . '%") OR ' .
-                'u.phone_number LIKE upper("%' . $key . '%") OR ' .
-                'u.address LIKE upper("%' . $key . '%") OR ' .
-                'u.city LIKE upper("%' . $key . '%") OR ' .
-                'u.zip_code LIKE upper("%' . $key . '%") OR ' .
-                'u.notes LIKE upper("%' . $key . '%"))' ;
-            $sql.= ' where '.$where;
-            $sql.= ' order by '.$order_by;
-            $sql.= ' limit '.$limit;
-            $customers = $this->db->query($sql)->result_array();
+                 '(u.first_name LIKE upper("%' . $key . '%") OR ' .
+                 'u.last_name  LIKE upper("%' . $key . '%") OR ' .
+                 'u.email LIKE upper("%' . $key . '%") OR ' .
+                 'u.phone_number LIKE upper("%' . $key . '%") OR ' .
+                 'u.address LIKE upper("%' . $key . '%") OR ' .
+                 'u.city LIKE upper("%' . $key . '%") OR ' .
+                 'u.zip_code LIKE upper("%' . $key . '%") OR ' .
+                 'u.notes LIKE upper("%' . $key . '%"))' ;
+             $sql.= ' where '.$where;
+             $sql.= ' order by '.$order_by;
+             $sql.= ' limit '.$limit;
+             $customers = $this->db->query($sql)->result_array();
+
+            //SELECT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer
+            // WHERE a.id_users_provider=4
+            // and u.last_name LIKE ('t%')
+            // OR u.first_name LIKE ('%a')
+            // GROUP BY a.id_users_customer
+            // ORDER BY ('u.first_name,u.last_name')
+            // LIMIT 5;
+
+            /* $a =
+             $customer = $this->db
+                 ->select('*')
+                 ->from('users')
+                 ->join('appointments', 'users.id = appointments.id_users_customer', 'inner')
+                 ->where('appointments.id_users_provider', $provider)
+                 ->where('users.first_name LIKE upper("%' . $key . '%")',$where)
+                 ->or_where('users.email  LIKE upper("%' . $key . '%")',$where)
+                 ->or_where('users.phone_number LIKE upper("%' . $key . '%")',$where)
+                 ->or_where('users.address LIKE upper("%' . $key . '%")',$where)
+                 ->or_where('users.city LIKE upper("%' . $key . '%")',$where)
+                 ->or_where('users.zip_code LIKE upper("%' . $key . '%")',$where)
+                 ->group_by('appointments.id_users_customer')
+                 ->order_by($order_by)
+                 ->limit('limit', $limit)
+                 ->getResultArray();
+             ob_start();
+             var_dump($a);
+             $mydebug = ob_get_clean();
+             error_log($mydebug);
+
+             $customer = $this->db
+                 ->select('*')
+                 ->from('users')
+                 ->join('appointments', 'users.id = appointments.id_users_customer', 'inner')
+                 ->where('appointments.id_users_provider', $provider)
+                 ->where('users.first_name LIKE upper("%' . $key . '%")',$where)
+                 ->or_where('users.email  LIKE upper("%' . $key . '%")',$where)
+                 ->or_where('users.phone_number LIKE upper("%' . $key . '%")',$where)
+                 ->or_where('users.address LIKE upper("%' . $key . '%")',$where)
+                 ->or_where('users.city LIKE upper("%' . $key . '%")',$where)
+                 ->or_where('users.zip_code LIKE upper("%' . $key . '%")',$where)
+                 ->group_by('appointments.id_users_customer')
+                 ->order_by($order_by)
+                 ->limit($limit)
+                 ->getResultArray();*/
+        }
+        else {
+            $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
         }
 
         return $customers;

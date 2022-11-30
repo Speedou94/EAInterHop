@@ -301,6 +301,11 @@ class Backend_api extends EA_Controller
                 if (!isset($appointment['id_users_customer']))
                 {
                     $appointment['id_users_customer'] = $customer['id'];
+                    $a = $customer['id'] = $this->customers_model->check_count_customer_by_provider($customer);
+                    ob_start();
+                    var_dump($a);
+                    $mydebug = ob_get_clean();
+                    error_log($mydebug);
                     $customer['id'] = $this->customers_model->check_count_customer_by_provider($customer);
                     $customer['id'] = $this->customers_model->check_count_customer_by_secretary($customer);
                 }
@@ -617,7 +622,9 @@ class Backend_api extends EA_Controller
                 $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
             }*/
 
-               $customers = $this->customers_model->display_customers_by_provider($customers);
+
+               $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
+               $customers = $this->customers_model->display_customers_by_provider();
 
             //rempli le tableau de client
             foreach ($customers as &$customer)
@@ -931,9 +938,13 @@ class Backend_api extends EA_Controller
                 throw new Exception('You do not have the required privileges for this task.');
             }
 
+            $customer_record = $this->customers_model->exists($customer);
             //count of customer
-            $customer_id = $this->customers_model->check_count_customer_by_secretary($customer);
-            $customer_id = $this->customers_model->check_count_customer_by_provider($customer);
+            if(!$customer_record)
+            {
+                $customer_id = $this->customers_model->check_count_customer_by_secretary($customer);
+                $customer_id = $this->customers_model->check_count_customer_by_provider($customer);
+            }
             $customer_id = $this->customers_model->add($customer);
 
             $response = [
