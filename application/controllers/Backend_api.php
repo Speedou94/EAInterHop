@@ -564,7 +564,7 @@ class Backend_api extends EA_Controller
                 throw new Exception('You do not have the required privileges for this task.');
             }
             //
-            $key = $this->db->escape_str($this->input->post("key"));
+           /* $key = $this->db->escape_str($this->input->post("key"));
             $key = strtoupper($key);
 
 
@@ -623,7 +623,7 @@ class Backend_api extends EA_Controller
             }*/
 
 
-               $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
+
                $customers = $this->customers_model->display_customers_by_provider();
 
             //rempli le tableau de client
