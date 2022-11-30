@@ -24,7 +24,7 @@ class Migration_Add_customers_count extends CI_Migration
     {
         $fields = [];
 
-        // Add color column to categories table if not exists.
+        // Add customers_count column to users table if not exists.
         if (!$this->db->field_exists('customers_count', 'users'))
             $fields['customers_count'] = ['type' => 'INTEGER', 'constraint' => '3', 'null' => TRUE];
 
