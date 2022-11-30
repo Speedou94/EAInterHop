@@ -300,12 +300,6 @@ class Backend_api extends EA_Controller
                 // inserted. Get the customer's record ID.
                 if (!isset($appointment['id_users_customer']))
                 {
-                    $appointment['id_users_customer'] = $customer['id'];
-                    $a = $customer['id'] = $this->customers_model->check_count_customer_by_provider($customer);
-                    ob_start();
-                    var_dump($a);
-                    $mydebug = ob_get_clean();
-                    error_log($mydebug);
                     $customer['id'] = $this->customers_model->check_count_customer_by_provider($customer);
                     $customer['id'] = $this->customers_model->check_count_customer_by_secretary($customer);
                 }

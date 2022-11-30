@@ -160,10 +160,10 @@ class Customers_model extends EA_Model {
                 $limit = 1000;
             }
 
-            $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer';
+            $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider';
 
             $where =
-                 '(a.id_users_provider  AND .
+                 '(
                  u.first_name LIKE upper("%' . $key . '%") OR ' .
                  'u.last_name  LIKE upper("%' . $key . '%") OR ' .
                  'u.email LIKE upper("%' . $key . '%") OR ' .
@@ -225,11 +225,12 @@ class Customers_model extends EA_Model {
         }
         else {
             $a = $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
+
             ob_start();
             var_dump($a);
             $mydebug = ob_get_clean();
             error_log($mydebug);
-            $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
+            $customers = $this->appointments_model->get_batch($where, $limit, NULL, $order_by);
         }
 
         return $customers;

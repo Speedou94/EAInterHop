@@ -66,6 +66,7 @@
                 return; // Do nothing when user edits a customer record.
             }
 
+
             var customerId = $(this).attr('data-id');
             var customer = instance.filterResults.find(function (filterResult) {
                 return Number(filterResult.id) === Number(customerId);
