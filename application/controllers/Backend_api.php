@@ -557,8 +557,8 @@ class Backend_api extends EA_Controller
             {
                 throw new Exception('You do not have the required privileges for this task.');
             }
-            //
-           /* $key = $this->db->escape_str($this->input->post("key"));
+
+            $key = $this->db->escape_str($this->input->post("key"));
             $key = strtoupper($key);
 
 
@@ -590,13 +590,18 @@ class Backend_api extends EA_Controller
             //$test = $this->db->get_where('users', ['id' => $user_id])->row_array()
 
 
+            $a = $this->session;
+            ob_start();
+            var_dump($a);
+            $mydebug = ob_get_clean();
+            error_log($mydebug);
 
-           /* if ($this->session->user_id)
+            if ($this->session->user_id && $this->session->role_slug == DB_SLUG_PROVIDER)
             {
 
                 //  $sql = 'SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider ='.
                 // $this->session->id;
-                $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer a.id_users_provider';//.$this->session->id;
+                $sql = "SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider = ". $this->session->user_id;//.$this->session->id;
 
                 $where =
                     '(u.first_name LIKE upper("%' . $key . '%") OR ' .
@@ -614,11 +619,8 @@ class Backend_api extends EA_Controller
             } else
             {
                 $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
-            }*/
+            }
 
-
-
-               $customers = $this->customers_model->display_customers_by_provider();
 
             //rempli le tableau de client
             foreach ($customers as &$customer)

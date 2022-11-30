@@ -142,12 +142,13 @@ class Customers_model extends EA_Model {
     /**
      * @return mixed
      */
-    public function display_customers_by_provider()
+   /* public function display_customers_by_provider($user_id = 0)
     {
 
 
+     if($user_id > 0)
+     {
 
-        if($this->session->user_id) {
 
             $key = $this->db->escape_str($this->input->post("key"));
             $key = strtoupper($key);
@@ -160,9 +161,9 @@ class Customers_model extends EA_Model {
                 $limit = 1000;
             }
 
-            $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider';
+           // $sql = 'SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider';
 
-            $where =
+           /* $where =
                  '(
                  u.first_name LIKE upper("%' . $key . '%") OR ' .
                  'u.last_name  LIKE upper("%' . $key . '%") OR ' .
@@ -184,34 +185,15 @@ class Customers_model extends EA_Model {
             // OR u.first_name LIKE ('%a')
             // GROUP BY a.id_users_customer
             // ORDER BY ('u.first_name,u.last_name')
-            // LIMIT 5;
+            // LIMIT 5;*/
 
-            /* $a =
-             $customer = $this->db
+
+
+            /* $customer = $this->db
                  ->select('*')
                  ->from('users')
                  ->join('appointments', 'users.id = appointments.id_users_customer', 'inner')
-                 ->where('appointments.id_users_provider', $provider)
-                 ->where('users.first_name LIKE upper("%' . $key . '%")',$where)
-                 ->or_where('users.email  LIKE upper("%' . $key . '%")',$where)
-                 ->or_where('users.phone_number LIKE upper("%' . $key . '%")',$where)
-                 ->or_where('users.address LIKE upper("%' . $key . '%")',$where)
-                 ->or_where('users.city LIKE upper("%' . $key . '%")',$where)
-                 ->or_where('users.zip_code LIKE upper("%' . $key . '%")',$where)
-                 ->group_by('appointments.id_users_customer')
-                 ->order_by($order_by)
-                 ->limit('limit', $limit)
-                 ->getResultArray();
-             ob_start();
-             var_dump($a);
-             $mydebug = ob_get_clean();
-             error_log($mydebug);
-
-             $customer = $this->db
-                 ->select('*')
-                 ->from('users')
-                 ->join('appointments', 'users.id = appointments.id_users_customer', 'inner')
-                 ->where('appointments.id_users_provider', $provider)
+                 ->where('appointments.id_users_provider', $user_id)
                  ->where('users.first_name LIKE upper("%' . $key . '%")',$where)
                  ->or_where('users.email  LIKE upper("%' . $key . '%")',$where)
                  ->or_where('users.phone_number LIKE upper("%' . $key . '%")',$where)
@@ -221,20 +203,21 @@ class Customers_model extends EA_Model {
                  ->group_by('appointments.id_users_customer')
                  ->order_by($order_by)
                  ->limit($limit)
-                 ->getResultArray();*/
-        }
-        else {
-            $a = $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
+                 ->getResultArray();
 
-            ob_start();
-            var_dump($a);
-            $mydebug = ob_get_clean();
-            error_log($mydebug);
-            $customers = $this->appointments_model->get_batch($where, $limit, NULL, $order_by);
+         ob_start();
+         var_dump($customer);
+         $mydebug = ob_get_clean();
+         error_log($mydebug);
+        }
+        else
+        {
+           $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
+
         }
 
         return $customers;
-    }
+    }*/
 
     /**
      * Validate customer data before the insert or update operation is executed.

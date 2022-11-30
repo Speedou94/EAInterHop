@@ -50,7 +50,7 @@
             </form>
 
             <h3><?= lang('customers') ?></h3>
-            id: <?= $user_id ?>
+
              <div class="results"></div>
 
         </div>
