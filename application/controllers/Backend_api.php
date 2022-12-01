@@ -300,6 +300,7 @@ class Backend_api extends EA_Controller
                 // inserted. Get the customer's record ID.
                 if (!isset($appointment['id_users_customer']))
                 {
+                    $appointment['id_users_customer'] = $customer['id'];
                     $customer['id'] = $this->customers_model->check_count_customer_by_provider($customer);
                     $customer['id'] = $this->customers_model->check_count_customer_by_secretary($customer);
                 }
@@ -571,8 +572,6 @@ class Backend_api extends EA_Controller
                 'city LIKE upper("%' . $key . '%") OR ' .
                 'zip_code LIKE upper("%' . $key . '%") OR ' .
                 'notes LIKE upper("%' . $key . '%"))';
-            //requete
-            // SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider = 10;
 
 
             $order_by = 'first_name ASC, last_name ASC';
@@ -589,12 +588,12 @@ class Backend_api extends EA_Controller
             //if ($this->session->get_userdata($_SESSION))
             //$test = $this->db->get_where('users', ['id' => $user_id])->row_array()
 
-
-            $a = $this->session;
+            //method debug
+          /*  $a = $this->session;
             ob_start();
             var_dump($a);
             $mydebug = ob_get_clean();
-            error_log($mydebug);
+            error_log($mydebug);*/
 
             if ($this->session->user_id && $this->session->role_slug == DB_SLUG_PROVIDER)
             {
