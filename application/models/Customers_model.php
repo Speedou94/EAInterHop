@@ -43,13 +43,6 @@ class Customers_model extends EA_Model {
         // Validate the customer data before doing anything.
         $this->validate($customer);
 
-        // Check if a customer already exists (by phone number).
-        if ($this->exists($customer) && ! isset($customer['id']))
-        {
-            // Find the customer id from the database.
-            $customer['id'] = $this->find_record_id($customer);
-        }
-
         // Insert or update the customer record.
         if ( ! isset($customer['id']))
         {
@@ -181,27 +174,6 @@ class Customers_model extends EA_Model {
         {
             throw new Exception('Invalid email address provided: ' . $customer['email']);
         }
-
-        // When inserting a record the phone number must be unique.
-        $customer_id = isset($customer['id']) ? $customer['id'] : '';
-
-        $num_rows = $this->db
-            ->select('*')
-            ->from('users')
-            ->join('roles', 'roles.id = users.id_roles', 'inner')
-            ->where('roles.slug', DB_SLUG_CUSTOMER)
-            ->where('users.phone_number', $customer['phone_number'])
-            ->where('users.id !=', $customer_id)
-            ->get()
-            ->num_rows();
-
-        if ($num_rows > 0)
-        {
-            throw new Exception('Given phone number belongs to another customer record. '
-                . 'Please use a different phone number.');
-        }
-
-
 
         return TRUE;
     }

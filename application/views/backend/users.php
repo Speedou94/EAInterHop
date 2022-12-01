@@ -177,7 +177,7 @@
                                         <label for="provider-mobile-number">
                                             <?= lang('mobile_number') ?>
                                         </label>
-                                        <input id="provider-mobile-number" type="tel" class="form-control" maxlength="10" minlength="1" >
+                                        <input id="provider-mobile-number" type="tel" class="form-control" maxlength="20" minlength="10" >
                                     </div>
 
                                     <div class="form-group">
@@ -502,7 +502,7 @@
                                     <?= lang('phone_number') ?>
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input id="secretary-phone-number" class="form-control required" maxlength="128">
+                                <input id="secretary-phone-number" class="form-control required" maxlength="20" minlength="10">
                             </div>
 
                             <div class="form-group">
@@ -712,7 +712,7 @@
                                     <?= lang('phone_number') ?>
                                     <span class="text-danger">*</span>
                                 </label>
-                                <input id="admin-phone-number" class="form-control required" maxlength="128">
+                                <input id="admin-phone-number" class="form-control required" maxlength="20" minlength="10">
                             </div>
 
                             <div class="form-group">
