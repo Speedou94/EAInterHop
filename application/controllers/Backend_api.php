@@ -615,7 +615,29 @@ class Backend_api extends EA_Controller
                 $sql.= ' order by '.$order_by;
                 $sql.= ' limit '.$limit;
                 $customers = $this->db->query($sql)->result_array();
-            } else
+            }
+            else if ($this->session->user_id && $this->session->role_slug == DB_SLUG_SECRETARY)
+
+            {
+                $sql = "SELECT DISTINCT u.* FROM `ea_appointments` a 
+                inner join `ea_users` u on u.id = a.id_users_customer and a.id_users_provider 
+                inner join `ea_secretaries_providers` sp on a.id_users_provider = sp.id_users_provider and sp.id_users_secretary ="
+               . $this->session->user_id;
+                $where =
+                    '(u.first_name LIKE upper("%' . $key . '%") OR ' .
+                    'u.last_name  LIKE upper("%' . $key . '%") OR ' .
+                    'u.email LIKE upper("%' . $key . '%") OR ' .
+                    'u.phone_number LIKE upper("%' . $key . '%") OR ' .
+                    'u.address LIKE upper("%' . $key . '%") OR ' .
+                    'u.city LIKE upper("%' . $key . '%") OR ' .
+                    'u.zip_code LIKE upper("%' . $key . '%") OR ' .
+                    'u.notes LIKE upper("%' . $key . '%"))' ;
+                $sql.= ' where '.$where;
+                $sql.= ' order by '.$order_by;
+                $sql.= ' limit '.$limit;
+                $customers = $this->db->query($sql)->result_array();
+            }
+            else
             {
                 $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
             }
