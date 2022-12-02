@@ -269,6 +269,31 @@
                         </label>
                         <input id="category-color" type="color" class="form-control" value="#ffffff">
                     </div>
+                    <div class="tab-pane active" id="services">
+                        <div class="row">
+                            <div id="filter-services" class="filter-records col col-12 col-md-5">
+                                <form class="mb-4">
+                                    <div class="input-group">
+                                        <input type="text" class="key form-control">
+
+                                        <div class="input-group-addon">
+                                            <div>
+                                                <button class="filter btn btn-outline-secondary" type="submit"
+                                                        data-tippy-content="<?= lang('filter') ?>">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                                <button class="clear btn btn-outline-secondary" type="button"
+                                                        data-tippy-content="<?= lang('clear') ?>">
+                                                    <i class="fas fa-redo-alt"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <h3><?= lang('services') ?></h3>
+                                <div class="results"></div>
+                            </div>
 
                     <div class="form-group">
                         <div class="custom-control custom-switch">

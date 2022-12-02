@@ -291,7 +291,7 @@
                                     <h4><?= lang('services') ?><span class="text-danger">*</span></h4>
 
 
-                                    <div id="provider-services" class="card card-body bg-light border-light "  ></div>
+                                    <div id="provider-services" class="card card-body bg-light border-light " ></div>
                                 </div>
                             </div>
                         </div>

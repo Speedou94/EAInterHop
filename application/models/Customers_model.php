@@ -16,7 +16,8 @@
  *
  * @package Models
  */
-class Customers_model extends EA_Model {
+class Customers_model extends EA_Model
+{
     /**
      * Customers_Model constructor.
      */
@@ -43,13 +44,16 @@ class Customers_model extends EA_Model {
         // Validate the customer data before doing anything.
         $this->validate($customer);
 
+        // Check if a customer already exists (by phone number).
+        /* if ($this->exists($customer) && ! isset($customer['id']))
+         {
+             // Find the customer id from the database.
+             $customer['id'] = $this->find_record_id($customer);
+         }*/
         // Insert or update the customer record.
-        if ( ! isset($customer['id']))
-        {
+        if (!isset($customer['id'])) {
             $customer['id'] = $this->insert($customer);
-        }
-        else
-        {
+        } else {
             $this->update($customer);
         }
 
@@ -72,20 +76,19 @@ class Customers_model extends EA_Model {
         $sql_count_customer = $this->db
             ->select('id_users_customer')
             ->from('users')
-            ->join('appointments','users.id = appointments.id_users_provider','inner')
-            ->where('users.id',$provider)
+            ->join('appointments', 'users.id = appointments.id_users_provider', 'inner')
+            ->where('users.id', $provider)
             ->group_by('id_users_customer')
             ->count_all_results();
 
         //limit of provider (customer_count in the database)
-            $sql_column_count_customer = $this->db
+        $sql_column_count_customer = $this->db
             ->select('customers_count')
             ->from('users')
-            ->where('id',$provider)
+            ->where('id', $provider)
             ->get()->row();
 
-         if($sql_count_customer > (int)$sql_column_count_customer->customers_count)
-        {
+        if ($sql_count_customer > (int)$sql_column_count_customer->customers_count) {
             throw new Exception('You can no longer add patients.');
         }
 
@@ -109,22 +112,21 @@ class Customers_model extends EA_Model {
         $sql_count_customer = $this->db
             ->select('id_users_customer')
             ->from('appointments')
-            ->join('secretaries_providers','appointments.id_users_provider = secretaries_providers.id_users_provider','inner')
-            ->where('id_users_secretary',$secretary)
+            ->join('secretaries_providers', 'appointments.id_users_provider = secretaries_providers.id_users_provider', 'inner')
+            ->where('id_users_secretary', $secretary)
             ->group_by('id_users_customer')
             ->count_all_results();
 
-       // SELECT customers_count FROM `ea_users` u join `ea_secretaries_providers` sp on u.id = sp.id_users_provider where sp.id_users_secretary;
+        // SELECT customers_count FROM `ea_users` u join `ea_secretaries_providers` sp on u.id = sp.id_users_provider where sp.id_users_secretary;
         //limit of provider (customer_count in the database)
         $sql_column_count_customer = $this->db
             ->select('customers_count')
             ->from('users')
-            ->join('secretaries_providers','users.id = secretaries_providers.id_users_provider')
-            ->where('id_users_secretary',$secretary)
+            ->join('secretaries_providers', 'users.id = secretaries_providers.id_users_provider')
+            ->where('id_users_secretary', $secretary)
             ->get()->row();
 
-        if($sql_count_customer > (int)$sql_column_count_customer->customers_count)
-        {
+        if ($sql_count_customer > (int)$sql_column_count_customer->customers_count) {
             throw new Exception('You can no longer add patients.');
         }
 
@@ -145,12 +147,10 @@ class Customers_model extends EA_Model {
     public function validate($customer)
     {
         // If a customer id is provided, check whether the record exist in the database.
-        if (isset($customer['id']))
-        {
+        if (isset($customer['id'])) {
             $num_rows = $this->db->get_where('users', ['id' => $customer['id']])->num_rows();
 
-            if ($num_rows === 0)
-            {
+            if ($num_rows === 0) {
                 throw new Exception('Provided customer id does not '
                     . 'exist in the database.');
             }
@@ -159,21 +159,37 @@ class Customers_model extends EA_Model {
         $phone_number_required = $this->db->get_where('settings', ['name' => 'require_phone_number'])->row()->value === '1';
 
         // Validate required fields
-        if ( ! isset(
+        if (!isset(
                 $customer['first_name'],
                 $customer['last_name'],
                 $customer['email']
             )
-            || ( ! isset($customer['phone_number']) && $phone_number_required))
-        {
+            || (!isset($customer['phone_number']) && $phone_number_required)) {
             throw new Exception('Not all required fields are provided: ' . print_r($customer, TRUE));
         }
 
         // Validate email address
-        if ( ! filter_var($customer['email'], FILTER_VALIDATE_EMAIL))
-        {
+        if (!filter_var($customer['email'], FILTER_VALIDATE_EMAIL)) {
             throw new Exception('Invalid email address provided: ' . $customer['email']);
         }
+        // When inserting a record the phone number must be unique.
+        /* $customer_id = isset($customer['id']) ? $customer['id'] : '';
+
+          $num_rows = $this->db
+              ->select('*')
+              ->from('users')
+              ->join('roles', 'roles.id = users.id_roles', 'inner')
+              ->where('roles.slug', DB_SLUG_CUSTOMER)
+              ->where('users.phone_number', $customer['phone_number'])
+              ->where('users.id !=', $customer_id)
+              ->get()
+              ->num_rows();
+
+          if ($num_rows > 0)
+          {
+              throw new Exception('Given phone number belongs to another customer record. '
+                  . 'Please use a different phone number.');
+          }*/
 
         return TRUE;
     }
@@ -193,8 +209,7 @@ class Customers_model extends EA_Model {
      */
     public function exists($customer)
     {
-        if (empty($customer['phone_number']))
-        {
+        if (empty($customer['phone_number'])) {
             throw new Exception('Customer\'s phone number is not provided.');
         }
 
@@ -209,6 +224,62 @@ class Customers_model extends EA_Model {
 
         return $num_rows > 0;
     }
+
+ /*public function dispaly_customer_by_provider()
+ {
+
+     $key = $this->db->escape_str($this->input->post("key"));
+     $key = strtoupper($key);
+
+
+     $order_by = 'first_name ASC, last_name ASC';
+
+     $limit = $this->input->post('limit');
+
+     if ($limit === NULL) {
+         $limit = 1000;
+     }
+
+
+     //var_dump($this->session->id);
+     //if ($this->session->get_userdata($_SESSION))
+     //$test = $this->db->get_where('users', ['id' => $user_id])->row_array()
+
+     //method debug
+     /*  $a = $this->session;
+       ob_start();
+       var_dump($a);
+       $mydebug = ob_get_clean();
+       error_log($mydebug);
+
+     if ($this->session->user_id && $this->session->role_slug == DB_SLUG_PROVIDER) {
+
+         //  $sql = 'SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider ='.
+         // $this->session->id;
+         $sql = "SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider = " . $this->session->user_id;//.$this->session->id;
+
+         $where =
+             '(u.first_name LIKE upper("%' . $key . '%") OR ' .
+             'u.last_name  LIKE upper("%' . $key . '%") OR ' .
+             'u.email LIKE upper("%' . $key . '%") OR ' .
+             'u.phone_number LIKE upper("%' . $key . '%") OR ' .
+             'u.address LIKE upper("%' . $key . '%") OR ' .
+             'u.city LIKE upper("%' . $key . '%") OR ' .
+             'u.zip_code LIKE upper("%' . $key . '%") OR ' .
+             'u.notes LIKE upper("%' . $key . '%"))';
+         $sql .= ' where ' . $where;
+         $sql .= ' order by ' . $order_by;
+         $sql .= ' limit ' . $limit;
+         $customers = $this->db->query($sql)->result_array();
+
+         $customers = $this->db
+             ->select('*')
+             ->from('users')
+             ->join('appointments','users.id = appointments.id_users_customer')
+             ->where('appointments.id_users_providers')
+     }
+
+ }*/
 
     /**
      * Find the database id of a customer record.
@@ -226,8 +297,7 @@ class Customers_model extends EA_Model {
      */
     public function find_record_id($customer)
     {
-        if (empty($customer['phone_number']))
-        {
+        if (empty($customer['phone_number'])) {
             throw new Exception('Customer\'s phone number was not provided: '
                 . print_r($customer, TRUE));
         }
@@ -241,8 +311,7 @@ class Customers_model extends EA_Model {
             ->where('roles.slug', DB_SLUG_CUSTOMER)
             ->get();
 
-        if ($result->num_rows() == 0)
-        {
+        if ($result->num_rows() == 0) {
             throw new Exception('Could not find customer record id.');
         }
 
@@ -271,8 +340,7 @@ class Customers_model extends EA_Model {
 
         $customer['id_roles'] = $customer_role_id;
 
-        if ( ! $this->db->insert('users', $customer))
-        {
+        if (!$this->db->insert('users', $customer)) {
             throw new Exception('Could not insert customer to the database.');
         }
 
@@ -295,8 +363,7 @@ class Customers_model extends EA_Model {
     {
         $this->db->where('id', $customer['id']);
 
-        if ( ! $this->db->update('users', $customer))
-        {
+        if (!$this->db->update('users', $customer)) {
             throw new Exception('Could not update customer to the database.');
         }
 
@@ -314,14 +381,12 @@ class Customers_model extends EA_Model {
      */
     public function delete($customer_id)
     {
-        if ( ! is_numeric($customer_id))
-        {
+        if (!is_numeric($customer_id)) {
             throw new Exception('Invalid argument type $customer_id: ' . $customer_id);
         }
 
         $num_rows = $this->db->get_where('users', ['id' => $customer_id])->num_rows();
-        if ($num_rows == 0)
-        {
+        if ($num_rows == 0) {
             return FALSE;
         }
 
@@ -340,8 +405,7 @@ class Customers_model extends EA_Model {
      */
     public function get_row($customer_id)
     {
-        if ( ! is_numeric($customer_id))
-        {
+        if (!is_numeric($customer_id)) {
             throw new Exception('Invalid argument provided as $customer_id : ' . $customer_id);
         }
         return $this->db->get_where('users', ['id' => $customer_id])->row_array();
@@ -362,28 +426,24 @@ class Customers_model extends EA_Model {
      */
     public function get_value($field_name, $customer_id)
     {
-        if ( ! is_numeric($customer_id))
-        {
+        if (!is_numeric($customer_id)) {
             throw new Exception('Invalid argument provided as $customer_id: '
                 . $customer_id);
         }
 
-        if ( ! is_string($field_name))
-        {
+        if (!is_string($field_name)) {
             throw new Exception('$field_name argument is not a string: '
                 . $field_name);
         }
 
-        if ($this->db->get_where('users', ['id' => $customer_id])->num_rows() == 0)
-        {
+        if ($this->db->get_where('users', ['id' => $customer_id])->num_rows() == 0) {
             throw new Exception('The record with the $customer_id argument '
                 . 'does not exist in the database: ' . $customer_id);
         }
 
         $row_data = $this->db->get_where('users', ['id' => $customer_id])->row_array();
 
-        if ( ! array_key_exists($field_name, $row_data))
-        {
+        if (!array_key_exists($field_name, $row_data)) {
             throw new Exception('The given $field_name argument does not exist in the database: '
                 . $field_name);
         }
@@ -411,13 +471,11 @@ class Customers_model extends EA_Model {
     {
         $role_id = $this->get_customers_role_id();
 
-        if ($where !== NULL)
-        {
+        if ($where !== NULL) {
             $this->db->where($where);
         }
 
-        if ($order_by !== NULL)
-        {
+        if ($order_by !== NULL) {
             $this->db->order_by($order_by);
         }
 
