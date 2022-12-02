@@ -267,12 +267,16 @@ class Backend_api extends EA_Controller
                 // inserted. Get the customer's record ID.
                 if (!isset($appointment['id_users_customer']))
                 {
+
                     $appointment['id_users_customer'] = $customer['id'];
+
                     $customer['id'] = $this->customers_model->check_count_customer_by_provider($customer);
                     $customer['id'] = $this->customers_model->check_count_customer_by_secretary($customer);
+
                 }
 
-                $appointment['id'] = $this->appointments_model->add($appointment);
+                    $appointment['id'] = $this->appointments_model->add($appointment);
+
             }
 
             $appointment = $this->appointments_model->get_row($appointment['id']);
@@ -479,10 +483,10 @@ class Backend_api extends EA_Controller
 
     /**
      * Filter the customer records with the given key string.
-     *recupére l'id de session
-     * Outputs the search results.*
+     * Get session id.
+     * Outputs the search results.
+     *
      */
-
 
     public function ajax_filter_customers()
     {
@@ -514,22 +518,9 @@ class Backend_api extends EA_Controller
                 $limit = 1000;
             }
 
-
-            //var_dump($this->session->id);
-            //if ($this->session->get_userdata($_SESSION))
-            //$test = $this->db->get_where('users', ['id' => $user_id])->row_array()
-
-            //method debug
-            /*  $a = $this->session;
-              ob_start();
-              var_dump($a);
-              $mydebug = ob_get_clean();
-              error_log($mydebug);*/
-
+            //displays customers by connected provider
             if ($this->session->user_id && $this->session->role_slug == DB_SLUG_PROVIDER) {
 
-                //  $sql = 'SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider ='.
-                // $this->session->id;
                 $sql = "SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider = " . $this->session->user_id;//.$this->session->id;
 
                 $where =
@@ -545,9 +536,8 @@ class Backend_api extends EA_Controller
                 $sql .= ' order by ' . $order_by;
                 $sql .= ' limit ' . $limit;
                 $customers = $this->db->query($sql)->result_array();
-            }
-            else if ($this->session->user_id && $this->session->role_slug == DB_SLUG_SECRETARY)
-            {
+            } //Displays the customers of a carer when his secretary is connected.
+            else if ($this->session->user_id && $this->session->role_slug == DB_SLUG_SECRETARY) {
                 $sql = "SELECT DISTINCT u.* FROM `ea_appointments` a 
                 inner join `ea_users` u on u.id = a.id_users_customer and a.id_users_provider 
                 inner join `ea_secretaries_providers` sp on a.id_users_provider = sp.id_users_provider and sp.id_users_secretary ="
@@ -565,18 +555,16 @@ class Backend_api extends EA_Controller
                 $sql .= ' order by ' . $order_by;
                 $sql .= ' limit ' . $limit;
                 $customers = $this->db->query($sql)->result_array();
-            }
-            else
-            {
+            } else {
                 $customers = $this->customers_model->get_batch($where, $limit, NULL, $order_by);
             }
 
 
-            //rempli le tableau de client
+            //Displays the customers of the provider.
             foreach ($customers as &$customer) {
                 $appointments = $this->appointments_model->get_batch(['id_users_customer' => $customer['id']]);
 
-                //rempli le tableau de rendez vous  selon le service et le provider
+                //Displays customer appointments by provider and service.
                 foreach ($appointments as &$appointment) {
                     $appointment['service'] = $this->services_model->get_row($appointment['id_services']);
                     $appointment['provider'] = $this->providers_model->get_row($appointment['id_users_provider']);

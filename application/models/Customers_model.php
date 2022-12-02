@@ -88,7 +88,8 @@ class Customers_model extends EA_Model
             ->where('id', $provider)
             ->get()->row();
 
-        if ($sql_count_customer > (int)$sql_column_count_customer->customers_count) {
+        if ($sql_count_customer > (int)$sql_column_count_customer->customers_count)
+        {
             throw new Exception('You can no longer add patients.');
         }
 
@@ -224,62 +225,6 @@ class Customers_model extends EA_Model
 
         return $num_rows > 0;
     }
-
- /*public function dispaly_customer_by_provider()
- {
-
-     $key = $this->db->escape_str($this->input->post("key"));
-     $key = strtoupper($key);
-
-
-     $order_by = 'first_name ASC, last_name ASC';
-
-     $limit = $this->input->post('limit');
-
-     if ($limit === NULL) {
-         $limit = 1000;
-     }
-
-
-     //var_dump($this->session->id);
-     //if ($this->session->get_userdata($_SESSION))
-     //$test = $this->db->get_where('users', ['id' => $user_id])->row_array()
-
-     //method debug
-     /*  $a = $this->session;
-       ob_start();
-       var_dump($a);
-       $mydebug = ob_get_clean();
-       error_log($mydebug);
-
-     if ($this->session->user_id && $this->session->role_slug == DB_SLUG_PROVIDER) {
-
-         //  $sql = 'SELECT * FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider ='.
-         // $this->session->id;
-         $sql = "SELECT DISTINCT u.* FROM `ea_users` u join `ea_appointments` a on u.id = a.id_users_customer and a.id_users_provider = " . $this->session->user_id;//.$this->session->id;
-
-         $where =
-             '(u.first_name LIKE upper("%' . $key . '%") OR ' .
-             'u.last_name  LIKE upper("%' . $key . '%") OR ' .
-             'u.email LIKE upper("%' . $key . '%") OR ' .
-             'u.phone_number LIKE upper("%' . $key . '%") OR ' .
-             'u.address LIKE upper("%' . $key . '%") OR ' .
-             'u.city LIKE upper("%' . $key . '%") OR ' .
-             'u.zip_code LIKE upper("%' . $key . '%") OR ' .
-             'u.notes LIKE upper("%' . $key . '%"))';
-         $sql .= ' where ' . $where;
-         $sql .= ' order by ' . $order_by;
-         $sql .= ' limit ' . $limit;
-         $customers = $this->db->query($sql)->result_array();
-
-         $customers = $this->db
-             ->select('*')
-             ->from('users')
-             ->join('appointments','users.id = appointments.id_users_customer')
-             ->where('appointments.id_users_providers')
-     }
-
- }*/
 
     /**
      * Find the database id of a customer record.
