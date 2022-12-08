@@ -11,7 +11,6 @@
 /npm-debug.log
 /assets/js/**/*.min.js
 /assets/css/**/*.min.css
-/config.php
 /storage/backups/*
 !/storage/backups/.htaccess
 !/storage/backups/index.html
