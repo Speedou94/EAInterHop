@@ -502,6 +502,8 @@ class Backend_api extends EA_Controller
             $where =
                 '(first_name LIKE upper("%' . $key . '%") OR ' .
                 'last_name  LIKE upper("%' . $key . '%") OR ' .
+                'other_first_name LIKE upper("%' . $key . '%") OR ' .
+                'other_last_name  LIKE upper("%' . $key . '%") OR ' .
                 'email LIKE upper("%' . $key . '%") OR ' .
                 'phone_number LIKE upper("%' . $key . '%") OR ' .
                 'address LIKE upper("%' . $key . '%") OR ' .
@@ -526,6 +528,8 @@ class Backend_api extends EA_Controller
                 $where =
                     '(u.first_name LIKE upper("%' . $key . '%") OR ' .
                     'u.last_name  LIKE upper("%' . $key . '%") OR ' .
+                    'u.other_first_name LIKE upper("%' . $key . '%") OR ' .
+                    'u.other_last_name  LIKE upper("%' . $key . '%") OR ' .
                     'u.email LIKE upper("%' . $key . '%") OR ' .
                     'u.phone_number LIKE upper("%' . $key . '%") OR ' .
                     'u.address LIKE upper("%' . $key . '%") OR ' .
@@ -545,6 +549,8 @@ class Backend_api extends EA_Controller
                 $where =
                     '(u.first_name LIKE upper("%' . $key . '%") OR ' .
                     'u.last_name  LIKE upper("%' . $key . '%") OR ' .
+                    'u.other_first_name LIKE upper("%' . $key . '%") OR ' .
+                    'u.other_last_name  LIKE upper("%' . $key . '%") OR ' .
                     'u.email LIKE upper("%' . $key . '%") OR ' .
                     'u.phone_number LIKE upper("%' . $key . '%") OR ' .
                     'u.address LIKE upper("%' . $key . '%") OR ' .
@@ -825,7 +831,8 @@ class Backend_api extends EA_Controller
 
             $customer_record = $this->customers_model->exists($customer);
             //count of customer
-            if (!$customer_record) {
+            if (!$customer_record)
+            {
                 $customer_id = $this->customers_model->check_count_customer_by_secretary($customer);
                 $customer_id = $this->customers_model->check_count_customer_by_provider($customer);
             }
@@ -1521,9 +1528,5 @@ class Backend_api extends EA_Controller
             ->set_output(json_encode($response));
     }
 
-    public function display_customer_provider()
-    {
 
-
-    }
 }

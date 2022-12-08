@@ -45,11 +45,11 @@ class Customers_model extends EA_Model
         $this->validate($customer);
 
         // Check if a customer already exists (by phone number).
-        /* if ($this->exists($customer) && ! isset($customer['id']))
+         if ($this->exists($customer) && ! isset($customer['id']))
          {
              // Find the customer id from the database.
              $customer['id'] = $this->find_record_id($customer);
-         }*/
+         }
         // Insert or update the customer record.
         if (!isset($customer['id'])) {
             $customer['id'] = $this->insert($customer);
@@ -108,7 +108,6 @@ class Customers_model extends EA_Model
         //get session id
         $secretary = $this->session->user_id;
 
-        //select id_users_customer from `ea_appointments` a join `ea_secretaries_providers` sp on a.id_users_provider = a.id_users_provider where sp.id_users_secretary;
         //count of customer
         $sql_count_customer = $this->db
             ->select('id_users_customer')
@@ -118,7 +117,6 @@ class Customers_model extends EA_Model
             ->group_by('id_users_customer')
             ->count_all_results();
 
-        // SELECT customers_count FROM `ea_users` u join `ea_secretaries_providers` sp on u.id = sp.id_users_provider where sp.id_users_secretary;
         //limit of provider (customer_count in the database)
         $sql_column_count_customer = $this->db
             ->select('customers_count')
@@ -174,7 +172,7 @@ class Customers_model extends EA_Model
             throw new Exception('Invalid email address provided: ' . $customer['email']);
         }
         // When inserting a record the phone number must be unique.
-        /* $customer_id = isset($customer['id']) ? $customer['id'] : '';
+         $customer_id = isset($customer['id']) ? $customer['id'] : '';
 
           $num_rows = $this->db
               ->select('*')
@@ -190,7 +188,7 @@ class Customers_model extends EA_Model
           {
               throw new Exception('Given phone number belongs to another customer record. '
                   . 'Please use a different phone number.');
-          }*/
+          }
 
         return TRUE;
     }
@@ -206,7 +204,7 @@ class Customers_model extends EA_Model
      *
      * @return bool Returns whether the record exists or not.
      *
-     * @throws Exception If customer email property is missing.
+     * @throws Exception If customer phone number property is missing.
      */
     public function exists($customer)
     {
@@ -224,6 +222,7 @@ class Customers_model extends EA_Model
             ->get()->num_rows();
 
         return $num_rows > 0;
+
     }
 
     /**

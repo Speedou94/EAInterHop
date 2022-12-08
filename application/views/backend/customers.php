@@ -26,6 +26,20 @@
         BackendCustomers.initialize(true);
     });
 </script>
+<script>
+    function myFunction(elem){
+        elsuiv = elem.nextSibling;
+        if(elsuiv.nodeName == '#text'){
+            elsuiv = elsuiv.nextSibling;
+        }
+        if(elsuiv.style.display == 'none'){
+            elsuiv.style.display = 'block';
+        }else{
+            elsuiv.style.display = 'none';
+        }
+    }
+</script>
+
 
 <div class="container-fluid backend-page" id="customers-page">
     <div class="row" id="customers">
@@ -50,9 +64,7 @@
             </form>
 
             <h3><?= lang('customers') ?></h3>
-
-             <div class="results"></div>
-
+            <div class="results"></div>
         </div>
 
         <div class="record-details col-12 col-md-7">
@@ -116,12 +128,25 @@
                         <input id="last-name" class="form-control required">
                     </div>
 
+                    <div>
+                        <label class="control-label" for="other-name">
+                            <?= lang('another_appointment') ?>
+                        </label>
+                        <input type="checkbox"  value="non" onclick="myFunction(this)">
+                        <div class="form-group" style="display:none;" >
+                            <input type="text" id="other-first-name" class="form-control" placeholder="Prénom" />
+                            <br>
+                            <input type="text" id="other-last-name" class="form-control" placeholder="Nom" />
+                        </div>
+                    </div>
+
+
                     <div class="form-group">
                         <label class="control-label" for="email">
                             <?= lang('email') ?>
-                            <span class="text-danger">*</span>
+
                         </label>
-                        <input id="email" class="form-control required">
+                        <input id="email" class="form-control">
                     </div>
 
                     <div class="form-group">

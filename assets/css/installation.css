@@ -1,12 +1,12 @@
 header {
-    background: #DAFFEB;
+    background: #1F1BDD;
     margin-bottom: 25px;
 }
 
 header .page-title {
     font-weight: lighter;
     padding: 40px 0;
-    color: #429a82;
+    color: #FFFFFF;
 }
 
 .content p {

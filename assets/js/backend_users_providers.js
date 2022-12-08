@@ -153,7 +153,7 @@
                 zip_code: $('#provider-zip-code').val(),
                 notes: $('#provider-notes').val(),
                 timezone: $('#provider-timezone').val(),
-                customers_count: ($('#customers_count').val()),
+                customers_count: ($('#provider-customers-count').val()),
 
                 settings: {
                     username: $('#provider-username').val(),
@@ -429,9 +429,9 @@
         $('#provider-zip-code').val(provider.zip_code);
         $('#provider-notes').val(provider.notes);
         $('#provider-timezone').val(provider.timezone);
-
         $('#provider-username').val(provider.settings.username);
         $('#provider-calendar-view').val(provider.settings.calendar_view);
+        $('#provider-customers-count').val(provider.customers_count);
         $('#provider-notifications').prop('checked', Boolean(Number(provider.settings.notifications)));
 
         // Add dedicated provider link.

@@ -23,7 +23,6 @@
     function CustomersHelper() {
         this.filterResults = {};
         this.filterLimit = 20;
-
     }
 
     /**
@@ -65,7 +64,6 @@
             if ($('#filter-customers .filter').prop('disabled')) {
                 return; // Do nothing when user edits a customer record.
             }
-
 
             var customerId = $(this).attr('data-id');
             var customer = instance.filterResults.find(function (filterResult) {
@@ -119,6 +117,8 @@
             var customer = {
                 first_name: $('#first-name').val(),
                 last_name: $('#last-name').val(),
+                other_first_name: $('#other-first-name').val(),
+                other_last_name: $('#other-last-name').val(),
                 email: $('#email').val(),
                 phone_number: $('#phone-number').val(),
                 address: $('#address').val(),
@@ -283,6 +283,8 @@
         $('#customer-id').val(customer.id);
         $('#first-name').val(customer.first_name);
         $('#last-name').val(customer.last_name);
+        $('#other-first-name').val(customer.other_first_name);
+        $('#other-last-name').val(customer.other_last_name);
         $('#email').val(customer.email);
         $('#phone-number').val(customer.phone_number);
         $('#address').val(customer.address);

@@ -73,6 +73,8 @@ window.BackendCalendarAppointmentsModal = window.BackendCalendarAppointmentsModa
             var customer = {
                 first_name: $dialog.find('#first-name').val(),
                 last_name: $dialog.find('#last-name').val(),
+                other_first_name: $dialog.find('#other-first-name').val(),
+                other_last_name: $dialog.find('#other-last-name').val(),
                 email: $dialog.find('#email').val(),
                 phone_number: $dialog.find('#phone-number').val(),
                 address: $dialog.find('#address').val(),
@@ -212,6 +214,8 @@ window.BackendCalendarAppointmentsModal = window.BackendCalendarAppointmentsModa
                 $('#customer-id').val(customer.id);
                 $('#first-name').val(customer.first_name);
                 $('#last-name').val(customer.last_name);
+                $('#other-first-name').val(customer.other_first_name);
+                $('#other-last-name').val(customer.other_last_name);
                 $('#email').val(customer.email);
                 $('#phone-number').val(customer.phone_number);
                 $('#address').val(customer.address);
@@ -277,6 +281,8 @@ window.BackendCalendarAppointmentsModal = window.BackendCalendarAppointmentsModa
                         GlobalVariables.customers.forEach(function (customer, index) {
                             if (customer.first_name.toLowerCase().indexOf(key) !== -1
                                 || customer.last_name.toLowerCase().indexOf(key) !== -1
+                                || customer.other_first_name.toLowerCase().indexOf(key) !== -1
+                                || customer.other_last_name.toLowerCase().indexOf(key) !== -1
                                 || customer.email.toLowerCase().indexOf(key) !== -1
                                 || customer.phone_number.toLowerCase().indexOf(key) !== -1
                                 || customer.address.toLowerCase().indexOf(key) !== -1
@@ -350,8 +356,8 @@ window.BackendCalendarAppointmentsModal = window.BackendCalendarAppointmentsModa
          * Event: Enter New Customer Button "Click"
          */
         $('#new-customer').on('click', function () {
-            $('#manage-appointment').find('#customer-id, #first-name, #last-name, #email, '
-                + '#phone-number, #address, #city, #zip-code, #customer-notes').val('');
+            $('#manage-appointment').find('#customer-id, #first-name, #last-name, #other-first-name, #other-last-name, #email,'
+                + ' #phone-number, #address, #city, #zip-code, #customer-notes').val('');
         });
     }
 

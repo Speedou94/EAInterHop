@@ -33,7 +33,7 @@
 
     <br>
 
-    <a href="<?= site_url() ?>" class="btn btn-success btn-large">
+    <a href="<?= site_url() ?>" class="btn btn-primary btn-large">
         <i class="fas fa-calendar-alt mr-2"></i>
         <?= lang('book_appointment_title') ?>
     </a>

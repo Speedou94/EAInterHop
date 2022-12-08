@@ -70,7 +70,7 @@
         <a href="<?= site_url('user/forgot_password') ?>" class="forgot-password">
             <?= lang('forgot_your_password') ?></a>
         |
-        <span id="select-language" class="badge badge-success">
+        <span id="select-language" class="badge badge-primary">
               <?= ucfirst(config('language')) ?>
             </span>
 

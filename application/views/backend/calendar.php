@@ -39,6 +39,19 @@
         BackendCalendar.initialize(GlobalVariables.calendarView);
     });
 </script>
+<script>
+    function myFunction(elem){
+        elsuiv = elem.nextSibling;
+        if(elsuiv.nodeName == '#text'){
+            elsuiv = elsuiv.nextSibling;
+        }
+        if(elsuiv.style.display == 'none'){
+            elsuiv.style.display = 'block';
+        }else{
+            elsuiv.style.display = 'none';
+        }
+    }
+</script>
 
 <div class="container-fluid backend-page" id="calendar-page">
     <div class="row" id="calendar-toolbar">
@@ -309,7 +322,18 @@
                                         <?= lang('last_name') ?>
                                         <span class="text-danger">*</span>
                                     </label>
-                                    <input id="last-name" class="required form-control">
+                                    <input id="last-name" class="form-control">
+                                </div>
+                                <div>
+                                    <label class="control-label" for="other-name">
+                                        <?= lang('another_appointment') ?>
+                                    </label>
+                                    <input type="checkbox"  value="non" onclick="myFunction(this)">
+                                    <div class="form-group" style="display:none;" >
+                                        <input type="text" id="other-first-name" class="form-control" placeholder="Prénom" />
+                                        <br>
+                                        <input type="text" id="other-last-name" class="form-control" placeholder="Nom" />
+                                    </div>
                                 </div>
 
                                 <div class="form-group">

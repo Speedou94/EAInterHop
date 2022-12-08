@@ -21,7 +21,7 @@ root {
    -------------------------------------------------------------------- */
 
 #header {
-    background-color: #429a82;
+    background-color: #1F1BDD;
     box-shadow: none;
     border-radius: 0;
     padding: 0;
@@ -66,11 +66,11 @@ root {
 }
 
 #header #header-menu .nav-item:hover {
-    background: #3a8873;
+    background: #1F1BDD;
 }
 
 #header #header-menu .nav-item.active {
-    background: #2e6a5b;
+    background: #1F1BDD;
 }
 
 #footer {
@@ -148,7 +148,7 @@ body .modal .modal-title {
 
 body .modal-header {
     padding: 20px 15px;
-    background: #429a82;
+    background: #1F1BDD;
 }
 
 body .modal-header h3 {
@@ -298,7 +298,7 @@ body legend {
 #calendar-page #calendar-toolbar {
     margin-bottom: 15px;
     color: white;
-    background: #353535;
+    background: #979797;
     padding: 15px 0;
 }
 

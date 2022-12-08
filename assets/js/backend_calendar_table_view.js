@@ -198,6 +198,8 @@ window.BackendCalendarTableView = window.BackendCalendarTableView || {};
                 $dialog.find('#customer-id').val(appointment.id_users_customer);
                 $dialog.find('#first-name').val(customer.first_name);
                 $dialog.find('#last-name').val(customer.last_name);
+                $dialog.find('#other-first-name').val(customer.other_first_name);
+                $dialog.find('#other-last-name').val(customer.other_last_name);
                 $dialog.find('#email').val(customer.email);
                 $dialog.find('#phone-number').val(customer.phone_number);
                 $dialog.find('#address').val(customer.address);
@@ -1355,6 +1357,15 @@ window.BackendCalendarTableView = window.BackendCalendarTableView || {};
                     GeneralFunctions.renderMapIcon(event.data.customer),
                     $('<span/>', {
                         'text': event.data.customer.first_name + ' ' + event.data.customer.last_name
+                    }),
+                    $('<br/>'),
+
+                    $('<strong/>', {
+                        'text': EALang.third_party
+                    }),
+                    GeneralFunctions.renderMapIcon(event.data.customer),
+                    $('<span/>', {
+                        'text': event.data.customer.other_first_name + ' ' + event.data.customer.other_last_name
                     }),
                     $('<br/>'),
 

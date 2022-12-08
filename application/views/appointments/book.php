@@ -19,6 +19,19 @@
 
     <script src="<?= asset_url('assets/ext/fontawesome/js/fontawesome.min.js') ?>"></script>
     <script src="<?= asset_url('assets/ext/fontawesome/js/solid.min.js') ?>"></script>
+    <script>
+        function myFunction(elem){
+            elsuiv = elem.nextSibling;
+            if(elsuiv.nodeName == '#text'){
+                elsuiv = elsuiv.nextSibling;
+            }
+            if(elsuiv.style.display == 'none'){
+                elsuiv.style.display = 'block';
+            }else{
+                elsuiv.style.display = 'none';
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -185,6 +198,7 @@
                                 </label>
 
                                 <select id="select-provider" class="form-control"></select>
+
                             </div>
 
                             <div id="service-description"></div>
@@ -265,6 +279,18 @@
                                 </label>
                                 <input type="text" id="last-name" class="required form-control" maxlength="120"/>
                             </div>
+                            <div>
+                                <label class="control-label" for="other-name">
+                                    <?= lang('another_appointment') ?>
+                                </label>
+                                <input type="checkbox"  value="non" onclick="myFunction(this)">
+                                <div class="form-group" style="display:none;" >
+                                    <input type="text" id="other-first-name" class="form-control" placeholder="Prénom" />
+                                    <br>
+                                    <input type="text" id="other-last-name" class="form-control" placeholder="Nom" />
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label for="email" class="control-label">
                                     <?= lang('email') ?>
@@ -305,8 +331,8 @@
                                 <label for="notes" class="control-label">
                                     <?= lang('notes') ?>
                                 </label>
-                                <textarea id="customer-notes" maxlength="500" class="form-control" rows="1"></textarea>
-                            </div
+                                <textarea id="notes" maxlength="500" class="form-control" rows="1"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -453,13 +479,15 @@
                         <?= lang('back') ?>
                     </button>
                     <form id="book-appointment-form" style="display:inline-block" method="post">
-                        <button id="book-appointment-submit" type="button" class="btn btn-success">
+                        <button id="book-appointment-submit" type="button" class="btn btn-primary">
                             <i class="fas fa-check-square mr-2"></i>
                             <?= ! $manage_mode ? lang('confirm') : lang('update') ?>
                         </button>
+
                         <input type="hidden" name="csrfToken"/>
                         <input type="hidden" name="post_data"/>
                     </form>
+
                 </div>
             </div>
 

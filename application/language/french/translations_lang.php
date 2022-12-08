@@ -348,5 +348,7 @@ $lang['email_validation_mail_title'] = 'Vérification de votre email';
 $lang['validation_code_is'] = 'Voici votre code de vérification d\'email à saisir sur le site (usage unique) :';
 $lang['invalid_validation_code'] = 'Code de validation de l\'email invalide.';
 $lang['customers_count'] = 'Limite de patients';
-$lang['customers_limit'] = 'Limite de patients';
+$lang['another_appointment'] = 'Rendez vous pour une tierce personne';
+$lang['third_party'] = 'Tierce personne';
+
 // End

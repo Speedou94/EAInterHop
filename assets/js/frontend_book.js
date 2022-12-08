@@ -574,6 +574,8 @@ window.FrontendBook = window.FrontendBook || {};
         // Customer Details
         var firstName = GeneralFunctions.escapeHtml($('#first-name').val());
         var lastName = GeneralFunctions.escapeHtml($('#last-name').val());
+        var otherFirstName = GeneralFunctions.escapeHtml($('#other-first-name').val());
+        var otherLastName = GeneralFunctions.escapeHtml($('#other-last-name').val());
         var phoneNumber = GeneralFunctions.escapeHtml($('#phone-number').val());
         var email = GeneralFunctions.escapeHtml($('#email').val());
         var address = GeneralFunctions.escapeHtml($('#address').val());
@@ -591,6 +593,10 @@ window.FrontendBook = window.FrontendBook || {};
                     'html': [
                         $('<span/>', {
                             'text': EALang.customer + ': ' + firstName + ' ' + lastName
+                        }),
+                        $('<br/>'),
+                        $('<span/>', {
+                            'text': EALang.third_party + ': ' + otherFirstName + ' ' + otherLastName
                         }),
                         $('<br/>'),
                         $('<span/>', {
@@ -626,6 +632,8 @@ window.FrontendBook = window.FrontendBook || {};
         data.customer = {
             last_name: $('#last-name').val(),
             first_name: $('#first-name').val(),
+            other_last_name: $('#other-last-name').val(),
+            other_first_name: $('#other-first-name').val(),
             email: $('#email').val(),
             phone_number: $('#phone-number').val(),
             address: $('#address').val(),
@@ -709,6 +717,8 @@ window.FrontendBook = window.FrontendBook || {};
             // Apply Customer's Data
             $('#last-name').val(customer.last_name);
             $('#first-name').val(customer.first_name);
+            $('#other-last-name').val(customer.other_last_name);
+            $('#other-first-name').val(customer.other_first_name);
             $('#email').val(customer.email);
             $('#phone-number').val(customer.phone_number);
             $('#address').val(customer.address);
