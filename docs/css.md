@@ -71,4 +71,4 @@ Une fois que vous aurez fait vos **modifications**, il se peut que celles-ci ne 
 
 1. Soit, elles sont **prises en compte immédiatement** et dans ce cas, c'est la fin de ce tutoriel.
 
-2. Soit, elles ne sont **pas prises en compte** et dans ce cas-là, vous avez juste à faire un **"run build"** dans le terminal de votre ide afin que l'appli compile les fichiers et prenne en compte les modifications.
+2. Soit, elles ne sont **pas prises en compte** et dans ce cas-là, vous avez juste à faire un **"run build"** dans le terminal de votre ide afin que l'IDE compile les fichiers et prenne en compte les modifications.
