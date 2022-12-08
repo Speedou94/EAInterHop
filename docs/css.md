@@ -11,7 +11,7 @@ Les fichiers **CSS**, qui vous permettront de modifier votre application, se tro
 
 lenomdevotreprojet/assets/css
 
-À l'intérieur de ce dossier se trouvent plusieurs fichiers **xxx .css** :
+À l'intérieur de ce dossier se trouvent plusieurs fichiers **xxx.css** :
 
 <img width="407" alt="Capture d’écran 2022-12-08 à 04 28 02" src="https://user-images.githubusercontent.com/101267251/206349587-1d7353d9-cf36-4327-bd30-1d64aa8f446f.png">
 
