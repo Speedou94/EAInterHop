@@ -66,6 +66,7 @@ https://htmlcolorcodes.com/fr/
 ## Dernière étape de la modification.
 
 Une fois que vous aurez fait vos **modifications**, il se peut que celles-ci ne soient pas prises en compte immédiatement.
+
 **Deux solutions :** 
 
 1. Soit, elles sont **prises en compte immédiatement** et dans ce cas, c'est la fin de ce tutoriel.
