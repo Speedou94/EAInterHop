@@ -2,13 +2,18 @@
 ![full_interhop_white_logopng (1)](https://user-images.githubusercontent.com/101267251/199488783-9cc034f0-bda5-4ee4-81d0-bad81e90eaf3.png)
 ![easyappointments-website-logo](https://user-images.githubusercontent.com/101267251/199488794-d3e9821b-903a-40b9-b1e0-2df1b7c536b6.png)
 
-Démarrage du projet EasyAppointments
+Démarrage du projet EasyAppointments (version windows)
 
 Prérequis au bon fonctionnement de l’application : 
 
-MAMP: https://www.mamp.info/en/mamp/mac/
+XAMPP 7.4 : https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/
 
-NodeJS (en version LTS – Long Time Support): <https://nodejs.org/en/download/>
+NodeJS (en version LTS – Long Time Support) : https://nodejs.org/en/download/
+
+Composer : https://getcomposer.org/
+
+OpenSSl : : https://slproweb.com/products/Win32OpenSSL.html
+
 
 -- Étape 1 : Récupérer le lien du fork EA.
 
@@ -62,19 +67,15 @@ Composer update –ignore-platform-regs
 
 -- Étape 4 : Mise en place de l’outil de gestion des bdd.
 
-Afin de faire fonctionner pleinement l’application, il vous faudra une base de données active et fonctionnel. Pour ce faire, sur mac vous avez la possibilité d’utiliser MAMP (lien disponible dans les prérequis).
+Afin de faire fonctionner pleinement l’application, il vous faudra une base de données active et fonctionnel. Pour ce faire, sur Windows, vous avez la possibilité d’utiliser XAMPP (lien disponible dans les prérequis).
 
 Une fois celui-ci installé, rien de plus simple. 
 
-Ouvre mamp puis cliquer sur Start en haut à droite.
+![xampp](https://user-images.githubusercontent.com/101267251/206696262-b38ef2db-e6cf-48cb-8570-468d135584ec.png)
 
-<img width="541" alt="Capture d’écran 2022-10-26 à 11 12 55" src="https://user-images.githubusercontent.com/101267251/199508822-c13a61b0-ea10-4f41-95af-81ba6a1df4f6.png">
+Cliquez sur « admin » dans le champ "MySQL" afin d’accéder à votre interface.
 
-Une fois votre serveur mamp démarré, cliquez sur « WebStart » afin d’accéder à votre interface.
-
-Une fois sur l’interface web de Mamp, cliquez sur « Tools » en haut à gauche puis sélectionnez « phpMyAdmin ».
-
-<img width="866" alt="Capture d’écran 2022-10-26 à 11 13 12" src="https://user-images.githubusercontent.com/101267251/199509097-08146c0e-ee83-4ea2-96bb-b10e9ac6b493.png">
+Rendez-vous sur l'url http://localhost/phpmyadmin/
 
 Vous voilà dans votre interface de gestion de vos BDD.
 
@@ -150,16 +151,12 @@ Vous devriez obtenir un résultat similaire à la capture ci-dessous.
 
 <img width="1109" alt="Capture d’écran 2022-10-26 à 12 29 04" src="https://user-images.githubusercontent.com/101267251/199512601-11a2b7e3-becd-46aa-9034-a5a54f0f98e5.png">
 
-Maintenant, il vous faut retourner sur mamp, cliquez « webstart » et une fois sur la page internet de votre mamp, cliquez sur « website » en haut à droite.
+Aller dans votre navigateur et taper localhost/easyappointments 
 
-<img width="865" alt="Capture d’écran 2022-10-26 à 12 31 52" src="https://user-images.githubusercontent.com/101267251/199512999-852c388c-188b-4b8a-adac-a4284a8a07e4.png">
+![url](https://user-images.githubusercontent.com/101267251/206697235-6a4019c6-a21b-4196-a471-8ec380426d40.png)
 
-Vous arriverez sur une fenêtre « Index Of / » dans laquelle s’afficherons tous les projets que vous avez dans votre dossier htdocs.
+A cette étape la, vous devriez arriver sur la page d’accueil de votre application.
 
-<img width="324" alt="Capture d’écran 2022-11-02 à 15 19 04" src="https://user-images.githubusercontent.com/101267251/199513876-2d0f3516-594b-4fb9-bd23-29b681617a85.png">
-
-Il vous suffit de cliquer sur celle que vous souhaitez lancer, dans notre cas easyappointments et si toutes les étapes ont bien été respectée, vous devriez arriver sur la page d’accueil de votre application.
-
-<img width="1728" alt="Capture d’écran 2022-10-26 à 11 05 46" src="https://user-images.githubusercontent.com/101267251/199513969-0ddc08f3-95dc-4000-9cb4-9faeb778686b.png">
+![MicrosoftTeams-image (1)](https://user-images.githubusercontent.com/101267251/206697575-70881c80-b67b-44fc-883f-c23393900c27.png)
 
 Bienvenue sur Easyappointments, bon dev à vous :)
