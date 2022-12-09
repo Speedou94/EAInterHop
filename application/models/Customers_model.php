@@ -71,7 +71,7 @@ class Customers_model extends EA_Model
 
         //get session id
 
-        $provider = $this->session->user_id;
+        $provider = $this->session->user_id && $this->session->role_slug == DB_SLUG_PROVIDER;
         //count of customer
         $sql_count_customer = $this->db
             ->select('id_users_customer')
@@ -106,7 +106,7 @@ class Customers_model extends EA_Model
     public function check_count_customer_by_secretary()
     {
         //get session id
-        $secretary = $this->session->user_id;
+        $secretary = $this->session->user_id && $this->session->role_slug == DB_SLUG_SECRETARY;
 
         //count of customer
         $sql_count_customer = $this->db
