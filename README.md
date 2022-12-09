@@ -159,6 +159,6 @@ Vous arriverez sur une fenêtre « Index Of / » dans laquelle s’afficherons
 
 Il vous suffit de cliquer sur celle que vous souhaitez lancer, dans notre cas easyappointments et si toutes les étapes ont bien été respectée, vous devriez arriver sur la page d’accueil de votre application.
 
-<img width="1728" alt="Capture d’écran 2022-10-26 à 11 05 46" src="https://user-images.githubusercontent.com/101267251/199513969-0ddc08f3-95dc-4000-9cb4-9faeb778686b.png">
+![MicrosoftTeams-image (1)](https://user-images.githubusercontent.com/101267251/206697695-98281f36-924f-4b99-80c7-e7fdb8a67a90.png)
 
 Bienvenue sur Easyappointments, bon dev à vous :)
