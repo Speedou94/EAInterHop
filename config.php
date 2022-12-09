@@ -31,7 +31,7 @@ class Config {
     // ------------------------------------------------------------------------
 
     const BASE_URL      = 'http://localhost/EAInterHop';
-    const LANGUAGE      = 'english';
+    const LANGUAGE      = 'french';
     const DEBUG_MODE    = FALSE;
 
     // ------------------------------------------------------------------------
