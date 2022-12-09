@@ -39,7 +39,7 @@ class Config {
     // ------------------------------------------------------------------------
 
     const DB_HOST       = 'localhost';
-    const DB_NAME       = 'test2';
+    const DB_NAME       = 'Stage';
     const DB_USERNAME   = 'Speedou';
     const DB_PASSWORD   = 'Password';
 
