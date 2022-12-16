@@ -42,7 +42,8 @@
         "jsvrcek/ics": "^0.8",
         "monolog/monolog": "^1",
         "google/apiclient": "^2.0",
-      "ext-openssl": "*"
+      "ext-openssl": "*",
+        "ext-mysqli": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",

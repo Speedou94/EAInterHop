@@ -42,11 +42,6 @@
                     <?= lang('go_to_booking_page') ?>
                 </a>
 
-                <a href="<?= $add_to_google_url ?>" id="add-to-google-calendar" class="btn btn-primary" target="_blank">
-                    <i class="fas fa-plus"></i>
-                    <?= lang('add_to_google_calendar') ?>
-                </a>
-
                 <?php if (isset($exceptions)): ?>
                     <div class="m-2">
                         <h4><?= lang('unexpected_issues') ?></h4>
