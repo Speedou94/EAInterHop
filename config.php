@@ -32,7 +32,7 @@ class Config {
 
     const BASE_URL      = 'http://localhost/EAInterHop';
     const LANGUAGE      = 'french';
-    const DEBUG_MODE    = FALSE;
+    const DEBUG_MODE    = TRUE;
 
     // ------------------------------------------------------------------------
     // DATABASE SETTINGS

@@ -348,8 +348,8 @@ $lang['validation_code_is'] = 'Here is your one use email validation code, pleas
 $lang['email_validation_hint'] = 'Please enter the code you recieved by email.';
 $lang['email_validation_code'] = 'Validation code';
 $lang['invalid_validation_code'] = 'Invalide validation code.';
-$lang['customers_count'] = 'Maximum customers count';
-$lang['another_appointment'] = 'Appointments for a third personne';
+$lang['customers_count'] = 'Patient limit';
+$lang['another_appointment'] = 'Appointments for someone else';
 $lang['third_party'] = 'Third party';
 
 
