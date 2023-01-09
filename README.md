@@ -5,6 +5,8 @@ Démarrage du projet EasyAppointments
 
 Prérequis au bon fonctionnement de l’application : 
 
+PHP 7.4 : https://formulae.brew.sh/formula/php@7.4
+
 MAMP: https://www.mamp.info/en/mamp/mac/
 
 NodeJS (en version LTS – Long Time Support): <https://nodejs.org/en/download/>
